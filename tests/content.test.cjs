@@ -459,6 +459,50 @@ test("home, search queries, and profile tweet tabs share the responsive grid wit
   }
 });
 
+test("profile chrome stays capped outside the wide timeline and restores on route or setting changes", async t => {
+  const page = setup("https://x.com/incago", true, false, { profile: "grid", search: "grid" }); t.after(page.close);
+  const primary = page.document.querySelector('[data-testid="primaryColumn"]');
+  primary.insertAdjacentHTML('afterbegin', '<div id="profile-title" style="position: sticky; top: 0px">Profile title</div>');
+  const stack = primary.querySelector('.feed-stack');
+  stack.insertAdjacentHTML('afterbegin', '<div id="profile-info" style="width: 100%; margin-left: auto"><div id="cover" style="aspect-ratio: 3 / 1"></div><div id="avatar" style="width: 25%">Avatar</div><button>Edit profile</button></div>');
+  const inner = primary.querySelector('.feed-inner');
+  inner.insertAdjacentHTML('beforebegin', '<nav id="profile-tabs">Posts / Replies / Media</nav>');
+  const headers = ['profile-title', 'profile-info', 'profile-tabs'].map(id => page.document.getElementById(id));
+  const nativeStyles = headers.map(header => header.getAttribute('style'));
+  await page.settle();
+  for (const header of headers) {
+    assert.ok(header.hasAttribute('data-bxl-profile-header'));
+    assert.equal(page.window.getComputedStyle(header).maxWidth, '600px');
+  }
+  const grid = page.document.querySelector('#timeline');
+  assert.equal(page.window.getComputedStyle(grid).maxWidth, 'none');
+  assert.equal(grid.hasAttribute('data-bxl-profile-header'), false);
+  assert.equal(stack.hasAttribute('data-bxl-profile-header'), false);
+  assert.equal(page.document.querySelector('#avatar').style.width, '25%');
+  assert.equal(page.document.querySelector('#cover').style.aspectRatio, '3 / 1');
+  const button = headers[1].querySelector('button'); let clicks = 0;
+  button.addEventListener('click', () => clicks++); button.click(); assert.equal(clicks, 1);
+  headers[1].remove();
+  stack.insertAdjacentHTML('afterbegin', '<div id="replacement-info">New profile info</div>');
+  await page.settle();
+  assert.equal(headers[1].hasAttribute('data-bxl-profile-header'), false);
+  assert.ok(page.document.querySelector('#replacement-info').hasAttribute('data-bxl-profile-header'));
+  for (const route of ['/incago/with_replies', '/incago/media', '/incago/highlights']) {
+    page.navigate(route); await page.settle();
+    assert.ok(headers[0].hasAttribute('data-bxl-profile-header'));
+  }
+  page.navigate('/search?q=cookie'); await page.settle();
+  assert.equal(page.document.querySelectorAll('[data-bxl-profile-header]').length, 0);
+  assert.ok(page.document.querySelector('[data-bxl-grid]'));
+  page.navigate('/incago'); await page.settle();
+  page.setModes({ profile: 'native' }); await page.settle();
+  assert.equal(page.document.querySelectorAll('[data-bxl-profile-header], [data-bxl-grid]').length, 0);
+  assert.deepEqual(headers.map(header => header.getAttribute('style')), nativeStyles);
+  page.setModes({ profile: 'grid' }); await page.settle();
+  page.setEnabled(false); await page.settle();
+  assert.equal(page.document.querySelectorAll('[data-bxl-profile-header]').length, 0);
+});
+
 test("native settings affect only the chosen page and survive route changes", async t => {
   const modes = { home: "native", search: "grid", profile: "native", bookmarks: "native" };
   const page = setup("https://x.com/home", true, false, modes); t.after(page.close);

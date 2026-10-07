@@ -75,6 +75,19 @@ html[data-bxl-active] [data-bxl-grid] {
   margin-block-start: 20px !important;
 }
 
+/* Keep profile chrome compact while the timeline uses the available width.
+   Descendant banner/portrait aspect ratios continue to use X's normal sizing. */
+html[data-bxl-active] [data-bxl-profile-header] {
+  width: 100% !important;
+  max-width: 600px !important;
+  min-width: 0 !important;
+  flex-grow: 0 !important;
+  flex-shrink: 1 !important;
+  align-self: flex-start !important;
+  box-sizing: border-box !important;
+  margin-inline: 0 !important;
+}
+
 /* Only ordinary, non-virtual lists use CSS Grid. */
 html[data-bxl-active] [data-bxl-layout="flow"] {
   display: grid !important;

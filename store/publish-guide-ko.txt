@@ -1,5 +1,5 @@
 Better X Likes — Chrome 웹 스토어 제출 안내
-준비 버전: 1.5.4 / 심사 중인 버전: 1.4.1
+준비 버전: 1.5.5 / 심사 중인 버전: 1.4.1
 게시자: Junhak Kim
 공개 지원 이메일: incago@gmail.com
 
@@ -24,17 +24,17 @@ https://chrome.google.com/webstore/devconsole
 대시보드: https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing
 
 2. 실제 X에서 출시 전 확인
-확장 프로그램 1.5.4을 새로고침하고, 열린 X 탭도 반드시 새로고침하세요.
+확장 프로그램 1.5.5을 새로고침하고, 열린 X 탭도 반드시 새로고침하세요.
 홈·검색·프로필·북마크·마음에 들어요에서 넓은 화면 4열 → 3열 → 2열 → 좁은 화면 1열을 확인하세요.
 최초 7개를 지나 아래로 스크롤하여 추가 게시물이 계속 나타나는지 확인하세요.
 홈의 “게시물 보기”를 누른 뒤 새 첫 줄이 위쪽에 가려지지 않고, 아래로 스크롤했다가 상단으로 돌아올 수 있는지 확인하세요. 기본 목록에서 갱신한 뒤 그리드를 켜는 경우도 확인하세요.
 영상이 임의로 재생되거나 빠르게 움직이지 않는지 확인하세요.
 재생 버튼을 누른 영상은 정상 속도로 재생되고 일시정지가 가능한지 확인하세요.
 화면별로 기본 목록을 선택하거나 팝업의 그리드 사용을 끄면 원래 목록과 우측 사이드바가 복원되는지 확인하세요.
-로컬 테스트 59개 및 가상 스크롤/영상 테스트는 통과했지만 로그인한 실제 X의 최종 확인은 남아 있습니다.
+로컬 테스트 60개 및 가상 스크롤/영상 테스트는 통과했지만 로그인한 실제 X의 최종 확인은 남아 있습니다.
 
 3. 준비된 업데이트 업로드
-기존 항목에 better-x-likes-1.5.4-webstore.zip을 올리세요. 새 항목을 만들지 마세요.
+기존 항목에 better-x-likes-1.5.5-webstore.zip을 올리세요. 새 항목을 만들지 마세요.
 사용자가 기존 1.4.1 심사를 유지하고 개선 버전은 나중에 별도로 제출하기로 결정했습니다. 현재 심사를 취소하거나 개선 버전을 업로드하지 마세요.
 이 ZIP은 Chrome 웹 스토어에 바로 올리는 파일입니다. 압축을 풀거나 ZIP 전체를 중첩하지 마세요.
 store-kit ZIP은 자료 묶음이므로 확장 프로그램 업로드 칸에 올리지 마세요.
@@ -62,7 +62,7 @@ privacy-fields.txt의 단일 목적, storage 및 사이트 접근 사유, 원격
 6. Distribution / Test instructions
 가격: 무료. 공개 범위: Public (검색과 일반 사용자 설치를 허용).
 배포 지역은 원하는 지역을 선택하세요. Unlisted는 검색되지 않습니다.
-1.5.4 Test instructions에는 reviewer-notes-1.5.4.txt를 입력하세요. reviewer-notes-submitted.txt는 이전 1.4.1 제출 기록입니다.
+1.5.5 Test instructions에는 reviewer-notes-1.5.5.txt를 입력하세요. reviewer-notes-submitted.txt는 이전 1.4.1 제출 기록입니다.
 심사자는 자신의 X 계정으로 테스트할 수 있습니다. 개인 X 비밀번호를 제출하지 마세요.
 
 7. 심사 요청과 공개
@@ -85,7 +85,7 @@ https://developer.chrome.com/docs/webstore/program-policies/user-data-faq
 https://developer.chrome.com/docs/webstore/cws-dashboard-distribution
 https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site
 
-1.5.4 준비 상태 (2026-10-07)
+1.5.5 준비 상태 (2026-10-07)
 패키지·화면별 옵션·등록 문구·개인정보 안내 원본을 준비했습니다.
 스토어 등록정보와 제출 상태는 기존 1.4.1 심사를 유지합니다.
 개인정보 안내는 한국어·영어·일본어 페이지를 제공합니다. 영어 스토어 설명은 listing-en.txt, 일본어는 listing-ja.txt에 준비되어 있습니다. 영어 제출 안내는 publish-guide-en.txt, 일본어는 publish-guide-ja.txt입니다.
@@ -93,6 +93,8 @@ https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-gi
 
 Japanese documents: listing-ja.txt, publish-guide-ja.txt, ../README.ja.md
 Japanese privacy policy: https://incago.github.io/better-x-likes-privacy/ja.html
-Version 1.5.4 bundles Korean, English and Japanese; default_locale remains English.
+Version 1.5.5 bundles Korean, English and Japanese; default_locale remains English.
 
-1.5.4 기본값: 북마크·마음에 들어요는 그리드, 홈·검색·프로필은 기본 목록입니다. 기존 저장값은 유지합니다. 홈·검색·프로필 그리드를 확인할 때는 팝업에서 직접 그리드를 선택하세요.
+1.5.5 기본값: 북마크·마음에 들어요는 그리드, 홈·검색·프로필은 기본 목록입니다. 기존 저장값은 유지합니다. 홈·검색·프로필 그리드를 확인할 때는 팝업에서 직접 그리드를 선택하세요.
+
+프로필 그리드에서는 상단 배너·프로필 사진·소개가 크게 늘어나지 않고, 넓은 게시물 그리드와 별도로 최대 600px를 유지하는지 확인하세요. 좁은 화면, 기본 목록 복원과 프로필 탭 이동도 확인하세요.

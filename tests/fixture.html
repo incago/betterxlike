@@ -21,6 +21,12 @@
     .heading { padding: 20px 24px; border-bottom: 1px solid #253442; }
     .heading h1 { font-size: 21px; margin: 0; }
     .heading p { font-size: 13px; margin: 4px 0 0; color: #8f9fab; }
+    #profile-info { width: 100%; }
+    .profile-cover { aspect-ratio: 3 / 1; width: 100%; background: linear-gradient(120deg, #224138, #213d58); display: grid; place-items: center; font-size: 24px; }
+    .profile-details { padding: 0 16px 16px; border-bottom: 1px solid #253442; }
+    .profile-avatar { width: 25%; aspect-ratio: 1; margin-top: -12.5%; border: 4px solid #0b1017; border-radius: 50%; background: #3c3a52; display: grid; place-items: center; font-size: 30px; }
+    .profile-details p { margin: 8px 0; }
+    .profile-tabs { padding: 16px; border-bottom: 1px solid #253442; }
     #right-rail { width: 330px; padding: 24px; }
     /* Reproduce the constrained, right-aligned wrappers in the reported layout. */
     .feed-stack { display: flex; flex-direction: column; align-items: flex-end; width: 100%; }
@@ -143,6 +149,12 @@
       const titles = { '/home': '홈', '/search': '검색 결과', '/incago': '프로필 · @incago' };
       document.querySelector('.heading h1').textContent = titles[location.pathname] || (bookmark ? '북마크' : '마음에 들어요');
       document.querySelector('section').setAttribute('aria-label', bookmark ? 'Timeline: Bookmarks' : 'Timeline: Likes');
+      const isProfile = location.pathname === '/incago';
+      const existing = document.querySelector('#profile-info');
+      if (isProfile && !existing) {
+        // Share a widened feed ancestor with the timeline, as X can do.
+        document.querySelector('.feed-stack').insertAdjacentHTML('afterbegin', '<div id="profile-info"><div class="profile-cover">프로필 배너 · 샘플</div><div class="profile-details"><div class="profile-avatar">인</div><p><strong>프로필 미리보기</strong><br>@sample_profile</p><p>샘플 소개 · 상단 정보는 적절한 크기로, 게시물은 넓은 그리드로</p><button>프로필 수정</button></div><nav class="profile-tabs">게시물　　답글　　미디어　　하이라이트</nav></div>');
+      } else if (!isProfile) existing?.remove();
     }
     updateHeading();
     document.querySelector('#bookmarks').onclick = () => navigate('/i/history');

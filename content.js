@@ -4,7 +4,8 @@
   const FLAG = "data-bxl-active";
   const OWNED = ["data-bxl-main", "data-bxl-shell", "data-bxl-wrapper",
     "data-bxl-primary", "data-bxl-grid", "data-bxl-cell", "data-bxl-sidebar",
-    "data-bxl-feed", "data-bxl-nav", "data-bxl-layout", "data-bxl-card", "data-bxl-index"];
+    "data-bxl-feed", "data-bxl-nav", "data-bxl-layout", "data-bxl-card", "data-bxl-index",
+    "data-bxl-profile-header"];
   const SIDEBAR_CONTENT = '[data-testid="SearchBox_Search_Input"], [data-testid="trend"], [data-testid="UserCell"]';
   const ownedElements = new Set();
   // Wait for the saved setting before painting, so disabled users see no flash.
@@ -130,6 +131,20 @@
       if (!feedWrappers.has(element)) element.removeAttribute("data-bxl-feed");
     }
     for (const wrapper of feedWrappers) mark(wrapper, "data-bxl-feed");
+    // Profile banners and avatars scale with their parent width. Keep the
+    // non-timeline branches at X's normal width, even inside shared feed wrappers.
+    const profileHeaders = new Set();
+    if (BxlPages.pageType(location.pathname) === "profile") {
+      for (let branch = grid; branch && branch !== primary; branch = branch.parentElement) {
+        for (const sibling of branch.parentElement.children) {
+          if (sibling !== branch && !sibling.hasAttribute("data-bxl-tail")) profileHeaders.add(sibling);
+        }
+      }
+    }
+    for (const element of ownedElements) {
+      if (!profileHeaders.has(element)) element.removeAttribute("data-bxl-profile-header");
+    }
+    for (const header of profileHeaders) mark(header, "data-bxl-profile-header");
     for (const oldGrid of primary.querySelectorAll("[data-bxl-grid]")) {
       if (oldGrid !== grid) {
         oldGrid.removeAttribute("data-bxl-grid");

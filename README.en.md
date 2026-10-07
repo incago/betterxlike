@@ -63,6 +63,8 @@ Version 1.5.3 fixes new home posts appearing above the reachable scroll area aft
 
 All 59 automated tests passed. The Home refresh test at `/home?virtual=1` checks batches of 1, 3 and 35 new posts, first-row alignment, reachable scroll origin, returning after scrolling and enabling the grid after a native refresh. Add `&width=500`, `&width=800` or `&width=1000` to constrain available content width for one, two or three columns. Local browser checks passed 21 items for each of one through four columns, plus 16 existing virtual-scroll checks. The current logged-in X website still needs a separate check.
 
+Version 1.5.5 keeps profile titles, banners, avatars, details and tabs outside the tweet timeline at a maximum width of 600px, shrinking to the available width on narrow screens. The tweet grid still expands to one through four columns. Original nodes and handlers are retained; Default list, disabling and navigation restore styles. All 60 automated tests passed, plus 19 flow-layout and 16 virtual-scroll profile checks (42 posts/6 pages). Wide and narrow geometry was checked locally; the current logged-in X profile still needs a separate check.
+
 ## Packaging and store status
 
 ```sh
@@ -74,6 +76,6 @@ The regular ZIP includes runtime files and all three installation guides. The We
 
 Publisher: **Junhak Kim**. Public support email: **incago@gmail.com**.
 
-Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.4** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
+Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.5** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
 
 Better X Likes is an independent extension and is not an official product of X Corp. There is no separate terms-of-service document in this project; the privacy policy is available in all three languages.
