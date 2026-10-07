@@ -6,12 +6,14 @@ X의 **홈·검색 결과·프로필·북마크·마음에 들어요**를 **창 
 
 ## 설치
 
-1. Chrome 주소창에서 `chrome://extensions`를 엽니다.
-2. 오른쪽 위 **개발자 모드**를 켭니다.
-3. **압축해제된 확장 프로그램을 로드합니다**를 누릅니다.
-4. 다운로드하거나 복제한 프로젝트 폴더(`manifest.json`이 있는 폴더)를 선택합니다.
+1. [v1.5.9 설치 파일 다운로드](https://github.com/incago/betterxlike/releases/download/v1.5.9/better-x-likes-1.5.9.zip) 후 압축을 풉니다. 변경 내역은 [릴리스 페이지](https://github.com/incago/betterxlike/releases/tag/v1.5.9)에서 확인할 수 있습니다.
+2. Chrome 주소창에서 `chrome://extensions`를 엽니다.
+3. 오른쪽 위 **개발자 모드**를 켭니다.
+4. **압축해제된 확장 프로그램을 로드합니다**를 누르고, 압축을 푼 폴더(`manifest.json`이 있는 폴더)를 선택합니다.
 5. 이미 열어 놓은 X 탭을 **한 번 새로고침**합니다.
 6. 로그인한 상태에서 [홈](https://x.com/home), 검색 결과, 프로필, [북마크](https://x.com/i/history) 또는 [마음에 들어요](https://x.com/i/history/likes)를 엽니다.
+
+기존 수동 설치본을 업데이트할 때는 설치 폴더의 파일을 새 버전으로 교체한 뒤, `chrome://extensions`에서 확장 프로그램을 새로고침하고 열려 있는 X 탭도 새로고침합니다.
 
 확장 프로그램을 툴바에 고정하면 팝업의 **그리드 사용** 스위치로 기본 목록과 그리드를 전환할 수 있습니다. 설정은 이 브라우저에 저장되며, 열린 X 탭에도 적용됩니다.
 

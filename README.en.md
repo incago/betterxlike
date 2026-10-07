@@ -8,12 +8,14 @@ The popup and extension description support Korean, English and Japanese. Chrome
 
 ## Install or update locally
 
-1. Open `chrome://extensions` in Chrome.
-2. Enable **Developer mode**.
-3. Click **Load unpacked** and select the folder containing `manifest.json`. If you downloaded a ZIP, extract it first.
-4. For an existing local installation, click its **Reload** button instead.
+1. [Download the v1.5.9 installation ZIP](https://github.com/incago/betterxlike/releases/download/v1.5.9/better-x-likes-1.5.9.zip) and extract it. See the [release page](https://github.com/incago/betterxlike/releases/tag/v1.5.9) for release notes.
+2. Open `chrome://extensions` in Chrome.
+3. Enable **Developer mode**.
+4. Click **Load unpacked** and select the extracted folder containing `manifest.json`.
 5. **Reload any open X tabs**, so the video guard installed at page startup uses the new code.
 6. Sign in to X normally and open a supported page.
+
+To update an existing local installation, replace the files in its installation folder with the new version, click the extension’s **Reload** button at `chrome://extensions`, and reload any open X tabs.
 
 Pin the extension to the toolbar to reach its popup. The **Enable grid** master switch disables all grids without losing your per-page choices. Changes apply to open X tabs and are saved locally in this browser.
 
