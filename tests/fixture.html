@@ -56,6 +56,8 @@
     <button id="profile">프로필</button>
     <button id="run">브라우저 테스트</button>
     <button id="scroll-next" hidden>아래로 스크롤</button>
+    <button id="refresh-home" hidden>35 게시물 보기</button>
+    <button id="run-refresh" hidden>홈 갱신 테스트</button>
     <span id="checks" role="status"></span>
     <span id="virtual-status" role="status"></span>
   </aside>
@@ -71,6 +73,12 @@
   </div>
   <script>
     const storageListeners = [];
+    // Constrain available content width for repeatable responsive refresh tests.
+    const fixtureWidth = Number(new URLSearchParams(location.search).get('width'));
+    if (fixtureWidth >= 320 && fixtureWidth <= 1280) {
+      document.body.style.width = `${fixtureWidth}px`;
+      document.body.style.maxWidth = '100%';
+    }
     const storeDemo = new URLSearchParams(location.search).has('store');
     if (storeDemo) {
       document.querySelector('.qa strong').textContent = 'Better X Likes · 저장한 게시물을 한눈에';
@@ -201,11 +209,13 @@
       const measured = new Map();
       const mounted = new Map();
       let loaded = 7;
+      const source = Array.from({ length: 42 }, (_, id) => id);
+      let freshId = 1000;
       let pages = 1;
       let removals = 0;
       let renderFrame = 0;
       const height = id => measured.get(id) || 330;
-      const offset = id => Array.from({ length: id }, (_, index) => height(index)).reduce((a, b) => a + b, 0);
+      const offset = position => Array.from({ length: position }, (_, index) => height(source[index])).reduce((a, b) => a + b, 0);
       const total = () => offset(loaded);
       const rootTop = () => grid.getBoundingClientRect().top + scrollY;
       function queueNative() { if (!renderFrame) renderFrame = requestAnimationFrame(renderNative); }
@@ -221,26 +231,28 @@
       });
       function renderNative() {
         renderFrame = 0;
-        if (scrollY + innerHeight >= rootTop() + total() - 160 && loaded < 42) {
-          loaded = Math.min(42, loaded + 7); pages++;
+        if (scrollY + innerHeight >= rootTop() + total() - 160 && loaded < source.length) {
+          loaded = Math.min(source.length, loaded + 7); pages++;
         }
         grid.style.minHeight = `${total()}px`;
         const start = scrollY - rootTop() - innerHeight * 2;
         const end = scrollY - rootTop() + innerHeight * 3;
         const wanted = new Set();
-        for (let id = 0; id < loaded; id++) {
-          if (offset(id) + height(id) < start || offset(id) > end) continue;
+        for (let position = 0; position < loaded; position++) {
+          const id = source[position];
+          if (offset(position) + height(id) < start || offset(position) > end) continue;
           wanted.add(id);
           if (!mounted.has(id)) {
             const cell = makeTweet(id);
             cell.dataset.sourceIndex = String(id);
+            if (id >= 1000) cell.querySelector('[data-testid="tweetText"]').prepend('새 게시물 · ');
             cell.style.position = 'absolute';
             mounted.set(id, cell);
             grid.append(cell);
             nativeResize.observe(cell);
           }
           const cell = mounted.get(id);
-          const transform = `translateY(${offset(id)}px)`;
+          const transform = `translateY(${offset(position)}px)`;
           if (cell.style.transform !== transform) cell.style.transform = transform;
         }
         for (const [id, cell] of mounted) {
@@ -249,7 +261,7 @@
           }
         }
         // Preserve native document order when previously unmounted cells return.
-        const ordered = [...mounted].sort((a, b) => a[0] - b[0]).map(([, cell]) => cell);
+        const ordered = source.slice(0, loaded).filter(id => mounted.has(id)).map(id => mounted.get(id));
         if (ordered.some((cell, index) => grid.children[index] !== cell)) {
           for (const cell of ordered) grid.append(cell);
         }
@@ -261,6 +273,51 @@
       document.querySelector('#scroll-next').hidden = false;
       document.querySelector('#scroll-next').onclick = () => scrollTo(0, document.scrollingElement.scrollHeight);
       document.querySelector('#add').disabled = true;
+      function prependPosts(amount) {
+        source.unshift(...Array.from({ length: amount }, () => freshId++));
+        loaded += amount;
+        scrollTo(0, 0); // Model X's own Show posts action, not extension scrolling.
+        renderNative();
+      }
+      const refreshHome = document.querySelector('#refresh-home');
+      const runRefresh = document.querySelector('#run-refresh');
+      refreshHome.hidden = runRefresh.hidden = location.pathname !== '/home';
+      refreshHome.onclick = () => prependPosts(35);
+      runRefresh.onclick = async () => {
+        const results = [];
+        const check = (name, pass) => results.push({ name, pass: Boolean(pass) });
+        setEnabled(true);
+        for (let i = 0; i < 4; i++) await settle();
+        const columns = Number(grid.style.getPropertyValue('--bxl-columns'));
+        for (const amount of [1, 3, 35]) {
+          prependPosts(amount);
+          for (let i = 0; i < 6; i++) await settle();
+          const first = mounted.get(source[0]);
+          const firstCard = first?.firstElementChild;
+          const firstRow = source.slice(0, columns).map(id => mounted.get(id)?.firstElementChild);
+          check(`${amount} new posts: first index is zero`, first?.dataset.bxlIndex === '0');
+          check(`${amount} new posts: top is reachable`, firstCard && Math.abs(firstCard.getBoundingClientRect().top - grid.getBoundingClientRect().top) < 2);
+          check(`${amount} new posts: first column`, first?.style.getPropertyValue('--bxl-left') === '16px');
+          check(`${amount} new posts: first row aligned`, firstRow.every(card => card && Math.abs(card.getBoundingClientRect().top - firstCard.getBoundingClientRect().top) < 2));
+          check(`${amount} new posts: indices nonnegative`, [...mounted.values()].every(cell => Number(cell.dataset.bxlIndex) >= 0));
+          scrollTo(0, document.scrollingElement.scrollHeight);
+          for (let i = 0; i < 6; i++) await settle();
+          scrollTo(0, 0);
+          for (let i = 0; i < 6; i++) await settle();
+          check(`${amount} new posts: first returns after scrolling`, mounted.get(source[0])?.dataset.bxlIndex === '0');
+        }
+        setEnabled(false);
+        for (let i = 0; i < 4; i++) await settle();
+        prependPosts(3);
+        for (let i = 0; i < 4; i++) await settle();
+        setEnabled(true);
+        for (let i = 0; i < 6; i++) await settle();
+        check('refresh while disabled then enable starts at zero', mounted.get(source[0])?.dataset.bxlIndex === '0');
+        check('page reaches scroll origin', scrollY === 0);
+        check('no inner vertical scroller', document.querySelector('[data-bxl-primary]').scrollHeight <= document.querySelector('[data-bxl-primary]').clientHeight + 1);
+        document.querySelector('#checks').textContent = `${results.filter(result => result.pass).length}/${results.length} 통과 · 홈 갱신`;
+        window.refreshResults = results;
+      };
       document.querySelector('#run').onclick = async () => {
         document.querySelector('#checks').textContent = '가상 스크롤 검증 중…';
         const results = [];
@@ -278,7 +335,7 @@
         check('at least four source pages load', pages >= 4);
         check('renders later tweets', [...mounted.keys()].some(id => id >= 14));
         check('unmounts offscreen cells', removals > 0);
-        check('native offsets match measured slot sums', [...mounted].every(([id, cell]) => cell.style.transform === `translateY(${offset(id)}px)`));
+        check('native offsets match measured slot sums', [...mounted].every(([id, cell]) => cell.style.transform === `translateY(${offset(source.indexOf(id))}px)`));
         scrollTo(0, 0);
         for (let i = 0; i < 4; i++) await settle();
         check('scrolling back restores the first tweet', mounted.has(0));

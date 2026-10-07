@@ -101,6 +101,26 @@
       }
     }
 
+    atNativeStart(cell) {
+      if (!cell) return false;
+      const transform = cell.style.transform;
+      // Only use an explicit X-owned offset. Newly mounted cells may not have
+      // been positioned yet, and an unpositioned cell is not a refresh signal.
+      if (!transform && !cell.style.top) return false;
+      let y = 0;
+      if (transform && transform !== "none") {
+        if (typeof DOMMatrixReadOnly === "function") {
+          try { y = new DOMMatrixReadOnly(transform).m42; } catch { return false; }
+        } else {
+          const translated = transform.match(/^translateY\(([-\d.]+)px\)$/) ||
+            transform.match(/^translate3d\([^,]+,\s*([-\d.]+)px,/);
+          if (!translated) return false;
+          y = Number(translated[1]);
+        }
+      }
+      return Math.abs(y + (parseFloat(cell.style.top) || 0)) < 1;
+    }
+
     update(grid) {
       if (grid !== this.grid) {
         this.clear();
@@ -148,6 +168,16 @@
       this.set(grid, "--bxl-columns", String(columns));
       const cardWidth = Math.max(1, (width - 32 - 16 * (columns - 1)) / columns);
       const tweets = records.filter(record => record.article);
+      const first = tweets[0];
+      const anchor = tweets.find(record => this.indices.has(record.key));
+      if (first && this.indices.size && this.atNativeStart(records[0]?.cell) &&
+        (!anchor || this.indices.get(anchor.key) > 0)) {
+        // X can replace/crop the home timeline without changing its parent or
+        // URL. A native origin with no old head means the old order is obsolete.
+        this.indices = new Map();
+        this.heights.clear();
+        this.nextIndex = 0;
+      }
       let previous;
       for (let i = 0; i < tweets.length; i++) {
         const record = tweets[i];
@@ -159,10 +189,21 @@
           this.indices.set(record.key, index);
           this.nextIndex = Math.max(this.nextIndex, index + 1);
         }
+        previous = this.indices.get(record.key);
+      }
+      // Prepending before index zero temporarily produces negative indices.
+      // Rebase the entire cached order, including unmounted posts, before any
+      // column/rise is calculated. The first new post must start in column zero.
+      let minimum = 0;
+      for (const index of this.indices.values()) minimum = Math.min(minimum, index);
+      if (minimum < 0) {
+        for (const [key, index] of this.indices) this.indices.set(key, index - minimum);
+        this.nextIndex -= minimum;
+      }
+      for (const record of tweets) {
         record.index = this.indices.get(record.key);
         record.column = ((record.index % columns) + columns) % columns;
         record.row = Math.floor(record.index / columns);
-        previous = record.index;
         this.mark(record.cell, "data-bxl-index", String(record.index));
         this.set(record.cell, "--bxl-width", `${cardWidth}px`);
         this.set(record.cell, "--bxl-left", `${16 + record.column * (cardWidth + 16)}px`);

@@ -1,6 +1,6 @@
 {
   "name": "better-x-likes",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "private": true,
   "description": "Responsive one-to-four-column grids for X home, search, profiles, bookmarks and likes, with Korean, English and Japanese support.",
   "scripts": {

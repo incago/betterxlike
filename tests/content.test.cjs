@@ -277,6 +277,66 @@ test("indices and columns survive offscreen unmounting and remounting", async (t
   assert.deepEqual([...grid.querySelectorAll('[data-bxl-cell="tweet"]')].map(cell => cell.getAttribute("data-bxl-index")), ["0", "1", "2", "3", "4", "5", "6", "7"]);
 });
 
+test("home refresh prepends start at column zero and reindex cached offscreen posts", async t => {
+  const page = setup("https://x.com/home"); t.after(page.close); await page.settle();
+  const grid = page.document.querySelector('#timeline');
+  const old = [...grid.querySelectorAll('[data-bxl-cell="tweet"]')];
+  old[4].remove(); // Its order must move too, even while X has it unmounted.
+  let inserted = 0;
+  for (const amount of [1, 3, 35]) {
+    const ids = Array.from({ length: amount }, (_, index) => 1000 + inserted + index);
+    grid.insertAdjacentHTML('afterbegin', ids.map(tweet).join(''));
+    inserted += amount;
+    grid.firstElementChild.style.transform = 'translateY(0px)';
+    await page.settle();
+    const first = grid.firstElementChild;
+    assert.equal(first.getAttribute('data-bxl-index'), '0');
+    assert.equal(first.style.getPropertyValue('--bxl-left'), '16px');
+    assert.equal(parseFloat(first.firstElementChild.style.getPropertyValue('--bxl-rise')), 0);
+    assert.equal(old[0].getAttribute('data-bxl-index'), String(inserted));
+    const indices = [...grid.querySelectorAll('[data-bxl-cell="tweet"]')].map(cell => Number(cell.dataset.bxlIndex));
+    assert.ok(indices.every(index => index >= 0));
+    assert.equal(new Set(indices).size, indices.length);
+  }
+  grid.append(old[4]); await page.settle();
+  assert.equal(old[4].getAttribute('data-bxl-index'), String(inserted + 4));
+  page.setEnabled(false); await page.settle();
+  page.setEnabled(true); await page.settle();
+  assert.equal(grid.firstElementChild.getAttribute('data-bxl-index'), '0');
+  assert.equal(old[4].getAttribute('data-bxl-index'), String(inserted + 4));
+});
+
+test("home refresh replacing the same native timeline resets order and obsolete heights", async t => {
+  const page = setup("https://x.com/home"); t.after(page.close);
+  const grid = page.document.querySelector('#timeline');
+  grid.firstElementChild.firstElementChild.getBoundingClientRect = () => ({ height: 1200 });
+  await page.settle();
+  grid.innerHTML = tweet(1000) + tweet(1001);
+  grid.firstElementChild.style.transform = 'translateY(0px)';
+  await page.settle();
+  assert.equal(grid.firstElementChild.getAttribute('data-bxl-index'), '0');
+  assert.equal(grid.lastElementChild.getAttribute('data-bxl-index'), '1');
+  assert.equal(grid.firstElementChild.style.getPropertyValue('--bxl-slot-height'), '84px');
+  assert.equal(parseFloat(grid.firstElementChild.firstElementChild.style.getPropertyValue('--bxl-rise')), 0);
+  // A disjoint window at a nonzero native offset is ordinary virtual paging.
+  grid.innerHTML = tweet(1002) + tweet(1003); await page.settle();
+  assert.equal(grid.firstElementChild.getAttribute('data-bxl-index'), '2');
+  assert.equal(grid.lastElementChild.getAttribute('data-bxl-index'), '3');
+});
+
+test("a cropped home timeline with an existing post at native origin starts a new first row", async t => {
+  const page = setup("https://x.com/home"); t.after(page.close); await page.settle();
+  const grid = page.document.querySelector('#timeline');
+  const cells = [...grid.querySelectorAll('[data-bxl-cell="tweet"]')];
+  cells.slice(0, 2).forEach(cell => cell.remove());
+  await page.settle();
+  assert.equal(cells[2].getAttribute('data-bxl-index'), '2');
+  cells[2].style.transform = 'translateY(0px)';
+  await page.settle();
+  assert.equal(cells[2].getAttribute('data-bxl-index'), '0');
+  assert.equal(parseFloat(cells[2].firstElementChild.style.getPropertyValue('--bxl-rise')), 0);
+});
+
 test("late taller content changes every slot in its row without overriding native offsets", async (t) => {
   const page = setup(); t.after(page.close); await page.settle();
   const cells = [...page.document.querySelectorAll('[data-bxl-cell="tweet"]')];

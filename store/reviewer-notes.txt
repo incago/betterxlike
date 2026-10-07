@@ -1,4 +1,4 @@
-Better X Likes 1.5.2 — review instructions
+Better X Likes 1.5.3 — review instructions
 Publisher: Junhak Kim
 Contact: incago@gmail.com
 
@@ -18,6 +18,7 @@ Steps
 8. Verify home, search results and profile tweet timelines also use grids. Set each page to native in the popup and verify only that page returns to X layout/sidebar/video behavior. Post detail, messages, notifications and explore remain native.
 
 9. Check the popup in Korean, English and Japanese Chrome. Labels, status/errors and the extension description follow Chrome’s UI locale, with English as the fallback. The underlying stored preference keys are unchanged.
+10. On home, wait for Show posts to appear and click it. The new first row must be reachable at the top, with no cards above the scroll origin. Scroll down and back, repeat after resizing, and refresh in Default list before re-enabling Grid.
 
 Permissions and data
 Korean/English/Japanese popup labels, status/error messages, locale fallback and setting preservation are covered by automated tests. All three popup layouts fit within 600px in the browser preview.
@@ -28,4 +29,6 @@ Known dependency
 X controls its own DOM, authentication, rendering, and network loading. The extension styles its existing DOM rather than providing independent copies of posts. If an X account has no saved posts, bookmark/like some before testing. Access restrictions imposed by X remain unchanged.
 
 Publisher pre-submission record
-56 automated tests passed for the current implementation. Local browser tests exercised actual canvas-stream videos (1,000 rejected autoplay retries with no play/pause or frame progression, trusted manual play, restoration) and a virtualized timeline (42 posts/6 pages). These local tests do not replace an end-to-end test on the current logged-in X website; complete that before submitting.
+59 automated tests passed for the current implementation. Local browser tests exercised actual canvas-stream videos (1,000 rejected autoplay retries with no play/pause or frame progression, trusted manual play, restoration) and a virtualized timeline (42 posts/6 pages). These local tests do not replace an end-to-end test on the current logged-in X website; complete that before submitting.
+
+For 1.5.3, the synthetic home refresh checks passed 21 items each at one, two, three and four columns: batches of 1/3/35 prepended posts, first-row alignment and scroll reachability, return after offscreen unmounting and restoration after refreshing in Default list. The existing 16 virtual-scroll checks also passed. The first prepend regression failed before the fix; the current tests include same-parent replacement and cropped-head reset cases.
