@@ -1,6 +1,6 @@
-I built Better X Likes to make saved posts easier to revisit.
+I save posts with likes, but the long vertical list made them hard to revisit.
 
-Turn X bookmarks and likes into a responsive 1–4 column grid. Videos play when you click.
+So I built Better X Likes, a Chrome extension that shows X bookmarks and likes in a 1–4 column grid.
 
-Miss the old TweetDeck feel? Give it a try.
-Free Chrome extension: {{STORE_URL}}
+Sharing it on GitHub before the Chrome Web Store release:
+https://github.com/incago/betterxlike
