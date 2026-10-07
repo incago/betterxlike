@@ -27,6 +27,10 @@
     .profile-cover img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
     .profile-details { padding: 0 16px 16px; border-bottom: 1px solid #253442; }
     .profile-avatar { width: 25%; aspect-ratio: 1; margin-top: -12.5%; border: 4px solid #0b1017; border-radius: 50%; background: #3c3a52; display: grid; place-items: center; font-size: 30px; position:relative; color:inherit; text-decoration:none; }
+    .profile-actions { display:flex; justify-content:space-between; align-items:flex-start; }
+    .portrait-frame { position:relative; width:25%; margin-top:-15%; }
+    .portrait-frame > .ratio { padding-bottom:100%; }
+    .portrait-frame .profile-avatar { position:absolute; inset:0; width:100%; height:100%; margin-top:0; }
     .profile-details p { margin: 8px 0; }
     .profile-tabs { padding: 16px; border-bottom: 1px solid #253442; }
     #right-rail { width: 330px; padding: 24px; }
@@ -168,6 +172,13 @@
       if (isProfile && !existing) {
         // Share a widened feed ancestor with the timeline, as X can do.
         document.querySelector('.feed-stack').insertAdjacentHTML('afterbegin', '<div id="profile-info"><a class="profile-cover" href="/incago/header_photo"><div class="ratio" style="padding-bottom:33.3333%"></div><img alt="프로필 배너 · 샘플" src="/tests/profile-cover.svg"></a><div class="profile-details"><a class="profile-avatar" href="/incago/photo">인</a><p><strong>프로필 미리보기</strong><br>@sample_profile</p><p>샘플 소개 · 상단 정보는 적절한 크기로, 게시물은 넓은 그리드로</p><button>프로필 수정</button></div><nav class="profile-tabs">게시물　　답글　　미디어　　하이라이트</nav></div>');
+        if (new URLSearchParams(location.search).has('avatarFrame')) {
+          const avatar = document.querySelector('.profile-avatar');
+          const actions = document.createElement('div'); actions.className = 'profile-actions';
+          const frame = document.createElement('div'); frame.className = 'portrait-frame';
+          frame.innerHTML = '<div class="ratio" style="padding-bottom:100%"></div>';
+          avatar.before(actions); actions.append(frame, document.querySelector('.profile-details button')); frame.append(avatar);
+        }
       } else if (!isProfile) existing?.remove();
     }
     updateHeading();
@@ -198,6 +209,7 @@
       const cover = info.querySelector('.profile-cover'); const avatar = info.querySelector('.profile-avatar');
       const original = info.getBoundingClientRect();
       const nativeCover = cover.getBoundingClientRect(); const nativeAvatar = avatar.getBoundingClientRect();
+      const nativeOverlap = nativeCover.bottom - nativeAvatar.top;
       enableTestGrids(); await waitLayout();
       const width = document.querySelector('[data-bxl-primary]').getBoundingClientRect().width - 2;
       const rect = info.getBoundingClientRect(); const banner = cover.getBoundingClientRect(); const portrait = avatar.getBoundingClientRect();
@@ -206,9 +218,10 @@
       check('banner height stays at native size', Math.abs(banner.height - Math.min(200, rect.width / 3)) < 2);
       check('portrait stays bounded', Math.abs(portrait.width - Math.min(145, rect.width / 4)) < 2 && Math.abs(portrait.height - portrait.width) < 2);
       check('portrait overlaps half its height', Math.abs(portrait.top - banner.bottom + portrait.height / 2) < 2);
-      // The portrait cap differs by a few pixels from the native padded 25% row.
-      // Permit only its half-height difference, never banner growth with width.
-      check('wide profile does not become taller', rect.width < 600 || rect.height <= original.height + Math.max(0, portrait.height - nativeAvatar.height) / 2 + 2);
+      // Account for replacing X's 15% overlap with half the bounded portrait;
+      // reject extra height from scaling the frame or banner with feed width.
+      check('wide profile does not become taller', rect.width < 600 || rect.height <= original.height + Math.max(0, portrait.height - nativeAvatar.height) / 2 + Math.max(0, nativeOverlap - nativeAvatar.height / 2) + 2);
+      check('profile name stays below the portrait', info.querySelector('.profile-details p').getBoundingClientRect().top >= portrait.bottom);
       check('banner is cropped to fill', getComputedStyle(cover.querySelector('img')).objectFit === 'cover');
       check('tabs use the full width', Math.abs(info.querySelector('nav').getBoundingClientRect().width - rect.width) < 2);
       check('original photo links remain', cover.getAttribute('href') === '/incago/header_photo' && avatar.getAttribute('href') === '/incago/photo');

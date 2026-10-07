@@ -592,6 +592,36 @@ test("blank profile banners are bounded without changing portrait spacers or twe
   assert.equal(page.document.querySelector('#blank-cover > div').style.paddingBottom, '33.3333%');
 });
 
+test("percentage portrait frames and parent overlap are bounded together and restore", async t => {
+  const page = setup('https://x.com/incago', true, false, {profile:'grid'}); t.after(page.close);
+  page.document.querySelector('.feed-stack').insertAdjacentHTML('afterbegin', '<div id="profile-info"><a href="/incago/header_photo"><div style="padding-bottom:33.3333%"></div></a><div id="action-row"><div id="portrait-frame" style="position:relative;width:25%;margin-top:-15%"><div style="padding-bottom:100%"></div><a id="portrait" href="/incago/photo" style="position:absolute;inset:0;width:100%;height:100%">Photo</a></div><button>Follow</button></div><p>Name</p></div>');
+  const frame = page.document.querySelector('#portrait-frame'); const row = page.document.querySelector('#action-row');
+  const original = frame.style.cssText;
+  await page.settle();
+  assert.ok(frame.hasAttribute('data-bxl-profile-avatar'));
+  assert.ok(frame.hasAttribute('data-bxl-profile-overlap'));
+  assert.equal(page.window.getComputedStyle(frame).maxWidth,'145px');
+  assert.equal(row.hasAttribute('data-bxl-profile-avatar'),false);
+  assert.equal(row.hasAttribute('data-bxl-profile-overlap'),false);
+  page.setModes({profile:'native'}); await page.settle();
+  assert.equal(frame.hasAttribute('data-bxl-profile-avatar'),false);
+  assert.equal(frame.hasAttribute('data-bxl-profile-overlap'),false);
+  assert.equal(frame.style.cssText, original);
+});
+
+test("a bounded portrait frame remains stable after its measured width changes", async t => {
+  const page = setup('https://x.com/incago',true,false,{profile:'grid'}); t.after(page.close);
+  page.document.querySelector('.feed-stack').insertAdjacentHTML('afterbegin','<div id="profile-info"><div id="portrait-row"><div id="portrait-frame"><a href="/incago/photo">Photo</a></div><button>Follow</button></div></div>');
+  const frame=page.document.querySelector('#portrait-frame'); const row=page.document.querySelector('#portrait-row');
+  let measuredWidth=300;
+  frame.getBoundingClientRect=()=>({width:measuredWidth}); row.getBoundingClientRect=()=>({width:1200});
+  await page.settle(); assert.ok(frame.hasAttribute('data-bxl-profile-avatar'));
+  measuredWidth=145; row.querySelector('button').textContent='Following';
+  await page.settle(); assert.ok(frame.hasAttribute('data-bxl-profile-avatar'));
+  row.append(frame.firstElementChild); frame.textContent='Unrelated content';
+  await page.settle(); assert.equal(frame.hasAttribute('data-bxl-profile-avatar'),false);
+});
+
 test("native settings affect only the chosen page and survive route changes", async t => {
   const modes = { home: "native", search: "grid", profile: "native", bookmarks: "native" };
   const page = setup("https://x.com/home", true, false, modes); t.after(page.close);

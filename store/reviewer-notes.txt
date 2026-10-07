@@ -1,4 +1,4 @@
-Better X Likes 1.5.7 — review instructions
+Better X Likes 1.5.8 — review instructions
 Publisher: Junhak Kim
 Contact: incago@gmail.com
 
@@ -29,7 +29,7 @@ Known dependency
 X controls its own DOM, authentication, rendering, and network loading. The extension styles its existing DOM rather than providing independent copies of posts. If an X account has no saved posts, bookmark/like some before testing. Access restrictions imposed by X remain unchanged.
 
 Publisher pre-submission record
-64 automated tests passed for the current implementation. Local browser tests exercised actual canvas-stream videos (1,000 rejected autoplay retries with no play/pause or frame progression, trusted manual play, restoration) and a virtualized timeline (42 posts/6 pages). These local tests do not replace an end-to-end test on the current logged-in X website; complete that before submitting.
+66 automated tests passed for the current implementation. Local browser tests exercised actual canvas-stream videos (1,000 rejected autoplay retries with no play/pause or frame progression, trusted manual play, restoration) and a virtualized timeline (42 posts/6 pages). These local tests do not replace an end-to-end test on the current logged-in X website; complete that before submitting.
 
 For 1.5.3, the synthetic home refresh checks passed 21 items each at one, two, three and four columns: batches of 1/3/35 prepended posts, first-row alignment and scroll reachability, return after offscreen unmounting and restoration after refreshing in Default list. The existing 16 virtual-scroll checks also passed. The first prepend regression failed before the fix; the current tests include same-parent replacement and cropped-head reset cases.
 
@@ -38,3 +38,5 @@ For 1.5.5, profile chrome (title, cover, avatar, details and tabs outside the tw
 For 1.5.6, inline follow suggestions are hidden on grid pages, including split headings/UserCell/More fragments, without removing native cells or changing X offsets. Hidden virtual cells measure zero height. Verify post alignment around the suggestions and native paging; loaders/retry controls and post-contained account elements must remain visible. Default list restores suggestions. All 62 automated tests passed; local recommendation checks passed 13 items at each of 1/2/3/4 columns (42 posts loaded) and 11 flow-list checks. The current logged-in X site still needs separate verification.
 
 For 1.5.7, profile headers fill the feed width. Banner height is capped at 200px and its image crops at the center. Portraits are capped at 145px with half-height overlap for negative-margin layouts. Narrow screens shrink both. Default list, disable and navigation restore original nodes/styles. All 64 automated tests passed. Local profile-header checks passed 12 items at each of 1/2/3/4 columns; flow layout passed 19 items and virtual scrolling 16 items (42 posts/6 pages). Verify the current logged-in X before submission.
+
+For 1.5.8, portrait links and percentage-sized outer frames are bounded together, including negative margins. Container sizing is on the feed column so header descendants retain their native absolute-positioning context. Test the photo at the lower-left banner edge, clear of the name, on resize and Default list restoration. All 66 automated tests passed; the outer-frame regression fails with the previous content script. The current logged-in X still needs separate verification.

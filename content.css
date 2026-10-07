@@ -86,6 +86,11 @@ html[data-bxl-active] [data-bxl-profile-header] {
   align-self: stretch !important;
   box-sizing: border-box !important;
   margin-inline: 0 !important;
+}
+
+/* Query the feed width without introducing a new containing block inside the
+   profile header, which can change where X positions an absolute portrait. */
+html[data-bxl-active] [data-bxl-primary]:has([data-bxl-profile-header]) {
   container-type: inline-size;
 }
 

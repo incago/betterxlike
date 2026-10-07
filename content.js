@@ -185,6 +185,25 @@
         } else if (path === `/${handle}/photo`) {
           avatars.add(link);
           if (parseFloat(getComputedStyle(link).marginTop) < 0) overlaps.add(link);
+          // X also renders the photo inside a percentage-sized outer frame.
+          // Sizing only its link leaves the frame's height and negative margin
+          // based on the expanded feed width, moving the photo off the banner.
+          for (let frame = link.parentElement; frame && frame !== header;
+            frame = frame.parentElement) {
+            const negativeMargin = parseFloat(getComputedStyle(frame).marginTop) < 0;
+            const frameWidth = frame.getBoundingClientRect().width;
+            const parentWidth = frame.parentElement.getBoundingClientRect().width;
+            const photoOnly = frame.querySelectorAll('a[href]').length === 1 &&
+              !frame.querySelector('button, [role="button"]');
+            const ratio = parentWidth ? frameWidth / parentWidth : 0;
+            if (negativeMargin) overlaps.add(frame);
+            if (photoOnly && (negativeMargin || frame.hasAttribute('data-bxl-profile-avatar') ||
+              (ratio >= 0.2 && ratio <= 0.3))) {
+              avatars.add(frame);
+              break;
+            }
+            if (negativeMargin || !photoOnly) break;
+          }
         }
       }
       // Empty headers have no photo link, but retain X's one-third-width spacer.
