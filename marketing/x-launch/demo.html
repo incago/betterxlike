@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Better X Likes — 샘플 게시물 데모</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#080c12;color:#f2f5fa;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif}
+#shell{display:flex;width:100%;margin:auto}#nav{flex:0 0 80px;padding:18px 20px;color:#edf4fb;font-size:27px;line-height:2.1}
+main{flex:1;min-width:0}#wrapper{display:flex;max-width:990px}#primary{width:600px;max-width:600px;border-inline:1px solid #26313e}
+.heading{height:80px;padding:14px 20px;border-bottom:1px solid #26313e;display:flex;align-items:center;gap:16px}.heading h1{font-size:20px;margin:0}.heading p{color:#8a9bb0;font-size:13px;margin:0}
+#right{width:300px;padding:20px}.rail{background:#121923;border:1px solid #26313e;border-radius:16px;padding:20px;margin-bottom:20px;color:#8a9bb0}
+#timeline{width:100%}article{padding:14px 16px;border-bottom:1px solid #26313e;background:#080c12}
+.author{display:flex;gap:9px;align-items:center;margin-bottom:10px}.avatar{height:32px;width:32px;flex:0 0 32px;display:grid;place-items:center;border-radius:50%;font-weight:700;font-size:14px;color:#fff;background:var(--accent)}
+.name{font-weight:700;font-size:14px}.handle{font-size:12px;color:#8291a5}a{color:inherit;text-decoration:none}
+[data-testid=tweetText]{font-size:14px;line-height:1.5;margin-bottom:12px}.media{height:148px;border-radius:12px;overflow:hidden;position:relative;display:grid;place-items:center;background:var(--bg);color:var(--fg)}
+.media p{font-size:24px;line-height:1.1;font-weight:750;letter-spacing:-.5px;text-align:center;z-index:1;margin:0}.media:before{content:"";position:absolute;width:170px;height:170px;border:32px solid currentColor;opacity:.15;border-radius:50%;right:-60px;bottom:-80px}
+.media:after{content:"";position:absolute;width:80px;height:80px;background:currentColor;opacity:.08;border-radius:18px;left:16px;top:-40px;transform:rotate(25deg)}
+.actions{display:flex;justify-content:space-between;font-size:12px;color:#76889d;margin-top:12px}.heart{color:#f174a9}.reply{color:#91a3ba}
+</style>
+<link rel="stylesheet" href="/content.css">
+<div id="shell"><header id="nav" aria-label="탐색">𝕏<br>⌂<br>⌕<br>♡<br>▱</header><main><div id="wrapper">
+<div id="primary" data-testid="primaryColumn"><div class="heading"><span>←</span><div><h1>마음에 들어요</h1><p>다시 보고 싶은 게시물</p></div></div><section aria-label="Timeline: Likes"><div id="timeline"></div></section></div>
+<aside id="right" data-testid="sidebarColumn"><div class="rail">검색</div><div class="rail">트렌드<br><br>오늘의 이야기<br><br>새로운 소식</div><div class="rail" data-testid="UserCell">팔로우 추천</div></aside>
+</div></main></div>
+<script>
+const params=new URLSearchParams(location.search);
+if(params.get('width'))document.body.style.width=params.get('width')+'px';
+const enabled=params.get('mode')!=='native';
+window.chrome={runtime:{},storage:{local:{get:(_,cb)=>cb({enabled,pageModes:{bookmarks:'grid',likes:'grid'}})},onChanged:{addListener:()=>{}}}};
+const samples=[
+['디자인 노트','@design_note','좋은 화면은 작은 변화에서 시작된다. 다시 꺼내 보고 싶은 아이디어.','LESS, BUT<br>BETTER.','#103d4d','#70d5ef','#2789a6'],
+['주말 산책','@slow_walk','걷다가 만난 오후의 빛. 다음 주말에도 이 길을 걸어야겠다.','AFTERNOON<br>WALK.','#342b4a','#c7b6ec','#7b69a1'],
+['개발 메모','@dev_memo','나중에 다시 읽을 코드 팁. 작은 발견들을 차곡차곡 모아 두기.','{ small ideas }','#172e45','#8ebde8','#426c9b'],
+['오늘의 문장','@daily_line','좋아하는 문장은 몇 번을 다시 읽어도 새로운 이야기를 들려준다.','KEEP WHAT<br>YOU LOVE.','#443133','#f1b5ac','#a16d69'],
+['작업실','@studio_note','오늘의 영감을 저장해 두었다. 다음 프로젝트의 출발점이 될지도.','MAKE<br>SOMETHING.','#28382e','#b7d9a8','#698a62'],
+['사진 일기','@photo_diary','기억하고 싶은 저녁의 색. 하늘은 매일 조금씩 달라진다.','BLUE HOUR.','#25304e','#aabce8','#5f70a3'],
+['읽는 시간','@reading_time','좋아하는 글을 다시 읽는 일. 미래의 나에게 남기는 작은 선물.','READ. SAVE.<br>RETURN.','#372743','#d6b4e7','#986bb1'],
+['작은 취향','@tiny_collection','다시 보고 싶은 것들을 한눈에. 작은 취향이 모여 새로운 생각이 된다.','A LITTLE<br>COLLECTION.','#163b39','#92d6ca','#448d83']
+];
+samples.forEach(([name,handle,text,media,bg,fg,accent],i)=>{
+ const cell=document.createElement('div');cell.dataset.testid='cellInnerDiv';
+ cell.innerHTML='<article data-testid="tweet" style="--bg:'+bg+';--fg:'+fg+';--accent:'+accent+'"><div class="author"><span class="avatar">'+name[0]+'</span><div><span class="name">'+name+'</span><div class="handle"><a href="/sample/status/'+(i+1)+'"><time>'+handle+' · 10월 7일</time></a></div></div></div><div data-testid="tweetText">'+text+'</div><div class="media"><p>'+media+'</p></div><div class="actions"><span class="reply">↩ 12</span><span>↻ 8</span><span class="heart">♥ '+(23+i*7)+'</span><span>▱</span><span>↗</span></div></article>';
+ document.querySelector('#timeline').append(cell);
+});
+</script>
+<script src="/pages.js"></script><script src="/layout.js"></script><script src="/video.js"></script><script src="/content.js"></script>
+</html>

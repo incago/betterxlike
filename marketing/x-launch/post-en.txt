@@ -1,0 +1,6 @@
+I built Better X Likes to make saved posts easier to revisit.
+
+Turn X bookmarks and likes into a responsive 1–4 column grid. Videos play when you click.
+
+Miss the old TweetDeck feel? Give it a try.
+Free Chrome extension: {{STORE_URL}}
