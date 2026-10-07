@@ -1,4 +1,4 @@
-Better X Likes 1.5.8 — review instructions
+Better X Likes 1.5.9 — review instructions
 Publisher: Junhak Kim
 Contact: incago@gmail.com
 
@@ -40,3 +40,5 @@ For 1.5.6, inline follow suggestions are hidden on grid pages, including split h
 For 1.5.7, profile headers fill the feed width. Banner height is capped at 200px and its image crops at the center. Portraits are capped at 145px with half-height overlap for negative-margin layouts. Narrow screens shrink both. Default list, disable and navigation restore original nodes/styles. All 64 automated tests passed. Local profile-header checks passed 12 items at each of 1/2/3/4 columns; flow layout passed 19 items and virtual scrolling 16 items (42 posts/6 pages). Verify the current logged-in X before submission.
 
 For 1.5.8, portrait links and percentage-sized outer frames are bounded together, including negative margins. Container sizing is on the feed column so header descendants retain their native absolute-positioning context. Test the photo at the lower-left banner edge, clear of the name, on resize and Default list restoration. All 66 automated tests passed; the outer-frame regression fails with the previous content script. The current logged-in X still needs separate verification.
+
+For 1.5.9, the selected divided-X grid icon replaces the previous four-square icon in the toolbar, popup and prepared store assets. Runtime behavior and permissions are unchanged.

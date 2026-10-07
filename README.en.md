@@ -82,6 +82,8 @@ The regular ZIP includes runtime files and all three installation guides. The We
 
 Publisher: **Junhak Kim**. Public support email: **incago@gmail.com**.
 
-Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.8** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
+Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.9** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
 
 Better X Likes is an independent extension and is not an official product of X Corp. There is no separate terms-of-service document in this project; the privacy policy is available in all three languages.
+
+Version 1.5.9 applies the selected divided-X grid icon to the toolbar, popup and prepared store artwork. The master is `design/icon-concepts/01-cross-grid-master.png`. Run `python3 tools/make_icons.py` with Pillow installed to rebuild the 16/32/48/128px icons.

@@ -80,6 +80,8 @@ python3 tools/package.py --store
 
 提供者: **Junhak Kim**。公開サポートメール: **incago@gmail.com**。
 
-**1.4.1**は2026年10月7日に、審査承認後の自動公開を選んで提出しました。ユーザーの希望により現在の審査を維持し、改善版は後日提出します。**1.5.8はローカルで準備した未提出のバージョンです。** [日本語の提出案内](store/publish-guide-ja.txt)、[日本語のストア説明](store/listing-ja.txt)、[提出状態](store/submission-status.json)を参照してください。
+**1.4.1**は2026年10月7日に、審査承認後の自動公開を選んで提出しました。ユーザーの希望により現在の審査を維持し、改善版は後日提出します。**1.5.9はローカルで準備した未提出のバージョンです。** [日本語の提出案内](store/publish-guide-ja.txt)、[日本語のストア説明](store/listing-ja.txt)、[提出状態](store/submission-status.json)を参照してください。
 
 Better X Likesは独立した拡張機能であり、X Corp.の公式製品ではありません。このプロジェクトには別途の利用規約文書はありません。プライバシーポリシーは3言語で提供します。
+
+1.5.9では、選択された1番のXグリッドアイコンをツールバー、ポップアップ、準備中のストア画像に適用しました。原本は `design/icon-concepts/01-cross-grid-master.png` です。Pillowを導入したPythonで `python3 tools/make_icons.py` を実行すると16/32/48/128pxのアイコンを再生成できます。
