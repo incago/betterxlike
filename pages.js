@@ -1,7 +1,7 @@
 /* Shared only by the isolated content script and extension popup. */
 (() => {
   "use strict";
-  const defaults = Object.freeze({ home: "grid", search: "grid", profile: "grid", bookmarks: "grid", likes: "grid" });
+  const defaults = Object.freeze({ home: "native", search: "native", profile: "native", bookmarks: "grid", likes: "grid" });
   const reserved = new Set(["i", "home", "search", "explore", "notifications", "messages", "settings",
     "compose", "login", "logout", "signup", "account", "tos", "privacy", "grok", "premium",
     "communities", "jobs", "about", "download", "intent", "share", "help", "oauth"]);
@@ -16,7 +16,7 @@
   }
   function normalize(value) {
     return Object.fromEntries(Object.entries(defaults).map(([key, fallback]) =>
-      [key, value?.[key] === "native" ? "native" : fallback]));
+      [key, ["native", "grid"].includes(value?.[key]) ? value[key] : fallback]));
   }
   globalThis.BxlPages = Object.freeze({ defaults, pageType, normalize });
 })();

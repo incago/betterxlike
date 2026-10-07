@@ -1,4 +1,4 @@
-Better X Likes 1.5.3 — review instructions
+Better X Likes 1.5.4 — review instructions
 Publisher: Junhak Kim
 Contact: incago@gmail.com
 
@@ -15,7 +15,7 @@ Steps
 5. Scroll down far enough to load more than the initial items; scroll back up and verify card positions.
 6. Videos in the grid should remain paused until the user clicks the corresponding player control or activates it by keyboard. Pause a manually played video and scroll; it should not repeatedly restart automatically.
 7. Open the extension popup and switch the grid off. The original X list/sidebar/video behavior should return. Turn it back on.
-8. Verify home, search results and profile tweet timelines also use grids. Set each page to native in the popup and verify only that page returns to X layout/sidebar/video behavior. Post detail, messages, notifications and explore remain native.
+8. On a new installation without saved page preferences, home, search and profiles start with the default list; bookmarks and likes start with grids. Choose Grid for home, search and profile in the popup and verify the grids work. Set each page to native and verify only that page returns to X layout/sidebar/video behavior. Updating preserves saved Grid/Default choices. Post detail, messages, notifications and explore remain native.
 
 9. Check the popup in Korean, English and Japanese Chrome. Labels, status/errors and the extension description follow Chrome’s UI locale, with English as the fallback. The underlying stored preference keys are unchanged.
 10. On home, wait for Show posts to appear and click it. The new first row must be reachable at the top, with no cards above the scroll origin. Scroll down and back, repeat after resizing, and refresh in Default list before re-enabling Grid.

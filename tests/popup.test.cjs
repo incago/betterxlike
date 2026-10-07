@@ -43,6 +43,14 @@ test("popup reads settings and persists a toggle", (t) => {
   const page = setup(); t.after(page.close);
   assert.equal(page.toggle.checked, true);
   assert.equal(page.toggle.disabled, false);
+  for (const key of ['home', 'search', 'profile']) {
+    assert.equal(page.window.document.querySelector(`#mode-${key}`).value, 'native');
+  }
+  for (const key of ['bookmarks', 'likes']) {
+    assert.equal(page.window.document.querySelector(`#mode-${key}`).value, 'grid');
+  }
+  assert.match(page.status.textContent, /2개 화면/);
+  assert.equal(page.writes.length, 0);
   page.toggle.click();
   assert.equal(page.writes.length, 1);
   assert.equal(page.writes[0].enabled, false);
@@ -70,13 +78,13 @@ test("failed reads leave the toggle disabled", (t) => {
 });
 
 test("page options read partial saved preferences, persist independently, and leave the master setting intact", t => {
-  const page = setup({ pageModes: { home: "native", profile: "native" } }); t.after(page.close);
+  const page = setup({ pageModes: { home: "grid", profile: "native" } }); t.after(page.close);
   const select = page.window.document.querySelector('#mode-search');
-  assert.equal(page.window.document.querySelector('#mode-home').value, "native");
+  assert.equal(page.window.document.querySelector('#mode-home').value, "grid");
   assert.equal(page.window.document.querySelector('#mode-likes').value, "grid");
   select.value = "native"; select.dispatchEvent(new page.window.Event("change"));
   assert.equal(page.writes[0].pageModes.search, "native");
-  assert.equal(page.writes[0].pageModes.home, "native");
+  assert.equal(page.writes[0].pageModes.home, "grid");
   assert.equal(page.writes[0].pageModes.likes, "grid");
   assert.equal("enabled" in page.writes[0], false);
   assert.equal(page.toggle.checked, true);
@@ -102,7 +110,7 @@ test("English popup localizes every visible label, preserves settings, and forma
   assert.equal(doc.querySelector('label[for="mode-search"] span').textContent, "Search results");
   assert.equal(doc.querySelector('#mode-home').value, "native");
   assert.equal(doc.querySelector('#mode-home option[value="native"]').textContent, "Default list");
-  assert.match(page.status.textContent, /4 pages/);
+  assert.match(page.status.textContent, /2 pages/);
   assert.equal(/[가-힣]/.test(doc.body.textContent), false);
   for (const element of doc.querySelectorAll('[data-i18n]')) assert.ok(element.textContent.trim());
   for (const key of ['search', 'profile', 'bookmarks']) {
@@ -124,10 +132,10 @@ test("English errors and unsupported browser languages fall back to English", t 
   assert.equal(write.toggle.checked, true);
   const fallback = setup({ locale: "fr" }); t.after(fallback.close);
   assert.equal(fallback.window.document.documentElement.lang, "en");
-  assert.match(fallback.status.textContent, /5 pages/);
+  assert.match(fallback.status.textContent, /2 pages/);
   const ko = setup({ locale: "ko-KR" }); t.after(ko.close);
   assert.equal(ko.window.document.documentElement.lang, "ko");
-  assert.match(ko.status.textContent, /5개 화면/);
+  assert.match(ko.status.textContent, /2개 화면/);
 });
 
 test("all three catalogs cover popup and manifest messages, including count placeholders", () => {
@@ -157,7 +165,7 @@ test("Japanese popup translates labels and counts while preserving and saving pa
   assert.equal(doc.querySelector('#mode-home').value, "native");
   assert.equal(doc.querySelector('#mode-home option[value="native"]').textContent, "標準の一覧");
   assert.equal(doc.querySelector('[data-i18n="openBookmarks"]').textContent, "自分のブックマークを開く");
-  assert.match(page.status.textContent, /4つの画面/);
+  assert.match(page.status.textContent, /2つの画面/);
   assert.equal(/[가-힣]/.test(doc.body.textContent), false);
   for (const element of doc.querySelectorAll('[data-i18n]')) assert.ok(element.textContent.trim());
   for (const key of ['search', 'profile', 'bookmarks']) {

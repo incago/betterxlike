@@ -127,6 +127,12 @@
       enabled = value;
       storageListeners.forEach(listener => listener({ enabled: { newValue: value } }, 'local'));
     }
+    function enableTestGrids() {
+      // Browser QA explicitly opts in; normal previews use production defaults.
+      pageModes = Object.fromEntries(Object.keys(BxlPages.defaults).map(key => [key, 'grid']));
+      storageListeners.forEach(listener => listener({ pageModes: { newValue: pageModes } }, 'local'));
+      setEnabled(true);
+    }
     function navigate(route) {
       history.pushState({}, '', route);
       dispatchEvent(new PopStateEvent('popstate'));
@@ -159,7 +165,7 @@
       const results = [];
       const initialRoute = location.pathname;
       function check(name, condition) { results.push({ name, pass: Boolean(condition) }); }
-      setEnabled(true); await settle();
+      enableTestGrids(); await settle();
       const grid = document.querySelector('[data-bxl-grid]');
       const cells = [...grid.children];
       const width = grid.getBoundingClientRect().width;
@@ -286,7 +292,7 @@
       runRefresh.onclick = async () => {
         const results = [];
         const check = (name, pass) => results.push({ name, pass: Boolean(pass) });
-        setEnabled(true);
+        enableTestGrids();
         for (let i = 0; i < 4; i++) await settle();
         const columns = Number(grid.style.getPropertyValue('--bxl-columns'));
         for (const amount of [1, 3, 35]) {
@@ -310,7 +316,7 @@
         for (let i = 0; i < 4; i++) await settle();
         prependPosts(3);
         for (let i = 0; i < 4; i++) await settle();
-        setEnabled(true);
+        enableTestGrids();
         for (let i = 0; i < 6; i++) await settle();
         check('refresh while disabled then enable starts at zero', mounted.get(source[0])?.dataset.bxlIndex === '0');
         check('page reaches scroll origin', scrollY === 0);
@@ -322,7 +328,7 @@
         document.querySelector('#checks').textContent = '가상 스크롤 검증 중…';
         const results = [];
         const check = (name, pass) => results.push({ name, pass: Boolean(pass) });
-        setEnabled(true);
+        enableTestGrids();
         for (let i = 0; i < 4; i++) await settle();
         check('initial source page had seven tweets', pages >= 1);
         check('uses the native virtual-slot layout', grid.dataset.bxlLayout === 'virtual');

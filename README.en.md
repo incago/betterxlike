@@ -17,6 +17,8 @@ The popup and extension description support Korean, English and Japanese. Chrome
 
 Pin the extension to the toolbar to reach its popup. The **Enable grid** master switch disables all grids without losing your per-page choices. Changes apply to open X tabs and are saved locally in this browser.
 
+From version 1.5.4, new installations or missing page preferences default to **Grid for bookmarks and likes** and **Default list for home, search and profiles**. Saved page choices remain unchanged after updating. All 59 automated tests passed, including defaults, saved preferences and switching to grids.
+
 ## Supported pages and behavior
 
 - Home: `/home`.
@@ -72,6 +74,6 @@ The regular ZIP includes runtime files and all three installation guides. The We
 
 Publisher: **Junhak Kim**. Public support email: **incago@gmail.com**.
 
-Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.3** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
+Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.4** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
 
 Better X Likes is an independent extension and is not an official product of X Corp. There is no separate terms-of-service document in this project; the privacy policy is available in all three languages.

@@ -5,7 +5,7 @@ Listing language: English
 Visibility: Public
 Price: Free
 Category: Productivity > Tools
-Prepared for version: 1.5.3 (not yet submitted)
+Prepared for version: 1.5.4 (not yet submitted)
 
 Short description
 View X home, search, profiles, bookmarks and likes in a 1–4 column grid, with a default layout option for each page.
@@ -20,6 +20,7 @@ Better X Likes turns long vertical timelines into grids that fit your browser wi
 • Hide the right search, trends and suggested follows sidebar on pages set to Grid, giving posts more room.
 • Stop automatic video playback in grids. Play a video by clicking its player control or using the keyboard.
 • Choose Grid or Default list separately for each page in the extension popup. A master switch can disable all grids while keeping your choices.
+• New installations use grids for bookmarks and likes; home, search and profiles start with the default list. Saved choices are preserved.
 • Use X’s existing light or dark theme.
 • Use the popup in Korean, English or Japanese. Its language follows Chrome’s interface language; other languages fall back to English.
 

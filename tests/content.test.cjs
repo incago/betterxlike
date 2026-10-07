@@ -278,7 +278,7 @@ test("indices and columns survive offscreen unmounting and remounting", async (t
 });
 
 test("home refresh prepends start at column zero and reindex cached offscreen posts", async t => {
-  const page = setup("https://x.com/home"); t.after(page.close); await page.settle();
+  const page = setup("https://x.com/home", true, false, { home: "grid" }); t.after(page.close); await page.settle();
   const grid = page.document.querySelector('#timeline');
   const old = [...grid.querySelectorAll('[data-bxl-cell="tweet"]')];
   old[4].remove(); // Its order must move too, even while X has it unmounted.
@@ -307,7 +307,7 @@ test("home refresh prepends start at column zero and reindex cached offscreen po
 });
 
 test("home refresh replacing the same native timeline resets order and obsolete heights", async t => {
-  const page = setup("https://x.com/home"); t.after(page.close);
+  const page = setup("https://x.com/home", true, false, { home: "grid" }); t.after(page.close);
   const grid = page.document.querySelector('#timeline');
   grid.firstElementChild.firstElementChild.getBoundingClientRect = () => ({ height: 1200 });
   await page.settle();
@@ -325,7 +325,7 @@ test("home refresh replacing the same native timeline resets order and obsolete 
 });
 
 test("a cropped home timeline with an existing post at native origin starts a new first row", async t => {
-  const page = setup("https://x.com/home"); t.after(page.close); await page.settle();
+  const page = setup("https://x.com/home", true, false, { home: "grid" }); t.after(page.close); await page.settle();
   const grid = page.document.querySelector('#timeline');
   const cells = [...grid.querySelectorAll('[data-bxl-cell="tweet"]')];
   cells.slice(0, 2).forEach(cell => cell.remove());
@@ -447,6 +447,10 @@ test("home, search queries, and profile tweet tabs share the responsive grid wit
     const header = page.document.createElement("h1"); header.textContent = "Profile / composer / search header"; primary.prepend(header);
     const original = page.document.querySelector("article");
     await page.settle();
+    assert.equal(page.document.querySelector('[data-bxl-grid]'), null, route);
+    assert.notEqual(page.window.getComputedStyle(page.document.querySelector('[data-testid="sidebarColumn"]')).display, 'none');
+    page.setModes({ home: 'grid', search: 'grid', profile: 'grid' });
+    await page.settle();
     assert.equal(page.document.querySelectorAll('[data-bxl-cell="tweet"]').length, 5, route);
     assert.equal(header.parentElement, primary);
     assert.ok(!header.hasAttribute("data-bxl-card"));
@@ -456,7 +460,7 @@ test("home, search queries, and profile tweet tabs share the responsive grid wit
 });
 
 test("native settings affect only the chosen page and survive route changes", async t => {
-  const modes = { home: "native", profile: "native", bookmarks: "native" };
+  const modes = { home: "native", search: "grid", profile: "native", bookmarks: "native" };
   const page = setup("https://x.com/home", true, false, modes); t.after(page.close);
   for (const route of ["/home", "/incago", "/incago/with_replies", "/i/history"]) {
     page.navigate(route); await page.settle();
@@ -470,7 +474,7 @@ test("native settings affect only the chosen page and survive route changes", as
 });
 
 test("changing a page setting immediately restores and reapplies native layout on open tabs", async t => {
-  const page = setup("https://x.com/search?q=cookie"); t.after(page.close); await page.settle();
+  const page = setup("https://x.com/search?q=cookie", true, false, { search: "grid" }); t.after(page.close); await page.settle();
   const article = page.document.querySelector("article");
   const cell = article.closest('[data-testid="cellInnerDiv"]');
   const nativeStyle = cell.style.transform;
@@ -481,6 +485,8 @@ test("changing a page setting immediately restores and reapplies native layout o
   assert.equal(page.document.documentElement.hasAttribute("data-bxl-path"), false);
   assert.equal(cell.style.transform, nativeStyle);
   page.setModes(undefined); await page.settle();
+  assert.equal(page.document.querySelector("[data-bxl-grid]"), null);
+  page.setModes({ search: "grid" }); await page.settle();
   assert.ok(page.document.querySelector("[data-bxl-grid]"));
   assert.equal(page.document.querySelector("article"), article);
 });
@@ -494,7 +500,7 @@ test("master disable still wins over all page defaults and new settings", async 
 });
 
 test("people-only search and empty profiles retain their layout until tweets arrive", async t => {
-  const page = setup("https://x.com/search?q=cookie&f=user"); t.after(page.close);
+  const page = setup("https://x.com/search?q=cookie&f=user", true, false, { search: "grid" }); t.after(page.close);
   const timeline = page.document.querySelector("#timeline"); timeline.replaceChildren();
   await page.settle();
   assert.equal(page.document.documentElement.hasAttribute("data-bxl-active"), false);
@@ -506,7 +512,7 @@ test("people-only search and empty profiles retain their layout until tweets arr
 });
 
 test("search query navigation resets virtual ordering even when the pathname stays the same", async t => {
-  const page = setup("https://x.com/search?q=first"); t.after(page.close); await page.settle();
+  const page = setup("https://x.com/search?q=first", true, false, { search: "grid" }); t.after(page.close); await page.settle();
   page.navigate("/search?q=second");
   const timeline = page.document.querySelector("#timeline"); timeline.innerHTML = tweet(90) + tweet(91);
   await page.settle();
