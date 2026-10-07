@@ -298,6 +298,24 @@
       const offset = position => Array.from({ length: position }, (_, index) => height(source[index])).reduce((a, b) => a + b, 0);
       const total = () => offset(loaded);
       const rootTop = () => grid.getBoundingClientRect().top + scrollY;
+      async function waitNativeLayout() {
+        // ResizeObserver can mount another window after the extension's last
+        // frame. Wait for measured geometry to settle, not a fixed frame count.
+        let previous = '';
+        let stable = 0;
+        for (let frame = 0; frame < 120; frame++) {
+          await settle();
+          const cells = [...mounted];
+          const ready = cells.every(([id, cell]) => id < 0 || cell.hasAttribute('data-bxl-index'));
+          const geometry = JSON.stringify(cells.map(([id, cell]) =>
+            [id, cell.dataset.bxlIndex, cell.style.transform, cell.getBoundingClientRect().height]));
+          if (ready && geometry === previous) {
+            if (++stable === 3) return;
+          } else stable = 0;
+          previous = geometry;
+        }
+        throw new Error(`Native preview layout did not settle: ${previous}`);
+      }
       function queueNative() { if (!renderFrame) renderFrame = requestAnimationFrame(renderNative); }
       const nativeResize = new ResizeObserver(entries => {
         let changed = false;
@@ -374,11 +392,11 @@
         const results = [];
         const check = (name, pass) => results.push({ name, pass: Boolean(pass) });
         enableTestGrids();
-        for (let i = 0; i < 4; i++) await settle();
+        await waitNativeLayout();
         const columns = Number(grid.style.getPropertyValue('--bxl-columns'));
         for (const amount of [1, 3, 35]) {
           prependPosts(amount);
-          for (let i = 0; i < 6; i++) await settle();
+          await waitNativeLayout();
           const first = mounted.get(source[0]);
           const firstCard = first?.firstElementChild;
           const firstRow = source.slice(0, columns).map(id => mounted.get(id)?.firstElementChild);
@@ -388,9 +406,9 @@
           check(`${amount} new posts: first row aligned`, firstRow.every(card => card && Math.abs(card.getBoundingClientRect().top - firstCard.getBoundingClientRect().top) < 2));
           check(`${amount} new posts: indices nonnegative`, [...mounted.values()].every(cell => Number(cell.dataset.bxlIndex) >= 0));
           scrollTo(0, document.scrollingElement.scrollHeight);
-          for (let i = 0; i < 6; i++) await settle();
+          await waitNativeLayout();
           scrollTo(0, 0);
-          for (let i = 0; i < 6; i++) await settle();
+          await waitNativeLayout();
           check(`${amount} new posts: first returns after scrolling`, mounted.get(source[0])?.dataset.bxlIndex === '0');
         }
         setEnabled(false);
@@ -398,7 +416,7 @@
         prependPosts(3);
         for (let i = 0; i < 4; i++) await settle();
         enableTestGrids();
-        for (let i = 0; i < 6; i++) await settle();
+        await waitNativeLayout();
         check('refresh while disabled then enable starts at zero', mounted.get(source[0])?.dataset.bxlIndex === '0');
         check('page reaches scroll origin', scrollY === 0);
         check('no inner vertical scroller', document.querySelector('[data-bxl-primary]').scrollHeight <= document.querySelector('[data-bxl-primary]').clientHeight + 1);
