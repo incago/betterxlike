@@ -1,0 +1,51 @@
+{
+  "checkedOn": "2026-10-07",
+  "name": "Better X Likes",
+  "version": "1.4.1",
+  "itemId": "kjdnnlmbnnncchgmogmagocekbikahpf",
+  "dashboardUrl": "https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing",
+  "privacyPolicyUrl": "https://incago.github.io/better-x-likes-privacy/",
+  "status": "pendingReview",
+  "saved": [
+    "package",
+    "listing",
+    "icon",
+    "screenshot",
+    "smallPromotionalTile",
+    "privacyPractices",
+    "publicFreeAllRegions",
+    "reviewInstructions",
+    "publisherDisplayName"
+  ],
+  "blocker": null,
+  "contactEmail": "incago@gmail.com",
+  "contactVerificationEmailRequested": true,
+  "contactEmailVerified": true,
+  "submittedForReview": true,
+  "autoPublishAfterApproval": true,
+  "published": false,
+  "preparedUpdate": {
+    "version": "1.5.2",
+    "package": "better-x-likes-1.5.2-webstore.zip",
+    "status": "deferredByUser",
+    "submittedForReview": false,
+    "languages": [
+      "ko",
+      "en",
+      "ja"
+    ],
+    "reason": "User chose to preserve the pending 1.4.1 review and submit the improved version later."
+  },
+  "privacyPolicyEnglishUrl": "https://incago.github.io/better-x-likes-privacy/en.html",
+  "privacyPolicyUpdate": {
+    "languages": [
+      "ko",
+      "en",
+      "ja"
+    ],
+    "published": true,
+    "commit": "bbd0b667a0d1ca6368253652038ab642170bd693",
+    "verifiedOn": "2026-10-07"
+  },
+  "privacyPolicyJapaneseUrl": "https://incago.github.io/better-x-likes-privacy/ja.html"
+}

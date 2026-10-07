@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Better X Likes — Privacy Policy</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, -apple-system, sans-serif; color: #172b36; background: #f5f8fa; }
+    body { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; line-height: 1.8; }
+    h1 { font-size: 30px; line-height: 1.3; } h2 { font-size: 20px; margin-top: 32px; }
+    a { color: #087d70; } .meta { color: #566a77; } .note { padding: 20px; border-radius: 12px; background: #e0f3ee; }
+  </style>
+</head>
+<body>
+  <nav aria-label="Policy language"><a href="index.html" lang="ko" hreflang="ko">한국어</a> · <span aria-current="page">English</span> · <a href="ja.html" lang="ja" hreflang="ja">日本語</a></nav>
+  <h1>Better X Likes Privacy Policy</h1>
+  <p class="meta">Publisher: Junhak Kim<br>Last updated: October 7, 2026<br>Contact: <a href="mailto:incago@gmail.com">incago@gmail.com</a></p>
+  <p class="note">Better X Likes displays X post timelines in a grid. Versions up to 1.4.1 support bookmarks and likes; versions from 1.5.0 also support home, search results and profile timelines, with a default layout option for each page. Version 1.5.1 adds Korean and English interface support; version 1.5.2 adds Japanese. Information needed for layout and video control is processed in the user's browser. The extension does not send it to the developer or third-party servers.</p>
+  <h2>1. Information processed on your device</h2>
+  <p>The extension checks the path and query parameters of the currently open x.com or twitter.com page to identify supported pages. It temporarily processes rendered post elements, post links and IDs, card dimensions and order in memory to arrange posts. To prevent autoplay and allow playback requested by the user, it processes video elements and clicks or Enter/Space input within the corresponding player.</p>
+  <p>This information is not used to create a separate browsing history or post archive. Post data and playback input are not recorded in extension storage or received or viewed by the developer. Typed keyboard text is not recorded.</p>
+  <p>Chrome's interface language is used locally to choose the Korean, English or Japanese interface. Unsupported languages fall back to English. The extension does not save or transmit a separate language preference.</p>
+  <h2>2. Settings saved in your browser</h2>
+  <p>The extension saves the master grid switch (<code>enabled</code>) and, from version 1.5.0, per-page layout preferences (<code>pageModes</code>) in <code>chrome.storage.local</code>. These settings preserve your choices in the same browser and apply changes to open X tabs. The extension does not synchronize settings to its own server.</p>
+  <h2>3. Permissions and scope</h2>
+  <p>The <code>storage</code> permission is used to save these settings. Content scripts detect navigation on x.com and twitter.com. Layout changes apply to supported post timelines when Grid is enabled for that page. Selecting Default list or turning off the master switch restores X's native layout and video behavior. The extension does not access other websites or use Chrome's full browsing history API.</p>
+  <h2>4. Transmission, sharing and limited use</h2>
+  <p>The extension contains no requests that send user data externally, advertising SDKs, analytics or tracking code. It does not sell or transfer user data to third parties, or use it for advertising, creditworthiness or lending decisions. Information processing is limited to the user-visible post grid and video playback control features and complies with the Chrome Web Store User Data Policy's Limited Use requirements.</p>
+  <p>Communication performed by X for sign-in, displaying posts and streaming video is part of X's own service. The extension does not ask for X login credentials or authentication cookies. X's handling of information is governed by X's privacy policy.</p>
+  <h2>5. Retention and deletion</h2>
+  <p>Card IDs, dimensions and playback control state are processed only in page memory and are not permanently stored. Closing the tab or reloading the document clears that state. You can change the saved master switch and per-page layout preferences in the popup. Removing the extension also removes its local storage. X manages your account's bookmarks and likes; removing this extension does not delete them.</p>
+  <h2>6. Contact and changes</h2>
+  <p>Send questions to <a href="mailto:incago@gmail.com">incago@gmail.com</a>. If you contact the publisher directly, the email address and message you send may be read to respond to your inquiry. Do not send sensitive information or login passwords. Changes to features or data handling will be reflected in this policy and its last updated date.</p>
+  <p>Better X Likes is an independent extension provided by Junhak Kim. It is not an official product of X Corp.</p>
+</body>
+</html>

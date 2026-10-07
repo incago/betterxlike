@@ -1,0 +1,13 @@
+{
+  "name": "better-x-likes",
+  "version": "1.5.2",
+  "private": true,
+  "description": "Responsive one-to-four-column grids for X home, search, profiles, bookmarks and likes, with Korean, English and Japanese support.",
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "preview": "node tests/preview-server.cjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}

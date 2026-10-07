@@ -1,0 +1,31 @@
+:root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+* { box-sizing: border-box; }
+body { width: 340px; margin: 0; padding: 16px; color: #edf3f7; background: #0e141b; }
+header { display: flex; align-items: center; gap: 12px; }
+h1 { font-size: 18px; margin: 0 0 5px; letter-spacing: -.5px; }
+header p { margin: 0; color: #91a2af; font-size: 12px; }
+.setting { margin-top: 18px; position: relative; display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 16px; border: 1px solid #293745; border-radius: 12px; }
+.setting strong { display: block; font-size: 14px; margin-bottom: 5px; }
+.setting div > span { color: #91a2af; font-size: 12px; }
+.setting input { position: absolute; right: 16px; width: 40px; height: 24px; opacity: 0; }
+.switch { display: block; width: 40px; height: 24px; background: #415160; border-radius: 24px; transition: background .15s; }
+.switch::after { content: ""; display: block; width: 18px; height: 18px; margin: 3px; background: #fff; border-radius: 50%; transition: transform .15s; }
+input:checked + .switch { background: #36bfa3; }
+input:checked + .switch::after { transform: translateX(16px); }
+input:focus-visible + .switch { outline: 2px solid #7fe9d0; outline-offset: 4px; }
+input:disabled + .switch { opacity: .5; }
+#status { margin: 12px 0 20px; min-height: 32px; line-height: 1.6; color: #91a2af; font-size: 12px; }
+fieldset { margin: 18px 0 0; padding: 0; border: none; }
+legend { font-size: 12px; color: #91a2af; margin-bottom: 8px; }
+fieldset label { display: flex; justify-content: space-between; align-items: center; min-height: 38px; border-bottom: 1px solid #293745; font-size: 13px; }
+select { font: inherit; background: #18232e; color: #edf3f7; border: 1px solid #415160; border-radius: 6px; padding: 5px 8px; }
+select:focus-visible { outline: 2px solid #7fe9d0; outline-offset: 2px; }
+fieldset:disabled { opacity: .6; }
+footer { line-height: 1.6; }
+.open-likes { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: #46d4b6; border-radius: 10px; text-decoration: none; color: #09201b; font-size: 13px; font-weight: 700; }
+.open-likes:hover { background: #6ee2c9; }
+.open-likes + .open-likes { margin-top: 8px; }
+.open-likes:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+footer { margin-top: 10px; text-align: center; font-size: 11px; color: #80929f; }
+html:lang(ja) .setting { margin-top: 12px; padding: 10px 16px; }
+@media (prefers-reduced-motion: reduce) { .switch, .switch::after { transition: none; } }

@@ -1,0 +1,77 @@
+{
+  "extensionName": {
+    "message": "Better X Likes"
+  },
+  "extensionDescription": {
+    "message": "View X home, search, profiles, bookmarks and likes in a 1–4 column grid, with a default layout option for each page."
+  },
+  "popupTagline": {
+    "message": "Browse X posts at a glance."
+  },
+  "gridEnabled": {
+    "message": "Enable grid"
+  },
+  "masterHint": {
+    "message": "Master switch for all pages"
+  },
+  "pageSettings": {
+    "message": "Layout by page"
+  },
+  "pageHome": {
+    "message": "Home"
+  },
+  "pageSearch": {
+    "message": "Search results"
+  },
+  "pageProfile": {
+    "message": "Profiles"
+  },
+  "pageBookmarks": {
+    "message": "Bookmarks"
+  },
+  "pageLikes": {
+    "message": "Likes"
+  },
+  "layoutGrid": {
+    "message": "Grid"
+  },
+  "layoutNative": {
+    "message": "Default list"
+  },
+  "statusLoading": {
+    "message": "Loading settings…"
+  },
+  "statusGridOne": {
+    "message": "Grid enabled on 1 page. Other pages use X’s default layout."
+  },
+  "statusGrid": {
+    "message": "Grid enabled on $COUNT$ pages. Other pages use X’s default layout.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "statusNative": {
+    "message": "All pages use X’s default layout."
+  },
+  "statusSaveError": {
+    "message": "Could not save settings. Please try again."
+  },
+  "statusLoadError": {
+    "message": "Could not load settings. Please reopen the popup."
+  },
+  "openBookmarks": {
+    "message": "Open my bookmarks"
+  },
+  "openLikes": {
+    "message": "Open my likes"
+  },
+  "gridSummary": {
+    "message": "Grid: 1–4 columns · No sidebar · Click to play"
+  },
+  "profileHint": {
+    "message": "Applies to your profile and other profiles"
+  }
+}

@@ -1,0 +1,41 @@
+Chrome Web Store Privacy practices 입력용
+게시자: Junhak Kim
+지원 이메일: incago@gmail.com
+
+Single purpose description
+Make X posts on home, search, profiles, bookmarks and likes easier to review in a responsive 1–4 column grid with a hidden right sidebar and manual video playback. Users can choose grid or native layout per page and toggle all grids off.
+
+storage permission justification
+Save enabled (the master switch) and pageModes (five grid/native layout preferences) in chrome.storage.local. No post content, tweet IDs, browsing history or video interaction data is persisted. chrome.storage.onChanged applies preference changes to open X tabs.
+
+Host access / content script match justification
+Content scripts run only on https://x.com/* and https://twitter.com/* to follow SPA navigation. Layout/video changes activate on /home, /search, profile tweet routes, /i/history, /i/history/likes and /i/bookmarks only when that page is set to grid and contains a tweet timeline. Current pathname/query, rendered post elements/status links, dimensions and player gestures are processed locally for this feature. No other websites or browser history API are accessed. Native behavior remains on unsupported routes, per-page native mode and when the master switch is off.
+
+MAIN world explanation (reviewer notes)
+video-play.js runs in MAIN at document_start to intercept X's native media play() calls before autoplay can start, avoiding a repeated play/pause feedback loop. It passes through calls outside active, configured tweet grids. Short-lived DOM attributes carry only the user's local player gesture authorization from the isolated content script. It has no extension API access, no messaging channel that grants privileged operations, and no network requests. All code is bundled in the extension ZIP.
+
+Localization
+Chrome’s UI language is read locally to select Korean, English or Japanese messages; unsupported locales fall back to English. No language preference is persisted. The popup uses chrome.i18n and bundled _locales catalogs; this does not add permissions or remote translation requests.
+
+Remote code
+No, I am not using remote code.
+
+Data usage disclosures
+Declare the data processed locally as well as the absence of external transmission. The current code handles:
+- Website content: rendered post elements/status links/video elements, used locally for layout and video control. Tweet IDs and dimensions are held temporarily in page memory.
+- Web history / browsing activity: only the current X page pathname/query, used locally to recognize supported routes; the browsing history API is not used and no history log is stored.
+- User activity: local video player clicks and Enter/Space gestures, used to allow explicitly requested playback. Keyboard text is not stored or transmitted.
+Other categories such as authentication information, financial/health data, location, and personal communications are not intentionally collected for this feature. Do not declare these as collected by the extension. The extension does not ask for passwords or access authentication cookies.
+
+The extension does not sell or transfer user data to third parties. Data handling is limited to the single-purpose, user-visible feature. It does not use or transfer data for advertising, creditworthiness, or lending. Confirm the corresponding certification statements in the dashboard if they still match the final code and policy.
+
+Privacy policy URL
+https://incago.github.io/better-x-likes-privacy/
+English: https://incago.github.io/better-x-likes-privacy/en.html
+Japanese: https://incago.github.io/better-x-likes-privacy/ja.html
+All three language versions are published on GitHub Pages and verified accessible on 2026-10-07. Use this exact HTTPS URL in the dashboard.
+
+Reference (checked 2026-10-07)
+https://developer.chrome.com/docs/webstore/cws-dashboard-privacy
+https://developer.chrome.com/docs/webstore/program-policies/user-data-faq
+Google's FAQ requires disclosure even when user data is processed only locally. Do not make the blanket claim “this extension never reads or handles any user data.”

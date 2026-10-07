@@ -1,0 +1,77 @@
+{
+  "extensionName": {
+    "message": "Better X Likes"
+  },
+  "extensionDescription": {
+    "message": "X의 홈·검색·프로필·북마크·마음에 들어요를 1~4열 그리드로 표시하고, 화면별로 기본 목록을 선택할 수 있습니다."
+  },
+  "popupTagline": {
+    "message": "X의 게시물을 한눈에."
+  },
+  "gridEnabled": {
+    "message": "그리드 사용"
+  },
+  "masterHint": {
+    "message": "모든 화면 설정의 전체 스위치"
+  },
+  "pageSettings": {
+    "message": "화면별 보기"
+  },
+  "pageHome": {
+    "message": "홈"
+  },
+  "pageSearch": {
+    "message": "검색 결과"
+  },
+  "pageProfile": {
+    "message": "프로필"
+  },
+  "pageBookmarks": {
+    "message": "북마크"
+  },
+  "pageLikes": {
+    "message": "마음에 들어요"
+  },
+  "layoutGrid": {
+    "message": "그리드"
+  },
+  "layoutNative": {
+    "message": "기본 목록"
+  },
+  "statusLoading": {
+    "message": "설정을 불러오는 중…"
+  },
+  "statusGridOne": {
+    "message": "1개 화면에 그리드를 적용합니다. 기본 목록을 선택한 화면은 X의 원래 동작을 사용합니다."
+  },
+  "statusGrid": {
+    "message": "$COUNT$개 화면에 그리드를 적용합니다. 기본 목록을 선택한 화면은 X의 원래 동작을 사용합니다.",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "statusNative": {
+    "message": "모든 화면에서 X의 기본 목록을 표시합니다."
+  },
+  "statusSaveError": {
+    "message": "설정을 저장하지 못했습니다. 다시 시도해 주세요."
+  },
+  "statusLoadError": {
+    "message": "설정을 불러오지 못했습니다. 팝업을 다시 열어 주세요."
+  },
+  "openBookmarks": {
+    "message": "내 북마크 열기"
+  },
+  "openLikes": {
+    "message": "내 마음에 들어요 열기"
+  },
+  "gridSummary": {
+    "message": "그리드: 1~4열 · 사이드바 숨김 · 영상은 직접 재생"
+  },
+  "profileHint": {
+    "message": "프로필 설정은 내 프로필과 다른 프로필에 적용"
+  }
+}

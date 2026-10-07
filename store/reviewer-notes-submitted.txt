@@ -1,0 +1,5 @@
+Saved in Chrome Web Store Test instructions (473 / 500 characters):
+
+Use your own X account with 8+ saved posts, including 2 videos. No extension account or payment is required. Install and reload X. Open x.com/i/history (or /i/bookmarks), then /i/history/likes: grid and hidden right rail. Resize: 4/3/2/1 columns. Scroll past initial posts. Videos stay paused until player click/Enter/Space; pause must persist. Popup toggle restores X layout/playback. Home/search/profile/detail stay unchanged. All code bundled; no external data transfer.
+
+No personal X username or password was submitted.

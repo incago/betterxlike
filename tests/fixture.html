@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/video-play.js"></script>
+  <title>Better X Likes · 로컬 미리보기</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0b1017; color: #e7eef5; font: 15px/1.55 -apple-system, BlinkMacSystemFont, sans-serif; }
+    .qa { padding: 16px 24px; background: #14232e; border-bottom: 1px solid #284050; }
+    .qa strong { color: #60dec0; }
+    .qa p { margin: 5px 0 12px; color: #afbdc8; font-size: 13px; }
+    button { cursor: pointer; border-radius: 7px; border: 1px solid #395464; background: #203341; color: #edf3f8; padding: 7px 11px; font: inherit; }
+    #checks { font-size: 13px; color: #60dec0; margin-left: 12px; }
+    #shell { display: flex; max-width: 1265px; margin: auto; }
+    #shell > header { flex: 0 0 90px; padding: 24px; font-size: 28px; }
+    main { flex: 1; min-width: 0; }
+    #wrapper { display: flex; max-width: 990px; }
+    [data-testid="primaryColumn"] { width: 600px; max-width: 600px; border-inline: 1px solid #253442; }
+    .heading { padding: 20px 24px; border-bottom: 1px solid #253442; }
+    .heading h1 { font-size: 21px; margin: 0; }
+    .heading p { font-size: 13px; margin: 4px 0 0; color: #8f9fab; }
+    #right-rail { width: 330px; padding: 24px; }
+    /* Reproduce the constrained, right-aligned wrappers in the reported layout. */
+    .feed-stack { display: flex; flex-direction: column; align-items: flex-end; width: 100%; }
+    .feed-align { display: flex; justify-content: flex-end; width: 1060px; max-width: 1060px; margin: 0 80px 0 auto; }
+    .feed-align > section { width: 100%; min-width: 0; }
+    .feed-inner { display: flex; flex-direction: column; align-items: flex-end; width: 100%; }
+    #timeline { position: relative; }
+    [data-testid="cellInnerDiv"] { position: relative; width: 100%; }
+    article { padding: 16px; border-bottom: 1px solid #253442; cursor: pointer; }
+    .author { display: flex; gap: 9px; align-items: center; margin-bottom: 12px; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #233b45; color: #6ee1c5; font-weight: 700; }
+    .author strong { display: block; font-size: 13px; }
+    .author small { color: #8195a6; font-size: 11px; }
+    [data-testid="tweetText"] { font-size: 14px; margin-bottom: 15px; }
+    .media { border-radius: 12px; padding: 32px 14px; background: #224138; min-height: 155px; text-align: center; display: grid; place-items: center; font-size: 25px; font-weight: 800; line-height: 1.2; letter-spacing: -.8px; }
+    .actions { display: flex; justify-content: space-between; color: #8599aa; font-size: 12px; margin-top: 14px; }
+    .actions button { background: none; border: none; color: #f088b5; padding: 0; font-size: 12px; }
+    .tag { display: inline-block; color: #64d5bf; margin-top: 12px; font-size: 12px; }
+  </style>
+  <link rel="stylesheet" href="/content.css">
+</head>
+<body>
+  <aside class="qa">
+    <strong>Better X Likes / 로컬 미리보기</strong>
+    <p>아래는 테스트용 트윗입니다. 실제 X 계정과 연결되어 있지 않습니다.</p>
+    <button id="toggle">그리드 켜기/끄기</button>
+    <button id="add">트윗 4개 추가</button>
+    <button id="theme">라이트/다크</button>
+    <button id="bookmarks">북마크</button>
+    <button id="likes">마음에 들어요</button>
+    <button id="home">홈</button>
+    <button id="search">검색</button>
+    <button id="profile">프로필</button>
+    <button id="run">브라우저 테스트</button>
+    <button id="scroll-next" hidden>아래로 스크롤</button>
+    <span id="checks" role="status"></span>
+    <span id="virtual-status" role="status"></span>
+  </aside>
+  <div id="shell">
+    <header aria-label="탐색">𝕏<br><span style="font-size:22px">⌂<br>⌕<br>♡</span></header>
+    <main><div id="wrapper">
+      <div data-testid="primaryColumn">
+        <div class="heading"><h1>좋아요</h1><p>다시 보고 싶은 순간들을 모아 두는 곳.</p></div>
+        <div class="feed-stack"><div class="feed-align"><section aria-label="Timeline: Likes"><div class="feed-inner"><div id="timeline"></div></div></section></div></div>
+      </div>
+      <aside id="right-rail" data-testid="sidebarColumn"><input data-testid="SearchBox_Search_Input" aria-label="검색"><div data-testid="trend">트렌드</div><div data-testid="UserCell">팔로우 추천</div></aside>
+    </div></main>
+  </div>
+  <script>
+    const storageListeners = [];
+    const storeDemo = new URLSearchParams(location.search).has('store');
+    if (storeDemo) {
+      document.querySelector('.qa strong').textContent = 'Better X Likes · 저장한 게시물을 한눈에';
+      document.querySelector('.qa p').textContent = '샘플 게시물 데모 · 창 너비에 맞춰 1~4열 · 우측 사이드바 숨김 · 영상은 눌러서 재생';
+      document.querySelectorAll('.qa button, .qa span').forEach(element => element.hidden = true);
+      document.body.style.overflow = 'hidden';
+    }
+    const virtualDemo = new URLSearchParams(location.search).has('virtual');
+    let enabled = localStorage.getItem('bxl-preview-enabled') !== 'false';
+    let pageModes = JSON.parse(localStorage.getItem("bxl-preview-modes") || "null");
+    window.chrome = { runtime: {}, storage: {
+      local: { get: (_, cb) => cb({ enabled, pageModes }) },
+      onChanged: { addListener: (listener) => storageListeners.push(listener) }
+    } };
+    addEventListener('storage', event => {
+      if (event.key === 'bxl-preview-modes') {
+        pageModes = JSON.parse(event.newValue || 'null');
+        storageListeners.forEach(listener => listener({ pageModes: { newValue: pageModes } }, 'local'));
+      }
+      if (event.key === 'bxl-preview-enabled') setEnabled(event.newValue !== 'false');
+    });
+    const samples = [
+      ['디자인 노트', '오늘의 작은 발견. 자주 쓰는 화면은 공간을 조금만 바꿔도 훨씬 편해진다.', 'LESS, BUT<br>BETTER.', '#224138'],
+      ['주말 산책', '걷다가 만난 오후의 빛. 다음 주말에도 이 길을 걸어야겠다.', 'AFTERNOON<br>WALK ☀', '#3c3a52'],
+      ['개발 메모', '나중에 다시 볼 코드 팁을 모아 두기. 이해하기 좋은 코드는 좋은 이름에서 시작한다.', '{ small ideas }', '#213d58'],
+      ['오늘의 문장', '좋은 문장을 다시 읽는 일. 기록은 미래의 나에게 보내는 작은 선물이다.', 'KEEP WHAT<br>YOU LOVE. ♡', '#503b36'],
+      ['작업실', '작업을 시작하기 전에 책상을 정리하는 5분. 오늘도 천천히, 꾸준히.', 'MAKE<br>SOMETHING.', '#393f30'],
+      ['사진 일기', '저녁의 하늘은 매일 다른 색이다. 오늘은 기억하고 싶은 색이 있었다.', 'BLUE HOUR', '#273956'],
+      ['읽는 시간', '좋아하는 글을 저장하는 이유. 다시 읽을 때 전에는 보이지 않던 부분이 보인다.', 'READ. SAVE.<br>RETURN.', '#3e3050'],
+      ['작은 취향', '다시 보고 싶은 것들을 한눈에. 다음 아이디어는 이 작은 모음에서 시작될지도.', 'A LITTLE<br>COLLECTION.', '#23413f']
+    ];
+    let count = 0;
+    let nativeClicks = 0;
+    function makeTweet(id) {
+        const [name, text, media, color] = samples[id % samples.length];
+        const cell = document.createElement('div');
+        cell.dataset.testid = 'cellInnerDiv';
+        cell.innerHTML = `<div><article data-testid="tweet"><div class="author"><span class="avatar">${name[0]}</span><div><strong>${name}</strong><a href="/writer/status/${id + 1}"><small>@sample_${id + 1} · <time>10월 7일</time></small></a></div></div><div data-testid="tweetText">${text}</div><div class="media" style="background:${color}">${media}</div><div class="actions"><span>↩ 12</span><span>↻ 8</span><button data-testid="unlike" aria-label="좋아요 테스트">♥ ${23 + id * 7}</button><span>↗</span></div></article></div>`;
+        cell.querySelector('button').addEventListener('click', (event) => { event.stopPropagation(); nativeClicks++; });
+        return cell;
+    }
+    function addTweets(amount) {
+      for (let i = 0; i < amount; i++) document.querySelector('#timeline').append(makeTweet(count++));
+    }
+    function setEnabled(value) {
+      enabled = value;
+      storageListeners.forEach(listener => listener({ enabled: { newValue: value } }, 'local'));
+    }
+    function navigate(route) {
+      history.pushState({}, '', route);
+      dispatchEvent(new PopStateEvent('popstate'));
+      updateHeading();
+    }
+    function updateHeading() {
+      const bookmark = ['/i/history', '/i/bookmarks'].includes(location.pathname);
+      const titles = { '/home': '홈', '/search': '검색 결과', '/incago': '프로필 · @incago' };
+      document.querySelector('.heading h1').textContent = titles[location.pathname] || (bookmark ? '북마크' : '마음에 들어요');
+      document.querySelector('section').setAttribute('aria-label', bookmark ? 'Timeline: Bookmarks' : 'Timeline: Likes');
+    }
+    updateHeading();
+    document.querySelector('#bookmarks').onclick = () => navigate('/i/history');
+    document.querySelector('#likes').onclick = () => navigate('/i/history/likes');
+    document.querySelector('#home').onclick = () => navigate('/home');
+    document.querySelector('#search').onclick = () => navigate('/search?q=cookie');
+    document.querySelector('#profile').onclick = () => navigate('/incago');
+    document.querySelector('#toggle').onclick = () => setEnabled(!enabled);
+    document.querySelector('#add').onclick = () => addTweets(4);
+    document.querySelector('#theme').onclick = () => {
+      const light = document.body.dataset.theme !== 'light';
+      document.body.dataset.theme = light ? 'light' : 'dark';
+      document.body.style.background = light ? '#f7fafc' : '#0b1017';
+      document.body.style.color = light ? '#16202c' : '#e7eef5';
+    };
+    if (!virtualDemo) addTweets(8);
+    const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    document.querySelector('#run').onclick = async () => {
+      document.querySelector('#checks').textContent = '검증 중…';
+      const results = [];
+      const initialRoute = location.pathname;
+      function check(name, condition) { results.push({ name, pass: Boolean(condition) }); }
+      setEnabled(true); await settle();
+      const grid = document.querySelector('[data-bxl-grid]');
+      const cells = [...grid.children];
+      const width = grid.getBoundingClientRect().width;
+      const columns = width >= 1060 ? 4 : width >= 800 ? 3 : width >= 540 ? 2 : 1;
+      const rects = cells.slice(0, columns + 1).map(cell => cell.getBoundingClientRect());
+      check('responsive columns', getComputedStyle(grid).gridTemplateColumns.split(' ').length === columns);
+      check('cards share the first row', rects.slice(0, columns).every(rect => Math.abs(rect.top - rects[0].top) < 1));
+      check('next card starts the second row', rects[columns].top > rects[0].bottom);
+      check('no overlap', rects.slice(1, columns).every((rect, index) => rect.left >= rects[index].right));
+      const primary = document.querySelector('[data-testid="primaryColumn"]');
+      const primaryRect = primary.getBoundingClientRect();
+      const gridRect = grid.getBoundingClientRect();
+      check('grid starts at the content left edge', Math.abs(gridRect.left - primaryRect.left - 1) < 2);
+      check('grid fills the content width', Math.abs(gridRect.width - primary.clientWidth) < 2);
+      check('sidebar hidden', getComputedStyle(document.querySelector('[data-testid="sidebarColumn"]')).display === 'none');
+      const sidebar = document.querySelector('#right-rail');
+      sidebar.removeAttribute('data-testid'); await settle();
+      check('fallback rail hidden', getComputedStyle(sidebar).display === 'none');
+      sidebar.setAttribute('data-testid', 'sidebarColumn'); await settle();
+      const original = document.querySelector('article');
+      original.querySelector('button').click();
+      check('native handler retained', nativeClicks > 0);
+      const before = count; addTweets(4); await settle();
+      check('dynamic tweets', document.querySelectorAll('[data-bxl-cell="tweet"]').length === before + 4);
+      setEnabled(false); await settle();
+      check('disabled restoration', !document.querySelector('[data-bxl-grid]') && getComputedStyle(grid).display !== 'grid');
+      check('disabled sidebar restoration', getComputedStyle(sidebar).display !== 'none');
+      check('inline styles retained', cells[1].style.transform === '');
+      setEnabled(true); await settle();
+      navigate('/explore'); await settle();
+      check('other routes restored', !document.documentElement.hasAttribute('data-bxl-active'));
+      check('explore sidebar restoration', getComputedStyle(sidebar).display !== 'none');
+      for (const route of ['/i/history', '/i/history/likes']) {
+        navigate(route); await settle();
+        check(`${route} grid`, document.querySelector('article') === original && document.querySelector('[data-bxl-grid]'));
+        check(`${route} sidebar hidden`, getComputedStyle(sidebar).display === 'none');
+      }
+      navigate(initialRoute); await settle();
+      document.querySelector('#checks').textContent = `${results.filter(result => result.pass).length}/${results.length} 통과`;
+      window.previewResults = results;
+    };
+
+    // Model native X-style measurement, Y positioning, window-based paging and
+    // actual offscreen removal. Initial page: 7. Each next page: another 7.
+    if (virtualDemo) {
+      const grid = document.querySelector('#timeline');
+      const measured = new Map();
+      const mounted = new Map();
+      let loaded = 7;
+      let pages = 1;
+      let removals = 0;
+      let renderFrame = 0;
+      const height = id => measured.get(id) || 330;
+      const offset = id => Array.from({ length: id }, (_, index) => height(index)).reduce((a, b) => a + b, 0);
+      const total = () => offset(loaded);
+      const rootTop = () => grid.getBoundingClientRect().top + scrollY;
+      function queueNative() { if (!renderFrame) renderFrame = requestAnimationFrame(renderNative); }
+      const nativeResize = new ResizeObserver(entries => {
+        let changed = false;
+        for (const entry of entries) {
+          const id = Number(entry.target.dataset.sourceIndex);
+          if (Math.abs(height(id) - entry.contentRect.height) > .5) {
+            measured.set(id, entry.contentRect.height); changed = true;
+          }
+        }
+        if (changed) queueNative();
+      });
+      function renderNative() {
+        renderFrame = 0;
+        if (scrollY + innerHeight >= rootTop() + total() - 160 && loaded < 42) {
+          loaded = Math.min(42, loaded + 7); pages++;
+        }
+        grid.style.minHeight = `${total()}px`;
+        const start = scrollY - rootTop() - innerHeight * 2;
+        const end = scrollY - rootTop() + innerHeight * 3;
+        const wanted = new Set();
+        for (let id = 0; id < loaded; id++) {
+          if (offset(id) + height(id) < start || offset(id) > end) continue;
+          wanted.add(id);
+          if (!mounted.has(id)) {
+            const cell = makeTweet(id);
+            cell.dataset.sourceIndex = String(id);
+            cell.style.position = 'absolute';
+            mounted.set(id, cell);
+            grid.append(cell);
+            nativeResize.observe(cell);
+          }
+          const cell = mounted.get(id);
+          const transform = `translateY(${offset(id)}px)`;
+          if (cell.style.transform !== transform) cell.style.transform = transform;
+        }
+        for (const [id, cell] of mounted) {
+          if (!wanted.has(id)) {
+            nativeResize.unobserve(cell); cell.remove(); mounted.delete(id); removals++;
+          }
+        }
+        // Preserve native document order when previously unmounted cells return.
+        const ordered = [...mounted].sort((a, b) => a[0] - b[0]).map(([, cell]) => cell);
+        if (ordered.some((cell, index) => grid.children[index] !== cell)) {
+          for (const cell of ordered) grid.append(cell);
+        }
+        document.querySelector('#virtual-status').textContent = `7개로 시작 · 불러온 트윗 ${loaded}개 · 페이지 ${pages} · 제거한 셀 ${removals}개`;
+      }
+      addEventListener('scroll', queueNative, { passive: true });
+      addEventListener('resize', queueNative);
+      renderNative();
+      document.querySelector('#scroll-next').hidden = false;
+      document.querySelector('#scroll-next').onclick = () => scrollTo(0, document.scrollingElement.scrollHeight);
+      document.querySelector('#add').disabled = true;
+      document.querySelector('#run').onclick = async () => {
+        document.querySelector('#checks').textContent = '가상 스크롤 검증 중…';
+        const results = [];
+        const check = (name, pass) => results.push({ name, pass: Boolean(pass) });
+        setEnabled(true);
+        for (let i = 0; i < 4; i++) await settle();
+        check('initial source page had seven tweets', pages >= 1);
+        check('uses the native virtual-slot layout', grid.dataset.bxlLayout === 'virtual');
+        check('native min-height is preserved', getComputedStyle(grid).minHeight === grid.style.minHeight);
+        for (let page = 0; page < 5; page++) {
+          scrollTo(0, document.scrollingElement.scrollHeight);
+          for (let i = 0; i < 4; i++) await settle();
+        }
+        check('scroll loads tweets beyond seven', loaded > 7);
+        check('at least four source pages load', pages >= 4);
+        check('renders later tweets', [...mounted.keys()].some(id => id >= 14));
+        check('unmounts offscreen cells', removals > 0);
+        check('native offsets match measured slot sums', [...mounted].every(([id, cell]) => cell.style.transform === `translateY(${offset(id)}px)`));
+        scrollTo(0, 0);
+        for (let i = 0; i < 4; i++) await settle();
+        check('scrolling back restores the first tweet', mounted.has(0));
+        check('column identity survives remounting', mounted.get(0)?.getAttribute('data-bxl-index') === '0');
+        const columns = Number(grid.style.getPropertyValue('--bxl-columns'));
+        const cards = Array.from({ length: columns }, (_, id) => mounted.get(id)?.firstElementChild);
+        check('visual cards share the first row', cards.every(card => card && Math.abs(card.getBoundingClientRect().top - cards[0].getBoundingClientRect().top) < 2));
+        const before = nativeClicks;
+        mounted.get(0)?.querySelector('button').click();
+        check('native click handlers still work', nativeClicks === before + 1);
+        const first = mounted.get(0)?.firstElementChild;
+        first.querySelector('.media').style.height = '550px';
+        for (let i = 0; i < 4; i++) await settle();
+        check('late media growth updates native slot height', measured.get(0) > 140);
+        check('growing media keeps cards aligned', cards.every(card => Math.abs(card.getBoundingClientRect().top - cards[0].getBoundingClientRect().top) < 2));
+        first.querySelector('.media').style.height = '';
+        for (let i = 0; i < 4; i++) await settle();
+        check('sidebar remains hidden', getComputedStyle(document.querySelector('#right-rail')).display === 'none');
+        check('no secondary vertical scroller in content', document.querySelector('[data-bxl-primary]').scrollHeight <= document.querySelector('[data-bxl-primary]').clientHeight + 1);
+        document.querySelector('#checks').textContent = `${results.filter(result => result.pass).length}/${results.length} 통과 · 가상 스크롤`;
+        window.previewResults = results;
+      };
+    }
+  </script>
+  <script src="/pages.js"></script>
+  <script src="/layout.js"></script>
+  <script src="/video.js"></script>
+  <script src="/content.js"></script>
+  <script>
+    // Real browser media without external downloads/account data. Canvas streams
+    // exercise native play/playing/pause events and trusted player gestures.
+    if (new URLSearchParams(location.search).has('videos')) {
+      const auto = document.createElement('button');
+      auto.textContent = 'X 자동재생 시도';
+      auto.id = 'video-autoplay';
+      const status = document.createElement('span');
+      status.id = 'video-status'; status.setAttribute('role', 'status');
+      document.querySelector('.qa').append(auto, status);
+      const mediaVideos = [];
+      let plays = 0, pauses = 0;
+      const refresh = () => status.textContent = `영상 재생 ${mediaVideos.filter(video => !video.paused).length}/4`;
+      for (const [index, area] of [...document.querySelectorAll('.media')].slice(0, 4).entries()) {
+        const canvas = document.createElement('canvas'); canvas.width = 480; canvas.height = 270;
+        const context = canvas.getContext('2d');
+        let frame = 0;
+        const draw = () => {
+          context.fillStyle = ['#224138', '#3c3a52', '#213d58', '#503b36'][index];
+          context.fillRect(0, 0, 480, 270);
+          context.fillStyle = '#e7eef5'; context.font = 'bold 36px sans-serif';
+          context.fillText(`VIDEO ${index + 1}`, 150, 130);
+          context.font = '20px sans-serif'; context.fillText(`FRAME ${frame++}`, 180, 175);
+        };
+        draw();
+        const video = document.createElement('video');
+        video.autoplay = true; video.muted = true; video.playsInline = true;
+        video.poster = canvas.toDataURL(); video.style.cssText = 'width:100%;display:block;border-radius:12px';
+        const player = document.createElement('div'); player.dataset.testid = 'videoPlayer';
+        const button = document.createElement('button'); button.textContent = `영상 ${index + 1} 재생`;
+        button.id = `video-toggle-${index + 1}`;
+        button.onclick = event => { event.stopPropagation(); if (video.paused) video.play().catch(() => {}); else video.pause(); };
+        player.append(video, button); area.replaceWith(player);
+        for (const type of ['play', 'playing', 'pause']) video.addEventListener(type, () => {
+          if (type === 'play') plays++;
+          if (type === 'pause') pauses++;
+          button.textContent = `영상 ${index + 1} ${video.paused ? '재생' : '일시정지'}`; refresh();
+        });
+        mediaVideos.push(video); video.srcObject = canvas.captureStream(10);
+        const timer = setInterval(draw, 100);
+        addEventListener('pagehide', () => { clearInterval(timer); video.srcObject?.getTracks().forEach(track => track.stop()); });
+      }
+      auto.onclick = () => mediaVideos.forEach(video => video.play().catch(() => {}));
+      const retry = document.createElement('button'); retry.textContent = '빠른 재생 재시도 테스트';
+      const retryStatus = document.createElement('span'); retryStatus.id = 'video-retries'; retryStatus.setAttribute('role', 'status');
+      document.querySelector('.qa').append(retry, retryStatus);
+      retry.onclick = async () => {
+        const beforePlays = plays, beforePauses = pauses;
+        const beforeTimes = mediaVideos.map(video => video.currentTime);
+        await Promise.allSettled(Array.from({ length: 1000 }, (_, index) => mediaVideos[index % 4].play()));
+        await settle(); await settle();
+        const stable = mediaVideos.every((video, index) => video.paused && video.currentTime === beforeTimes[index]);
+        retryStatus.textContent = `재시도 1000회 · 실제 재생 ${plays - beforePlays}회 · 일시정지 ${pauses - beforePauses}회 · 프레임 ${stable ? '유지' : '변경'}`;
+      };
+      refresh();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+Better X Likes — Chrome Web Store submission guide
+Prepared version: 1.5.2
+Existing review: 1.4.1, submitted October 7, 2026
+Publisher: Junhak Kim
+Public support email: incago@gmail.com
+
+Current decision
+Keep the existing 1.4.1 review. The user will submit the improved version separately later. Do not cancel the current review or upload this update now. No 1.5.x package has been submitted.
+
+Privacy policy
+Japanese: https://incago.github.io/better-x-likes-privacy/ja.html
+Korean: https://incago.github.io/better-x-likes-privacy/
+English: https://incago.github.io/better-x-likes-privacy/en.html
+Source: https://github.com/incago/better-x-likes-privacy
+GitHub Pages serves the main branch root over HTTPS. The policy explains which information is processed locally and which settings are saved, and distinguishes 1.4.1 from later features.
+
+1. Developer account
+The developer registration payment, sign-in and contact email verification were completed by the user. The existing item is Better X Likes, ID kjdnnlmbnnncchgmogmagocekbikahpf.
+Dashboard: https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing
+
+2. Verify the update on X
+Reload the unpacked extension and any open X tabs. Test home, search results with posts, profiles, bookmarks and likes. Resize from four columns down to one. Scroll past the initial posts and back up. Confirm videos remain paused until explicitly played and play at normal speed. Set each page to Default list and verify native layout and video behavior. The master switch should retain per-page preferences. Check the popup in Korean, English and Japanese. Local synthetic tests do not replace this logged-in X check.
+
+3. Package and upload later
+Run python3 tools/package.py --store. Upload better-x-likes-1.5.2-webstore.zip to the same existing item when ready for the next review. Do not create a second item: updates must remain linked to existing installations. Do not upload the store-kit ZIP or nest the extension ZIP.
+If the dashboard requires cancelling a pending review, obtain explicit user authorization first because cancellation may lose the current queue position. The current instruction is to preserve the review.
+
+4. Store listing languages
+Keep the Korean listing and add English and Japanese as separate localized listings using listing-en.txt and listing-ja.txt. Use listing-ko.txt for Korean. The extension's manifest default_locale is English, but extension UI localization and store listing translations are separate.
+Category: Productivity > Tools. Price: Free. Visibility: Public. Distribution: all supported regions allowed by the publisher account.
+Use assets/icon-128.png, assets/promo-440x280.jpg and assets/grid-demo-1280x800.jpg. The grid screenshot uses synthetic sample posts with the actual extension CSS/JS; do not describe it as a real X account screenshot. Existing artwork is in Korean. Before an English listing is submitted, prepare English artwork if needed and inspect the dashboard's current image requirements. Do not expose private bookmarks or account details in screenshots.
+
+5. Privacy and reviewer instructions
+Use privacy-fields.txt for the single purpose, storage/site access rationale, local data categories and remote-code answer. Code is bundled; remote code is No. Do not claim that the extension never reads or processes any data: layout and video control process page data locally.
+Use reviewer-notes-1.5.2.txt for the short review instructions; reviewer-notes.txt provides the fuller explanation. reviewer-notes-submitted.txt is the historical 1.4.1 submission and must not be presented as a new submission.
+Provide no personal X account credentials. Reviewers can use an account they control.
+
+6. Submit the future update
+Check the dashboard for required fields and validation errors. Choose review/publication settings when the user is ready. The previous 1.4.1 submission selected automatic publication after approval; there is no guarantee of review time or search indexing time.
+After publication, test installation from the store in a fresh Chrome profile.
+
+Official references
+https://developer.chrome.com/docs/extensions/reference/api/i18n
+https://developer.chrome.com/docs/webstore/publish
+https://developer.chrome.com/docs/webstore/images
+https://developer.chrome.com/docs/webstore/cws-dashboard-privacy
+https://developer.chrome.com/docs/webstore/cws-dashboard-distribution

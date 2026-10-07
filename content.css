@@ -1,0 +1,162 @@
+/* Scoped to configured tweet timelines; removed on navigation or disable. */
+html[data-bxl-active] [data-bxl-shell],
+html[data-bxl-active] [data-bxl-main],
+html[data-bxl-active] [data-bxl-wrapper] {
+  max-width: none !important;
+  min-width: 0 !important;
+  flex-grow: 1 !important;
+}
+
+html[data-bxl-active] [data-bxl-main],
+html[data-bxl-active] [data-bxl-wrapper] {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  align-self: stretch !important;
+  margin-inline: 0 !important;
+  padding-inline: 0 !important;
+}
+
+html[data-bxl-active] [data-bxl-shell] {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  margin-inline: 0 !important;
+}
+
+html[data-bxl-active] [data-bxl-main] {
+  flex: 1 1 0% !important;
+}
+
+/* X's banner can grow to center the old, narrow timeline. Keep its natural width. */
+html[data-bxl-active] [data-bxl-nav] {
+  flex-grow: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+html[data-bxl-active] [data-testid="sidebarColumn"],
+html[data-bxl-active] [data-bxl-sidebar] {
+  display: none !important;
+}
+
+html[data-bxl-active] [data-bxl-primary] {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  flex-grow: 1 !important;
+  flex-basis: auto !important;
+  margin-inline: 0 !important;
+  overflow-x: auto !important;
+}
+
+/* Reset only the ancestors of the native timeline, leaving tweet contents and
+   the history header/tabs alone. A full-width grid inside a capped wrapper still
+   produces a narrow, shifted feed even when primaryColumn has been widened. */
+html[data-bxl-active] [data-bxl-feed] {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  margin-inline: 0 !important;
+  padding-inline: 0 !important;
+  align-self: stretch !important;
+  inset-inline: auto !important;
+  transform: none !important;
+}
+
+html[data-bxl-active] [data-bxl-grid] {
+  position: relative !important;
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin-inline: 0 !important;
+  align-self: stretch !important;
+  margin-block-start: 20px !important;
+}
+
+/* Only ordinary, non-virtual lists use CSS Grid. */
+html[data-bxl-active] [data-bxl-layout="flow"] {
+  display: grid !important;
+  grid-template-columns: repeat(var(--bxl-columns, 4), minmax(0, 1fr)) !important;
+  align-items: start !important;
+  gap: 16px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 16px 32px !important;
+}
+
+html[data-bxl-active] [data-bxl-layout="flow"] > [data-bxl-cell] {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: 100% !important;
+}
+
+/* X owns the Y transform/top and timeline height. Do not reset them. Its height
+   observer measures a short slot while the native card overflows inside it. */
+html[data-bxl-active] [data-bxl-layout="virtual"] {
+  display: block !important;
+  padding: 0 !important;
+}
+
+html[data-bxl-active] [data-bxl-layout="virtual"] > [data-bxl-cell] {
+  position: absolute !important;
+  width: var(--bxl-width) !important;
+  left: var(--bxl-left) !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+html[data-bxl-active] [data-bxl-layout="virtual"] > [data-bxl-cell="tweet"] {
+  height: var(--bxl-slot-height) !important;
+  min-height: 0 !important;
+}
+
+html[data-bxl-active] [data-bxl-cell] {
+  min-width: 0 !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+html[data-bxl-active] [data-bxl-card] {
+  width: 100% !important;
+  height: auto !important;
+  box-sizing: border-box !important;
+}
+
+html[data-bxl-active] [data-bxl-layout="virtual"] [data-bxl-card] {
+  transform: translateY(var(--bxl-rise, 0px)) !important;
+}
+
+html[data-bxl-active] [data-bxl-cell="tweet"] > [data-bxl-card] {
+  overflow: hidden !important;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent) !important;
+  border-radius: 16px !important;
+}
+
+html[data-bxl-active] [data-bxl-tail] {
+  height: var(--bxl-tail-height, 0px);
+  pointer-events: none;
+}
+
+html[data-bxl-active] [data-bxl-cell="tweet"] article[data-testid="tweet"] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  height: auto !important;
+  border-bottom: none !important;
+  padding-inline: 12px !important;
+}
+
+html[data-bxl-active] [data-bxl-cell="tweet"] [data-testid="tweetText"] {
+  overflow-wrap: anywhere !important;
+}
+
+/* Loading, retry, and empty-state cells keep the entire row. */
+html[data-bxl-active] [data-bxl-layout="flow"] > [data-bxl-cell="other"] {
+  grid-column: 1 / -1 !important;
+}

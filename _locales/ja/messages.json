@@ -1,0 +1,77 @@
+{
+  "extensionName": {
+    "message": "Better X Likes"
+  },
+  "extensionDescription": {
+    "message": "Xのホーム・検索結果・プロフィール・ブックマーク・いいねを1〜4列のグリッドで表示。画面ごとに標準の一覧表示も選べます。"
+  },
+  "popupTagline": {
+    "message": "Xのポストをひと目で。"
+  },
+  "gridEnabled": {
+    "message": "グリッドを使う"
+  },
+  "masterHint": {
+    "message": "全画面共通のスイッチ"
+  },
+  "pageSettings": {
+    "message": "画面ごとの表示"
+  },
+  "pageHome": {
+    "message": "ホーム"
+  },
+  "pageSearch": {
+    "message": "検索結果"
+  },
+  "pageProfile": {
+    "message": "プロフィール"
+  },
+  "pageBookmarks": {
+    "message": "ブックマーク"
+  },
+  "pageLikes": {
+    "message": "いいね"
+  },
+  "layoutGrid": {
+    "message": "グリッド"
+  },
+  "layoutNative": {
+    "message": "標準の一覧"
+  },
+  "statusLoading": {
+    "message": "設定を読み込み中…"
+  },
+  "statusGridOne": {
+    "message": "1つの画面でグリッドを表示します。他の画面はXの標準表示を使います。"
+  },
+  "statusGrid": {
+    "message": "$COUNT$つの画面でグリッドを表示します。他の画面はXの標準表示を使います。",
+    "placeholders": {
+      "count": {
+        "content": "$1",
+        "example": "5"
+      }
+    }
+  },
+  "statusNative": {
+    "message": "すべての画面でXの標準表示を使います。"
+  },
+  "statusSaveError": {
+    "message": "設定を保存できませんでした。もう一度お試しください。"
+  },
+  "statusLoadError": {
+    "message": "設定を読み込めませんでした。ポップアップを開き直してください。"
+  },
+  "openBookmarks": {
+    "message": "自分のブックマークを開く"
+  },
+  "openLikes": {
+    "message": "自分のいいねを開く"
+  },
+  "gridSummary": {
+    "message": "1〜4列 · サイドバー非表示 · 動画は手動再生"
+  },
+  "profileHint": {
+    "message": "自分と他のユーザーのプロフィールに適用"
+  }
+}

@@ -1,0 +1,31 @@
+Better X Likes 1.5.2 — review instructions
+Publisher: Junhak Kim
+Contact: incago@gmail.com
+
+This extension improves the display of X home, search, profile, bookmark and like timelines. It does not call X APIs, scrape content into external storage, automate likes/bookmarks, or bypass X account permissions. Reviewers should use an X account they control. The publisher's personal account credentials are not provided.
+
+Prerequisites
+Use current desktop Chrome and log into X through X's normal website. Save at least eight ordinary posts as bookmarks or likes, including two video posts. The extension itself requires no additional account, license, payment, or backend service.
+
+Steps
+1. Install the submitted extension and reload the X tab (the autoplay guard runs at document_start).
+2. Open https://x.com/i/history or https://x.com/i/bookmarks. The native list should become a grid and the right search/trends/follow rail should be hidden.
+3. Open https://x.com/i/history/likes and verify the same behavior.
+4. Resize Chrome. Available content widths >=1060, >=800, >=540, and <540px produce 4, 3, 2, and 1 columns respectively.
+5. Scroll down far enough to load more than the initial items; scroll back up and verify card positions.
+6. Videos in the grid should remain paused until the user clicks the corresponding player control or activates it by keyboard. Pause a manually played video and scroll; it should not repeatedly restart automatically.
+7. Open the extension popup and switch the grid off. The original X list/sidebar/video behavior should return. Turn it back on.
+8. Verify home, search results and profile tweet timelines also use grids. Set each page to native in the popup and verify only that page returns to X layout/sidebar/video behavior. Post detail, messages, notifications and explore remain native.
+
+9. Check the popup in Korean, English and Japanese Chrome. Labels, status/errors and the extension description follow Chrome’s UI locale, with English as the fallback. The underlying stored preference keys are unchanged.
+
+Permissions and data
+Korean/English/Japanese popup labels, status/error messages, locale fallback and setting preservation are covered by automated tests. All three popup layouts fit within 600px in the browser preview.
+
+storage persists only the master switch and five pageModes preferences. Site access is limited to x.com and twitter.com for SPA route detection. MAIN code intercepts play() only within active, configured tweet grids and requires a local user gesture for manual playback. All runtime JS/CSS is included in the ZIP; there is no remotely hosted code or external data transmission.
+
+Known dependency
+X controls its own DOM, authentication, rendering, and network loading. The extension styles its existing DOM rather than providing independent copies of posts. If an X account has no saved posts, bookmark/like some before testing. Access restrictions imposed by X remain unchanged.
+
+Publisher pre-submission record
+56 automated tests passed for the current implementation. Local browser tests exercised actual canvas-stream videos (1,000 rejected autoplay retries with no play/pause or frame progression, trusted manual play, restoration) and a virtualized timeline (42 posts/6 pages). These local tests do not replace an end-to-end test on the current logged-in X website; complete that before submitting.

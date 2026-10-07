@@ -1,0 +1,8 @@
+node_modules/
+*.zip
+.DS_Store
+
+# Local Chrome Web Store account screenshots
+/store/assets/contact-verification.jpg
+/store/assets/submitted-for-review.jpg
+/store/review-pending-before-update.jpg

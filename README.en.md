@@ -1,0 +1,73 @@
+# Better X Likes
+
+[한국어](README.md) | English | [Japanese](README.ja.md)
+
+A Chrome extension that displays **X home, search results, profiles, bookmarks and likes in responsive grids with 1–4 posts per row**. Choose **Grid / Default list** separately for each page in the popup. Grid pages hide the right search, trends and suggested follows sidebar while keeping the left navigation.
+
+The popup and extension description support Korean, English and Japanese. Chrome selects the language from its interface language; unsupported languages fall back to English. Your layout preferences stay the same when the language changes. The extension does not translate posts or X’s own interface.
+
+## Install or update locally
+
+1. Open `chrome://extensions` in Chrome.
+2. Enable **Developer mode**.
+3. Click **Load unpacked** and select the folder containing `manifest.json`. If you downloaded a ZIP, extract it first.
+4. For an existing local installation, click its **Reload** button instead.
+5. **Reload any open X tabs**, so the video guard installed at page startup uses the new code.
+6. Sign in to X normally and open a supported page.
+
+Pin the extension to the toolbar to reach its popup. The **Enable grid** master switch disables all grids without losing your per-page choices. Changes apply to open X tabs and are saved locally in this browser.
+
+## Supported pages and behavior
+
+- Home: `/home`.
+- Search results containing posts: `/search`.
+- Profiles: `/username`, `/username/with_replies`, `/username/media`, `/username/highlights`. The same profile preference applies to your profile and other profiles.
+- Bookmarks: `/i/history` and `/i/bookmarks`.
+- Likes: `/i/history/likes`.
+
+Post details, messages, notifications, Explore, follower lists and pages without a tweet timeline keep X’s original layout. Selecting **Default list** restores X’s layout, sidebar and video behavior for that page.
+
+Available content widths of at least 1060px, 800px and 540px produce four, three and two columns respectively. Below 540px, posts appear in one column. Resizing the window updates the layout automatically.
+
+The extension styles existing X elements rather than copying posts. Links, buttons, media controls and X’s own text truncation remain in place. X keeps control of virtual scrolling and loading; the extension adjusts measured cell slots and positions cards inside them.
+
+Videos in grids remain paused until you click the corresponding player control or activate it with the keyboard. Clicking post text or Like does not authorize video playback. A guard in the page’s MAIN execution environment rejects unrequested `play()` calls before playback begins, preventing repeated start/stop cycles. Switching to Default list or leaving a grid page restores native playback behavior.
+
+## Permissions and privacy
+
+The `storage` permission saves only `enabled` (the master switch) and `pageModes` (five layout preferences) in `chrome.storage.local`. Content scripts run on `x.com` and `twitter.com` to detect navigation and supported timelines. The current path/query, rendered post links/IDs, dimensions and player gestures are processed temporarily in page memory. Posts, browsing history and player input are not persisted or sent to the developer. There is no backend service, analytics or remote runtime code.
+
+[English privacy policy](https://incago.github.io/better-x-likes-privacy/en.html) · [Korean privacy policy](https://incago.github.io/better-x-likes-privacy/)
+
+## Development and verification
+
+```sh
+npm ci
+npm test
+npm run preview
+```
+
+The preview server at `http://127.0.0.1:4173` uses synthetic posts and does not connect to an X account. Supported examples include `/home`, `/search?q=cookie`, `/incago`, `/i/history` and `/i/history/likes`.
+
+Add `?virtual=1` (or `&virtual=1` after another query) to exercise virtual scrolling: seven initial posts, automatic loading up to 42 posts over six pages, and removal of offscreen DOM cells. The fixture’s browser test checks layout, late media resizing, original event handlers and restoration.
+
+Add `?videos=1` to use actual browser videos generated from canvas streams, without external video downloads. Test autoplay retries, explicit manual playback and restoration. Popup previews are available at `/popup.html?lang=en` and `/popup.html?lang=ko`; these use mocked Chrome APIs and local preferences.
+
+Version 1.5.0 passed 51 automated tests, home layout checks, search/profile virtual scrolling checks and a home video test with 1,000 rejected autoplay retries. Version 1.5.1 passed 54 automated tests, including English labels, status/error messages, singular/plural page counts, locale fallback and saved preference preservation. The Korean and English popup previews were also checked in the browser; both fit within Chrome’s 600px popup height. These local checks do not replace testing on the current logged-in X website. X may change its DOM or measurement behavior; if the layout breaks, disable the grid and reload the tab.
+
+Version 1.5.2 adds Japanese translations and passed 56 automated tests, including Japanese status/error messages and saved preferences. Japanese preview: `/popup.html?lang=ja`. [Japanese privacy policy](https://incago.github.io/better-x-likes-privacy/ja.html).
+
+## Packaging and store status
+
+```sh
+python3 tools/package.py
+python3 tools/package.py --store
+```
+
+The regular ZIP includes runtime files and all three installation guides. The Web Store ZIP contains runtime files, including all three `_locales` catalogs. It can be uploaded directly without extracting or nesting it inside another ZIP. A store-kit archive is a bundle of submission materials, not an installable extension package.
+
+Publisher: **Junhak Kim**. Public support email: **incago@gmail.com**.
+
+Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.2** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
+
+Better X Likes is an independent extension and is not an official product of X Corp. There is no separate terms-of-service document in this project; the privacy policy is available in all three languages.

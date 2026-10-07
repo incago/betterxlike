@@ -1,0 +1,50 @@
+Name: Better X Likes
+Publisher: Junhak Kim
+Support email: incago@gmail.com
+Listing language: English
+Visibility: Public
+Price: Free
+Category: Productivity > Tools
+Prepared for version: 1.5.2 (not yet submitted)
+
+Short description
+View X home, search, profiles, bookmarks and likes in a 1–4 column grid, with a default layout option for each page.
+
+Detailed description
+
+Browse posts on X (Twitter) at a glance: home, search results, profiles, bookmarks and likes.
+Better X Likes turns long vertical timelines into grids that fit your browser window.
+
+• See up to four posts per row in a wide window.
+• Automatically switch to three, two or one column as the window gets narrower.
+• Hide the right search, trends and suggested follows sidebar on pages set to Grid, giving posts more room.
+• Stop automatic video playback in grids. Play a video by clicking its player control or using the keyboard.
+• Choose Grid or Default list separately for each page in the extension popup. A master switch can disable all grids while keeping your choices.
+• Use X’s existing light or dark theme.
+• Use the popup in Korean, English or Japanese. Its language follows Chrome’s interface language; other languages fall back to English.
+
+How to use
+1. After installing or updating, reload any X tabs that are already open.
+2. Sign in to X and open home, search results, a profile, bookmarks or likes.
+3. Resize the window and choose a layout for each page in the popup.
+
+Supported pages
+https://x.com/home
+https://x.com/search
+https://x.com/username (profile posts, replies, media and highlights)
+https://x.com/i/history
+https://x.com/i/history/likes
+https://x.com/i/bookmarks
+
+The profile preference applies to your profile and other profiles. Post details, messages, notifications, Explore, follower lists and pages without a tweet timeline keep X’s default layout.
+
+Privacy and permissions
+Only the master switch and per-page layout preferences are saved in the browser. The current page path/query, rendered post elements and links, dimensions and video player gestures are processed locally for layout and playback control. The extension does not save posts or browsing history to a separate file or server, or send them to the developer. It includes no advertising, analytics or remotely executed code.
+
+You need to sign in to X, but the extension requires no separate account or login credentials. Changes to X’s page structure may require updates to this extension. If something stops working, turn off the grid and reload the X tab.
+
+Better X Likes is an independent extension provided by Junhak Kim. It is not an official product of X Corp.
+Support: incago@gmail.com
+
+Privacy policy (English):
+https://incago.github.io/better-x-likes-privacy/en.html
