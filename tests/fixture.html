@@ -22,9 +22,11 @@
     .heading h1 { font-size: 21px; margin: 0; }
     .heading p { font-size: 13px; margin: 4px 0 0; color: #8f9fab; }
     #profile-info { width: 100%; }
-    .profile-cover { aspect-ratio: 3 / 1; width: 100%; background: linear-gradient(120deg, #224138, #213d58); display: grid; place-items: center; font-size: 24px; }
+    .profile-cover { position:relative; width:100%; overflow:hidden; display:block; color:inherit; }
+    .profile-cover > .ratio { padding-bottom:33.3333%; }
+    .profile-cover img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
     .profile-details { padding: 0 16px 16px; border-bottom: 1px solid #253442; }
-    .profile-avatar { width: 25%; aspect-ratio: 1; margin-top: -12.5%; border: 4px solid #0b1017; border-radius: 50%; background: #3c3a52; display: grid; place-items: center; font-size: 30px; }
+    .profile-avatar { width: 25%; aspect-ratio: 1; margin-top: -12.5%; border: 4px solid #0b1017; border-radius: 50%; background: #3c3a52; display: grid; place-items: center; font-size: 30px; position:relative; color:inherit; text-decoration:none; }
     .profile-details p { margin: 8px 0; }
     .profile-tabs { padding: 16px; border-bottom: 1px solid #253442; }
     #right-rail { width: 330px; padding: 24px; }
@@ -65,6 +67,8 @@
     <button id="refresh-home" hidden>35 게시물 보기</button>
     <button id="run-refresh" hidden>홈 갱신 테스트</button>
     <button id="run-follow" hidden>추천 영역 테스트</button>
+    <button id="run-profile" hidden>프로필 상단 테스트</button>
+    <span id="profile-checks" role="status"></span>
     <span id="follow-checks" role="status"></span>
     <span id="checks" role="status"></span>
     <span id="virtual-status" role="status"></span>
@@ -163,7 +167,7 @@
       const existing = document.querySelector('#profile-info');
       if (isProfile && !existing) {
         // Share a widened feed ancestor with the timeline, as X can do.
-        document.querySelector('.feed-stack').insertAdjacentHTML('afterbegin', '<div id="profile-info"><div class="profile-cover">프로필 배너 · 샘플</div><div class="profile-details"><div class="profile-avatar">인</div><p><strong>프로필 미리보기</strong><br>@sample_profile</p><p>샘플 소개 · 상단 정보는 적절한 크기로, 게시물은 넓은 그리드로</p><button>프로필 수정</button></div><nav class="profile-tabs">게시물　　답글　　미디어　　하이라이트</nav></div>');
+        document.querySelector('.feed-stack').insertAdjacentHTML('afterbegin', '<div id="profile-info"><a class="profile-cover" href="/incago/header_photo"><div class="ratio" style="padding-bottom:33.3333%"></div><img alt="프로필 배너 · 샘플" src="/tests/profile-cover.svg"></a><div class="profile-details"><a class="profile-avatar" href="/incago/photo">인</a><p><strong>프로필 미리보기</strong><br>@sample_profile</p><p>샘플 소개 · 상단 정보는 적절한 크기로, 게시물은 넓은 그리드로</p><button>프로필 수정</button></div><nav class="profile-tabs">게시물　　답글　　미디어　　하이라이트</nav></div>');
       } else if (!isProfile) existing?.remove();
     }
     updateHeading();
@@ -185,6 +189,37 @@
       if (recommendationDemo) document.querySelector('#timeline').children[2].after(...[-1, -2, -3, -4].map(makeRecommendation));
     }
     const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    document.querySelector('#run-profile').hidden = !location.pathname.startsWith('/incago');
+    document.querySelector('#run-profile').onclick = async () => {
+      const results = []; const check = (name, pass) => results.push({name,pass:Boolean(pass)});
+      const waitLayout = async () => { for (let i = 0; i < 6; i++) await settle(); };
+      setEnabled(false); await waitLayout();
+      const info = document.querySelector('#profile-info');
+      const cover = info.querySelector('.profile-cover'); const avatar = info.querySelector('.profile-avatar');
+      const original = info.getBoundingClientRect();
+      const nativeCover = cover.getBoundingClientRect(); const nativeAvatar = avatar.getBoundingClientRect();
+      enableTestGrids(); await waitLayout();
+      const width = document.querySelector('[data-bxl-primary]').getBoundingClientRect().width - 2;
+      const rect = info.getBoundingClientRect(); const banner = cover.getBoundingClientRect(); const portrait = avatar.getBoundingClientRect();
+      check('profile fills the available feed width', Math.abs(rect.width - width) < 2);
+      check('banner fills the profile width', Math.abs(banner.width - rect.width) < 2);
+      check('banner height stays at native size', Math.abs(banner.height - Math.min(200, rect.width / 3)) < 2);
+      check('portrait stays bounded', Math.abs(portrait.width - Math.min(145, rect.width / 4)) < 2 && Math.abs(portrait.height - portrait.width) < 2);
+      check('portrait overlaps half its height', Math.abs(portrait.top - banner.bottom + portrait.height / 2) < 2);
+      // The portrait cap differs by a few pixels from the native padded 25% row.
+      // Permit only its half-height difference, never banner growth with width.
+      check('wide profile does not become taller', rect.width < 600 || rect.height <= original.height + Math.max(0, portrait.height - nativeAvatar.height) / 2 + 2);
+      check('banner is cropped to fill', getComputedStyle(cover.querySelector('img')).objectFit === 'cover');
+      check('tabs use the full width', Math.abs(info.querySelector('nav').getBoundingClientRect().width - rect.width) < 2);
+      check('original photo links remain', cover.getAttribute('href') === '/incago/header_photo' && avatar.getAttribute('href') === '/incago/photo');
+      check('tweets start below the header', document.querySelector('[data-bxl-cell="tweet"]').firstElementChild.getBoundingClientRect().top >= rect.bottom);
+      setEnabled(false); await waitLayout();
+      check('default list restores original header dimensions', Math.abs(info.getBoundingClientRect().width - original.width) < 2 && Math.abs(info.getBoundingClientRect().height - original.height) < 2);
+      check('default list restores photo dimensions', Math.abs(cover.getBoundingClientRect().height - nativeCover.height) < 2 && Math.abs(avatar.getBoundingClientRect().width - nativeAvatar.width) < 2);
+      enableTestGrids(); await waitLayout();
+      document.querySelector('#profile-checks').textContent = `${results.filter(result => result.pass).length}/${results.length} 통과 · 프로필 상단`;
+      document.querySelector('#profile-checks').dataset.results = JSON.stringify(results);
+    };
     document.querySelector('#run').onclick = async () => {
       document.querySelector('#checks').textContent = '검증 중…';
       const results = [];

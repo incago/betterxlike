@@ -511,12 +511,12 @@ test("home, search queries, and profile tweet tabs share the responsive grid wit
   }
 });
 
-test("profile chrome stays capped outside the wide timeline and restores on route or setting changes", async t => {
+test("profile chrome spans the timeline while photo sizes are bounded and restore on route or setting changes", async t => {
   const page = setup("https://x.com/incago", true, false, { profile: "grid", search: "grid" }); t.after(page.close);
   const primary = page.document.querySelector('[data-testid="primaryColumn"]');
   primary.insertAdjacentHTML('afterbegin', '<div id="profile-title" style="position: sticky; top: 0px">Profile title</div>');
   const stack = primary.querySelector('.feed-stack');
-  stack.insertAdjacentHTML('afterbegin', '<div id="profile-info" style="width: 100%; margin-left: auto"><div id="cover" style="aspect-ratio: 3 / 1"></div><div id="avatar" style="width: 25%">Avatar</div><button>Edit profile</button></div>');
+  stack.insertAdjacentHTML('afterbegin', '<div id="profile-info" style="width: 100%; margin-left: auto"><a id="cover" href="/incago/header_photo" style="aspect-ratio: 3 / 1"><div style="padding-bottom:33.3333%"></div><img alt="Banner"></a><a id="avatar" href="/incago/photo" style="width: 25%; margin-top:-12.5%">Avatar</a><a id="mutual-avatar" href="/friend/photo">Mutual follower</a><button>Edit profile</button></div>');
   const inner = primary.querySelector('.feed-inner');
   inner.insertAdjacentHTML('beforebegin', '<nav id="profile-tabs">Posts / Replies / Media</nav>');
   const headers = ['profile-title', 'profile-info', 'profile-tabs'].map(id => page.document.getElementById(id));
@@ -524,7 +524,7 @@ test("profile chrome stays capped outside the wide timeline and restores on rout
   await page.settle();
   for (const header of headers) {
     assert.ok(header.hasAttribute('data-bxl-profile-header'));
-    assert.equal(page.window.getComputedStyle(header).maxWidth, '600px');
+    assert.equal(page.window.getComputedStyle(header).maxWidth, 'none');
   }
   const grid = page.document.querySelector('#timeline');
   assert.equal(page.window.getComputedStyle(grid).maxWidth, 'none');
@@ -532,12 +532,18 @@ test("profile chrome stays capped outside the wide timeline and restores on rout
   assert.equal(stack.hasAttribute('data-bxl-profile-header'), false);
   assert.equal(page.document.querySelector('#avatar').style.width, '25%');
   assert.equal(page.document.querySelector('#cover').style.aspectRatio, '3 / 1');
+  assert.equal(page.window.getComputedStyle(page.document.querySelector('#cover')).maxHeight, '200px');
+  assert.equal(page.window.getComputedStyle(page.document.querySelector('#cover img')).objectFit, 'cover');
+  assert.equal(page.window.getComputedStyle(page.document.querySelector('#avatar')).maxWidth, '145px');
+  assert.ok(page.document.querySelector('#avatar').hasAttribute('data-bxl-profile-overlap'));
+  assert.equal(page.document.querySelector('#mutual-avatar').hasAttribute('data-bxl-profile-avatar'), false);
   const button = headers[1].querySelector('button'); let clicks = 0;
   button.addEventListener('click', () => clicks++); button.click(); assert.equal(clicks, 1);
   headers[1].remove();
   stack.insertAdjacentHTML('afterbegin', '<div id="replacement-info">New profile info</div>');
   await page.settle();
   assert.equal(headers[1].hasAttribute('data-bxl-profile-header'), false);
+  assert.equal(headers[1].querySelector('[data-bxl-profile-cover], [data-bxl-profile-avatar]'), null);
   assert.ok(page.document.querySelector('#replacement-info').hasAttribute('data-bxl-profile-header'));
   for (const route of ['/incago/with_replies', '/incago/media', '/incago/highlights']) {
     page.navigate(route); await page.settle();
@@ -553,6 +559,37 @@ test("profile chrome stays capped outside the wide timeline and restores on rout
   page.setModes({ profile: 'grid' }); await page.settle();
   page.setEnabled(false); await page.settle();
   assert.equal(page.document.querySelectorAll('[data-bxl-profile-header]').length, 0);
+});
+
+test("separate banner wrapper and positioned avatar preserve native geometry and photo links", async t => {
+  const page = setup('https://x.com/incago', true, false, { profile: 'grid', home: 'grid' }); t.after(page.close);
+  const stack = page.document.querySelector('.feed-stack');
+  stack.insertAdjacentHTML('afterbegin', '<div id="profile-info"><div id="cover-wrapper" style="height:200px"><a href="https://x.com/incago/header_photo"><img alt="Banner"></a></div><div><a id="portrait" href="/incago/photo" style="position:absolute;transform:translateY(-50%);width:136px;height:136px"><img alt="Avatar"></a><button>Edit profile</button></div></div>');
+  const portrait = page.document.querySelector('#portrait');
+  const native = portrait.style.cssText;
+  await page.settle();
+  assert.ok(page.document.querySelector('#cover-wrapper').hasAttribute('data-bxl-profile-cover'));
+  assert.ok(portrait.hasAttribute('data-bxl-profile-avatar'));
+  assert.equal(portrait.hasAttribute('data-bxl-profile-overlap'), false);
+  assert.equal(portrait.style.cssText, native);
+  assert.equal(portrait.getAttribute('href'), '/incago/photo');
+  page.navigate('/home'); await page.settle();
+  assert.equal(page.document.querySelectorAll('[data-bxl-profile-header], [data-bxl-profile-cover], [data-bxl-profile-avatar], [data-bxl-profile-overlap]').length, 0);
+  assert.equal(portrait.style.cssText, native);
+});
+
+test("blank profile banners are bounded without changing portrait spacers or tweet media", async t => {
+  const page = setup('https://x.com/incago', true, false, { profile: 'grid' }); t.after(page.close);
+  const stack = page.document.querySelector('.feed-stack');
+  stack.insertAdjacentHTML('afterbegin', '<div id="profile-info"><div id="blank-cover"><div style="padding-bottom:33.3333%"></div></div><a href="/incago/photo"><div id="portrait-spacer" style="padding-bottom:100%"></div></a></div>');
+  page.document.querySelector('article').insertAdjacentHTML('beforeend', '<div id="tweet-media"><div style="padding-bottom:33.3333%"></div></div>');
+  await page.settle();
+  assert.ok(page.document.querySelector('#blank-cover').hasAttribute('data-bxl-profile-cover'));
+  assert.equal(page.document.querySelector('#portrait-spacer').hasAttribute('data-bxl-profile-cover'), false);
+  assert.equal(page.document.querySelector('#tweet-media').hasAttribute('data-bxl-profile-cover'), false);
+  page.setModes({ profile: 'native' }); await page.settle();
+  assert.equal(page.document.querySelectorAll('[data-bxl-profile-cover]').length, 0);
+  assert.equal(page.document.querySelector('#blank-cover > div').style.paddingBottom, '33.3333%');
 });
 
 test("native settings affect only the chosen page and survive route changes", async t => {

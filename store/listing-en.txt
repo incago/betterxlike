@@ -5,7 +5,7 @@ Listing language: English
 Visibility: Public
 Price: Free
 Category: Productivity > Tools
-Prepared for version: 1.5.6 (not yet submitted)
+Prepared for version: 1.5.7 (not yet submitted)
 
 Short description
 View X home, search, profiles, bookmarks and likes in a 1–4 column grid, with a default layout option for each page.
@@ -15,6 +15,7 @@ Detailed description
 Browse posts on X (Twitter) at a glance: home, search results, profiles, bookmarks and likes.
 Better X Likes turns long vertical timelines into grids that fit your browser window.
 
+• Use the full profile header width while capping banner height at 200px and portraits at 145px. Banner images are cropped around their center to fill the width.
 • Hide inline follow suggestions in grids to keep posts aligned. Switching to Default list restores the suggestions.
 • See up to four posts per row in a wide window.
 • Automatically switch to three, two or one column as the window gets narrower.

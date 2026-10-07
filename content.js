@@ -5,7 +5,8 @@
   const OWNED = ["data-bxl-main", "data-bxl-shell", "data-bxl-wrapper",
     "data-bxl-primary", "data-bxl-grid", "data-bxl-cell", "data-bxl-sidebar",
     "data-bxl-feed", "data-bxl-nav", "data-bxl-layout", "data-bxl-card", "data-bxl-index",
-    "data-bxl-profile-header"];
+    "data-bxl-profile-header", "data-bxl-profile-cover", "data-bxl-profile-avatar",
+    "data-bxl-profile-overlap"];
   const SIDEBAR_CONTENT = '[data-testid="SearchBox_Search_Input"], [data-testid="trend"], [data-testid="UserCell"]';
   const FOLLOW_CONTENT = '[data-testid="UserCell"], [data-testid="whoToFollow"], a[href*="/i/connect_people"]';
   const FOLLOW_TITLES = new Set(["팔로우 추천", "Who to follow", "You might like", "おすすめユーザー"]);
@@ -156,8 +157,8 @@
       if (!feedWrappers.has(element)) element.removeAttribute("data-bxl-feed");
     }
     for (const wrapper of feedWrappers) mark(wrapper, "data-bxl-feed");
-    // Profile banners and avatars scale with their parent width. Keep the
-    // non-timeline branches at X's normal width, even inside shared feed wrappers.
+    // Profile chrome spans the feed, but its banner/portrait must not scale up
+    // with the wide timeline. Identify only the profile's own photo links.
     const profileHeaders = new Set();
     if (BxlPages.pageType(location.pathname) === "profile") {
       for (let branch = grid; branch && branch !== primary; branch = branch.parentElement) {
@@ -170,6 +171,34 @@
       if (!profileHeaders.has(element)) element.removeAttribute("data-bxl-profile-header");
     }
     for (const header of profileHeaders) mark(header, "data-bxl-profile-header");
+    const covers = new Set();
+    const avatars = new Set();
+    const overlaps = new Set();
+    const handle = location.pathname.split('/')[1];
+    for (const header of profileHeaders) {
+      for (const link of header.querySelectorAll('a[href]')) {
+        const path = new URL(link.href, location.href).pathname;
+        if (path === `/${handle}/header_photo`) {
+          covers.add(link);
+          // Some X versions put the banner height on a separate wrapper.
+          if (link.parentElement.children.length === 1) covers.add(link.parentElement);
+        } else if (path === `/${handle}/photo`) {
+          avatars.add(link);
+          if (parseFloat(getComputedStyle(link).marginTop) < 0) overlaps.add(link);
+        }
+      }
+      // Empty headers have no photo link, but retain X's one-third-width spacer.
+      for (const spacer of header.querySelectorAll('[style*="padding-bottom"]')) {
+        const padding = spacer.style.paddingBottom;
+        if (padding.endsWith('%') && Math.abs(parseFloat(padding) - 100 / 3) < 0.1 &&
+          spacer.parentElement.children.length <= 2) covers.add(spacer.parentElement);
+      }
+    }
+    for (const [name, elements] of [["data-bxl-profile-cover", covers],
+      ["data-bxl-profile-avatar", avatars], ["data-bxl-profile-overlap", overlaps]]) {
+      for (const element of ownedElements) if (!elements.has(element)) element.removeAttribute(name);
+      for (const element of elements) mark(element, name);
+    }
     for (const oldGrid of primary.querySelectorAll("[data-bxl-grid]")) {
       if (oldGrid !== grid) {
         oldGrid.removeAttribute("data-bxl-grid");

@@ -5,9 +5,9 @@ const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const fixture = fs.readFileSync(path.join(__dirname, "fixture.html"));
 const assets = new Set(["/pages.js", "/layout.js", "/video.js", "/video-play.js", "/content.js", "/content.css", "/popup.html", "/popup.js", "/popup.css",
-  "/store/promo.html", "/store/privacy/index.html", "/store/privacy/en.html", "/store/privacy/ja.html",
+  "/store/promo.html", "/store/privacy/index.html", "/store/privacy/en.html", "/store/privacy/ja.html", "/tests/profile-cover.svg",
   "/icons/icon-16.png", "/icons/icon-32.png", "/icons/icon-48.png", "/icons/icon-128.png"]);
-const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".png": "image/png" };
+const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".png": "image/png", ".svg": "image/svg+xml" };
 
 const server = http.createServer((request, response) => {
   const url = new URL(request.url, "http://localhost");
