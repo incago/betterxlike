@@ -16,9 +16,11 @@
       this.resize = typeof ResizeObserver === "function" ? new ResizeObserver(schedule) : null;
       this.grid = null;
       this.indices = new Map();
+      this.positions = new Map();
       this.orders = new WeakMap();
       this.heights = new Map();
       this.rows = new Map();
+      this.columns = 0;
       this.nextIndex = 0;
       this.tail = null;
     }
@@ -75,8 +77,10 @@
       this.tail = null;
       this.grid = null;
       this.indices = new Map();
+      this.positions.clear();
       this.heights.clear();
       this.rows.clear();
+      this.columns = 0;
       this.nextIndex = 0;
     }
 
@@ -98,6 +102,57 @@
       if (!this.observed.has(element)) {
         this.resize?.observe(element);
         this.observed.add(element);
+      }
+    }
+
+    shiftIndices(start, amount) {
+      // Only structural insertions scan the history. Ordinary scroll/resize
+      // updates look up the few cached peers of each affected row directly.
+      for (const [key, index] of this.indices) {
+        if (index >= start) this.indices.set(key, index + amount);
+      }
+      this.positions = new Map([...this.indices].map(([key, index]) => [index, key]));
+      this.nextIndex += amount;
+      this.columns = 0;
+    }
+
+    order(tweets) {
+      const known = tweets.filter(record => this.indices.has(record.key));
+      const slots = known.map(record => this.indices.get(record.key));
+      if (slots.some((slot, index) => index && slot < slots[index - 1])) {
+        // A same-parent reorder changes visible identities without discarding
+        // the order of cached posts that are currently unmounted.
+        slots.sort((a, b) => a - b);
+        known.forEach((record, index) => {
+          this.indices.set(record.key, slots[index]);
+          this.positions.set(slots[index], record.key);
+        });
+        this.columns = 0;
+      }
+      let previous;
+      for (let i = 0; i < tweets.length;) {
+        if (this.indices.has(tweets[i].key)) {
+          previous = this.indices.get(tweets[i++].key);
+          continue;
+        }
+        let end = i + 1;
+        while (end < tweets.length && !this.indices.has(tweets[end].key)) end++;
+        const count = end - i;
+        let start = previous !== undefined ? previous + 1 :
+          end < tweets.length ? this.indices.get(tweets[end].key) - count : this.nextIndex;
+        if (start < 0) {
+          this.shiftIndices(0, -start);
+          start = 0;
+        } else if (Array.from({ length: count }, (_, offset) => start + offset)
+          .some(index => this.positions.has(index))) {
+          this.shiftIndices(start, count);
+        }
+        for (; i < end; i++) {
+          this.indices.set(tweets[i].key, start);
+          this.positions.set(start, tweets[i].key);
+          previous = start++;
+        }
+        this.nextIndex = Math.max(this.nextIndex, start);
       }
     }
 
@@ -129,6 +184,7 @@
         if (saved) {
           this.indices = saved.indices;
           this.nextIndex = saved.nextIndex;
+          this.positions = new Map([...this.indices].map(([key, index]) => [index, key]));
         }
       }
       if (!grid) return;
@@ -175,31 +231,14 @@
         // X can replace/crop the home timeline without changing its parent or
         // URL. A native origin with no old head means the old order is obsolete.
         this.indices = new Map();
+        this.positions.clear();
         this.heights.clear();
+        this.rows.clear();
+        this.columns = 0;
         this.nextIndex = 0;
       }
-      let previous;
-      for (let i = 0; i < tweets.length; i++) {
-        const record = tweets[i];
-        if (!this.indices.has(record.key)) {
-          const next = tweets.slice(i + 1).find(candidate => this.indices.has(candidate.key));
-          const distance = next ? tweets.indexOf(next) - i : 0;
-          const index = previous !== undefined ? previous + 1 :
-            next ? this.indices.get(next.key) - distance : this.nextIndex;
-          this.indices.set(record.key, index);
-          this.nextIndex = Math.max(this.nextIndex, index + 1);
-        }
-        previous = this.indices.get(record.key);
-      }
-      // Prepending before index zero temporarily produces negative indices.
-      // Rebase the entire cached order, including unmounted posts, before any
-      // column/rise is calculated. The first new post must start in column zero.
-      let minimum = 0;
-      for (const index of this.indices.values()) minimum = Math.min(minimum, index);
-      if (minimum < 0) {
-        for (const [key, index] of this.indices) this.indices.set(key, index - minimum);
-        this.nextIndex -= minimum;
-      }
+      this.order(tweets);
+      const dirtyRows = new Set();
       for (const record of tweets) {
         record.index = this.indices.get(record.key);
         record.column = ((record.index % columns) + columns) % columns;
@@ -212,17 +251,28 @@
       // never gets a fixed height, so late images/video/text can resize it.
       for (const record of tweets) {
         const height = record.card?.getBoundingClientRect().height || record.card?.scrollHeight || 320;
+        if (this.heights.get(record.key) !== height) dirtyRows.add(record.row);
         this.heights.set(record.key, height);
       }
       // Include cached peers that are currently unmounted, while allowing a row
       // to shrink again when media collapses or its visible cards become shorter.
-      this.rows = new Map();
-      for (const [key, index] of this.indices) {
-        const height = this.heights.get(key);
-        if (height) {
-          const row = Math.floor(index / columns);
-          this.rows.set(row, Math.max(this.rows.get(row) || 0, height));
+      if (this.columns !== columns) {
+        this.rows.clear();
+        for (const [key, index] of this.indices) {
+          const height = this.heights.get(key);
+          if (height) {
+            const row = Math.floor(index / columns);
+            this.rows.set(row, Math.max(this.rows.get(row) || 0, height));
+          }
         }
+        this.columns = columns;
+      } else for (const row of dirtyRows) {
+        let height = 0;
+        for (let column = 0; column < columns; column++) {
+          const key = this.positions.get(row * columns + column);
+          height = Math.max(height, this.heights.get(key) || 0);
+        }
+        this.rows.set(row, height);
       }
       let pending = 0;
       for (const record of records) {

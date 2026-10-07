@@ -6,7 +6,7 @@ X의 **홈·검색 결과·프로필·북마크·마음에 들어요**를 **창 
 
 ## 설치
 
-1. [v1.5.9 설치 파일 다운로드](https://github.com/incago/betterxlike/releases/download/v1.5.9/better-x-likes-1.5.9.zip) 후 압축을 풉니다. 변경 내역은 [릴리스 페이지](https://github.com/incago/betterxlike/releases/tag/v1.5.9)에서 확인할 수 있습니다.
+1. [v1.5.10 설치 파일 다운로드](https://github.com/incago/betterxlike/releases/download/v1.5.10/better-x-likes-1.5.10.zip) 후 압축을 풉니다. 변경 내역은 [릴리스 페이지](https://github.com/incago/betterxlike/releases/tag/v1.5.10)에서 확인할 수 있습니다.
 2. Chrome 주소창에서 `chrome://extensions`를 엽니다.
 3. 오른쪽 위 **개발자 모드**를 켭니다.
 4. **압축해제된 확장 프로그램을 로드합니다**를 누르고, 압축을 푼 폴더(`manifest.json`이 있는 폴더)를 선택합니다.
@@ -60,6 +60,10 @@ npm ci
 npm test
 ```
 
+브라우저 자동 검증은 Playwright로 실행합니다. 최초 한 번 `npx playwright install chromium`으로 테스트용 브라우저를 설치한 뒤 `npm run test:browser`를 실행합니다. `npm run test:all`은 DOM 테스트와 브라우저 테스트를 모두 실행합니다. 설치된 Chrome을 쓰려면 `PLAYWRIGHT_CHANNEL=chrome npm run test:browser`를 실행할 수 있습니다. 테스트 서버는 기본 미리보기와 다른 `127.0.0.1:4175`를 사용합니다.
+
+브라우저 테스트는 1~4열의 좌표·겹침·복원, 가상 스크롤과 화면 밖 게시물의 재등장, 홈 갱신, 프로필 사진 외부 프레임, 팔로우 추천, 실제 영상의 자동재생 차단과 재생 실패, 세 언어의 설정 저장을 검증합니다. GitHub Actions에서도 두 종류의 테스트를 실행합니다. 중간 삽입은 화면 밖 게시물을 포함한 순번을 조정하며, 일반 배치 갱신과 미디어 높이 변경은 영향을 받은 행만 다시 계산합니다. 열 수나 순서가 바뀔 때 전체 캐시를 다시 계산합니다.
+
 로컬 샘플을 브라우저에서 확인하려면 `npm run preview` 실행 후 `http://127.0.0.1:4173/i/history` 또는 `http://127.0.0.1:4173/i/history/likes`를 엽니다. 테스트용 트윗만 표시하며 실제 X 계정과 연결하지 않습니다. 페이지의 **브라우저 테스트** 버튼으로 현재 너비에 따른 1~4열의 실제 좌표, 내부 래퍼 때문에 발생한 가로 여백, 겹침 여부, 두 페이지의 사이드바 숨김, 동적 추가와 복원 등 19개 항목을 확인합니다.
 
 가상 스크롤 재현은 `http://127.0.0.1:4173/i/history/likes?virtual=1` 또는 북마크 주소 `http://127.0.0.1:4173/i/history?virtual=1`에서 확인합니다. 7개로 시작해서 스크롤에 따라 7개씩 추가로 로딩하며, 화면 밖의 항목은 실제 DOM에서 제거합니다. **브라우저 테스트**로 42개/6페이지 로딩, 위로 돌아왔을 때 열 위치 유지, 늦게 커진 미디어 반영, 원래 클릭 핸들러 유지 등 16개 항목을 확인합니다. 별도 수동 추가 버튼으로 페이지 로딩을 대신하지 않습니다.
@@ -86,10 +90,10 @@ npm test
 
 ## Chrome 웹 스토어 배포 준비
 
-스토어 업로드용 ZIP은 `python3 tools/package.py --store`로 생성합니다. 런타임 파일만 포함한 `store/better-x-likes-1.5.9-webstore.zip`과 제출 문구, 권한 사유, 심사자 안내, 규격에 맞는 이미지가 `store/`에 있습니다. 자세한 순서는 [제출 안내](store/publish-guide-ko.txt)를 참고하세요.
+스토어 업로드용 ZIP은 `python3 tools/package.py --store`로 생성합니다. 런타임 파일만 포함한 `store/better-x-likes-1.5.10-webstore.zip`과 제출 문구, 권한 사유, 심사자 안내, 규격에 맞는 이미지가 `store/`에 있습니다. 자세한 순서는 [제출 안내](store/publish-guide-ko.txt)를 참고하세요.
 
 게시자는 Junhak Kim, 공개 지원 이메일은 incago@gmail.com입니다. [공개 개인정보처리방침](https://incago.github.io/better-x-likes-privacy/)은 [전용 GitHub Pages 저장소](https://github.com/incago/better-x-likes-privacy)에 게시했습니다. 2026년 10월 7일 개발자 등록과 연락처 이메일 인증을 완료하고, 승인 후 자동 공개 옵션으로 1.4.1의 심사를 제출했습니다. [대시보드](https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing) 상태는 검토 대기 중입니다. 실제 X에서의 최종 동작 검증은 별도 확인이 필요합니다.
 
-1.5.9 패키지는 준비했지만 스토어에는 아직 업로드하지 않았습니다. 사용자의 결정에 따라 기존 1.4.1 심사는 유지하며, 개선 버전은 나중에 별도로 심사를 제출합니다.
+1.5.10 패키지는 준비했지만 스토어에는 아직 업로드하지 않았습니다. 사용자의 결정에 따라 기존 1.4.1 심사는 유지하며, 개선 버전은 나중에 별도로 심사를 제출합니다.
 
 1.5.9에서는 선택한 1번 시안의 X 그리드 아이콘을 툴바·팝업·스토어용 이미지에 적용했습니다. 원본은 `design/icon-concepts/01-cross-grid-master.png`이며, Pillow가 설치된 Python에서 `python3 tools/make_icons.py`로 16·32·48·128px 아이콘을 재생성할 수 있습니다.

@@ -8,7 +8,7 @@ The popup and extension description support Korean, English and Japanese. Chrome
 
 ## Install or update locally
 
-1. [Download the v1.5.9 installation ZIP](https://github.com/incago/betterxlike/releases/download/v1.5.9/better-x-likes-1.5.9.zip) and extract it. See the [release page](https://github.com/incago/betterxlike/releases/tag/v1.5.9) for release notes.
+1. [Download the v1.5.10 installation ZIP](https://github.com/incago/betterxlike/releases/download/v1.5.10/better-x-likes-1.5.10.zip) and extract it. See the [release page](https://github.com/incago/betterxlike/releases/tag/v1.5.10) for release notes.
 2. Open `chrome://extensions` in Chrome.
 3. Enable **Developer mode**.
 4. Click **Load unpacked** and select the extracted folder containing `manifest.json`.
@@ -51,6 +51,10 @@ npm test
 npm run preview
 ```
 
+For automated browser checks, run `npx playwright install chromium` once, then `npm run test:browser`. Run `npm run test:all` for both DOM and browser tests, or `PLAYWRIGHT_CHANNEL=chrome npm run test:browser` to use installed Chrome. The test server uses `127.0.0.1:4175`. GitHub Actions runs both suites. Browser checks cover 1–4 columns, paging/remounting, media growth, home refresh, profile portrait frames, follow modules, real video playback and failures, and saved preferences in all three languages.
+
+Middle insertions now shift cached offscreen post indices. Routine layout and media-height updates recalculate only affected rows; column or order changes rebuild cached rows. Failed native video playback revokes manual permission without revoking a newer successful request.
+
 The preview server at `http://127.0.0.1:4173` uses synthetic posts and does not connect to an X account. Supported examples include `/home`, `/search?q=cookie`, `/incago`, `/i/history` and `/i/history/likes`.
 
 Add `?virtual=1` (or `&virtual=1` after another query) to exercise virtual scrolling: seven initial posts, automatic loading up to 42 posts over six pages, and removal of offscreen DOM cells. The fixture’s browser test checks layout, late media resizing, original event handlers and restoration.
@@ -84,7 +88,7 @@ The regular ZIP includes runtime files and all three installation guides. The We
 
 Publisher: **Junhak Kim**. Public support email: **incago@gmail.com**.
 
-Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.9** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
+Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.10** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
 
 Better X Likes is an independent extension and is not an official product of X Corp. There is no separate terms-of-service document in this project; the privacy policy is available in all three languages.
 

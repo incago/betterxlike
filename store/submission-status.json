@@ -25,8 +25,8 @@
   "autoPublishAfterApproval": true,
   "published": false,
   "preparedUpdate": {
-    "version": "1.5.9",
-    "package": "better-x-likes-1.5.9-webstore.zip",
+    "version": "1.5.10",
+    "package": "better-x-likes-1.5.10-webstore.zip",
     "status": "deferredByUser",
     "submittedForReview": false,
     "languages": [

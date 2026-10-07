@@ -51,6 +51,34 @@ function setup(url = "https://x.com/i/history/likes", enabled = true, deferSetti
   };
 }
 
+test("middle insertions shift cached offscreen posts and preserve unique ordered slots", async t => {
+  const page = setup(); t.after(page.close); await page.settle();
+  const grid = page.document.querySelector('#timeline');
+  const old = [...grid.querySelectorAll('[data-bxl-cell="tweet"]')];
+  old[4].remove(); await page.settle();
+  old[1].insertAdjacentHTML('beforebegin', tweet(99) + tweet(100));
+  await page.settle();
+  assert.deepEqual([...grid.querySelectorAll('[data-bxl-cell="tweet"]')].map(cell => cell.dataset.bxlIndex), ['0', '1', '2', '3', '4', '5']);
+  grid.insertBefore(old[4], page.document.querySelector('#loader')); await page.settle();
+  assert.equal(old[4].dataset.bxlIndex, '6');
+  page.setEnabled(false); await page.settle();
+  page.setEnabled(true); await page.settle();
+  assert.deepEqual([...grid.querySelectorAll('[data-bxl-cell="tweet"]')].map(cell => cell.dataset.bxlIndex), ['0', '1', '2', '3', '4', '5', '6']);
+});
+
+test("reordering mounted posts preserves cached peers and subsequent insertion order", async t => {
+  const page = setup(); t.after(page.close); await page.settle();
+  const grid = page.document.querySelector('#timeline');
+  const old = [...grid.querySelectorAll('[data-bxl-cell="tweet"]')];
+  old[4].remove();
+  grid.insertBefore(old[2], old[1]); await page.settle();
+  assert.equal(old[2].dataset.bxlIndex, '1');
+  assert.equal(old[1].dataset.bxlIndex, '2');
+  old[1].insertAdjacentHTML('beforebegin', tweet(99)); await page.settle();
+  grid.insertBefore(old[4], page.document.querySelector('#loader')); await page.settle();
+  assert.deepEqual([...grid.querySelectorAll('[data-bxl-cell="tweet"]')].map(cell => cell.dataset.bxlIndex), ['0', '1', '2', '3', '4', '5']);
+});
+
 test("applies to likes, keeps original React nodes, native inline styles, and click handlers", async (t) => {
   const page = setup(); t.after(page.close);
   const article = page.document.querySelector("article");

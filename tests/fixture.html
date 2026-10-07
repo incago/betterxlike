@@ -359,6 +359,13 @@
         scrollTo(0, 0); // Model X's own Show posts action, not extension scrolling.
         renderNative();
       }
+      // Browser regression tests use the same native measurement and paging
+      // model for insertions between existing posts, not just home prepends.
+      window.insertPreviewPosts = (position, amount) => {
+        source.splice(position, 0, ...Array.from({ length: amount }, () => freshId++));
+        loaded += amount;
+        renderNative();
+      };
       const refreshHome = document.querySelector('#refresh-home');
       const runRefresh = document.querySelector('#run-refresh');
       refreshHome.hidden = runRefresh.hidden = location.pathname !== '/home';

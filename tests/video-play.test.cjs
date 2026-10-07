@@ -32,6 +32,57 @@ function setup() {
   return { window, policy, grid, videos, state, gesture: target => policy.gesture({ target, type: "click", isTrusted: true }), close: () => { policy.clear(); window.close(); } };
 }
 
+test("failed native playback revokes manual permission and preserves the rejection", async t => {
+  for (const synchronous of [false, true]) {
+    const page = setup(); t.after(page.close);
+    const [video] = page.videos;
+    // Install a failing native method beneath a fresh guard.
+    let calls = 0;
+    const failure = new page.window.DOMException('Media unavailable', 'NotSupportedError');
+    page.window.HTMLMediaElement.prototype.play = () => {
+      calls++;
+      if (synchronous) throw failure;
+      return Promise.reject(failure);
+    };
+    page.window.eval(guardSource);
+    let now = 100;
+    page.window.Date.now = () => now;
+    page.gesture(video);
+    if (synchronous) assert.throws(() => video.play(), error => error === failure);
+    else await assert.rejects(video.play(), error => error === failure);
+    assert.equal(video.hasAttribute('data-bxl-video-manual'), false);
+    assert.equal(video.hasAttribute('data-bxl-video-until'), false);
+    now += 5000;
+    await assert.rejects(video.play(), { name: 'NotAllowedError' });
+    assert.equal(calls, 1);
+    page.gesture(video);
+    if (synchronous) assert.throws(() => video.play(), error => error === failure);
+    else await assert.rejects(video.play(), error => error === failure);
+    assert.equal(calls, 2, 'a fresh gesture still permits a new native attempt');
+  }
+});
+
+test("a stale failed play cannot revoke a newer successful playback", async t => {
+  const page = setup(); t.after(page.close);
+  const [video] = page.videos;
+  let rejectFirst;
+  let calls = 0;
+  page.window.HTMLMediaElement.prototype.play = function () {
+    if (++calls === 1) return new Promise((_, reject) => { rejectFirst = reject; });
+    page.state(this).paused = false;
+    this.dispatchEvent(new page.window.Event('play'));
+    return Promise.resolve();
+  };
+  page.window.eval(guardSource);
+  page.gesture(video);
+  const first = video.play();
+  await video.play();
+  rejectFirst(new page.window.DOMException('Interrupted', 'AbortError'));
+  await assert.rejects(first, { name: 'AbortError' });
+  assert.equal(video.hasAttribute('data-bxl-video-manual'), true);
+  assert.equal(video.paused, false);
+});
+
 test("a thousand autoplay retries never invoke native play or pause or change playback speed", async (t) => {
   const page = setup(); t.after(page.close);
   const [video] = page.videos;

@@ -8,7 +8,7 @@ Xの**ホーム・検索結果・プロフィール・ブックマーク・い�
 
 ## ローカルでのインストール・更新
 
-1. [v1.5.9のインストール用ZIPをダウンロード](https://github.com/incago/betterxlike/releases/download/v1.5.9/better-x-likes-1.5.9.zip)し、展開します。変更内容は[リリースページ](https://github.com/incago/betterxlike/releases/tag/v1.5.9)で確認できます。
+1. [v1.5.10のインストール用ZIPをダウンロード](https://github.com/incago/betterxlike/releases/download/v1.5.10/better-x-likes-1.5.10.zip)し、展開します。変更内容は[リリースページ](https://github.com/incago/betterxlike/releases/tag/v1.5.10)で確認できます。
 2. Chromeで `chrome://extensions` を開きます。
 3. **デベロッパー モード**をオンにします。
 4. **パッケージ化されていない拡張機能を読み込む**から、展開したフォルダー（`manifest.json` があるフォルダー）を選びます。
@@ -51,6 +51,10 @@ npm test
 npm run preview
 ```
 
+ブラウザの自動検証は、初回に `npx playwright install chromium` を実行し、その後 `npm run test:browser` で実行できます。DOMとブラウザの両方を検証するには `npm run test:all`、インストール済みChromeを使うには `PLAYWRIGHT_CHANNEL=chrome npm run test:browser` を実行します。テストサーバーは `127.0.0.1:4175` を使用します。GitHub Actionsでも両方を実行します。1〜4列、仮想スクロールと再表示、メディアの高さ変更、ホーム更新、プロフィール写真の外枠、おすすめユーザー、実際の動画再生と失敗、3言語の設定保存を検証します。
+
+途中にポストを追加すると、画面外のポストも含めて順番を調整します。通常の配置更新は変更された行だけを再計算し、列数や順番が変わる場合はキャッシュ全体を再計算します。動画再生が失敗すると手動再生の許可を解除し、新しい再生要求の成功は維持します。
+
 `http://127.0.0.1:4173` のプレビューは合成ポストを使い、Xのアカウントには接続しません。`/home`、`/search?q=cookie`、`/incago`、`/i/history`、`/i/history/likes` を確認できます。
 
 `?virtual=1`（別のクエリがあれば `&virtual=1`）を付けると、最初の7件から6ページ・42件までの自動読み込みと、画面外のDOM要素の削除を再現します。プレビュー内のブラウザテストでは、配置、遅れて変わるメディアの高さ、元のイベント処理、標準表示への復元を確認します。
@@ -82,7 +86,7 @@ python3 tools/package.py --store
 
 提供者: **Junhak Kim**。公開サポートメール: **incago@gmail.com**。
 
-**1.4.1**は2026年10月7日に、審査承認後の自動公開を選んで提出しました。ユーザーの希望により現在の審査を維持し、改善版は後日提出します。**1.5.9はローカルで準備した未提出のバージョンです。** [日本語の提出案内](store/publish-guide-ja.txt)、[日本語のストア説明](store/listing-ja.txt)、[提出状態](store/submission-status.json)を参照してください。
+**1.4.1**は2026年10月7日に、審査承認後の自動公開を選んで提出しました。ユーザーの希望により現在の審査を維持し、改善版は後日提出します。**1.5.10はローカルで準備した未提出のバージョンです。** [日本語の提出案内](store/publish-guide-ja.txt)、[日本語のストア説明](store/listing-ja.txt)、[提出状態](store/submission-status.json)を参照してください。
 
 Better X Likesは独立した拡張機能であり、X Corp.の公式製品ではありません。このプロジェクトには別途の利用規約文書はありません。プライバシーポリシーは3言語で提供します。
 
