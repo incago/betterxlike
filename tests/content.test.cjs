@@ -81,6 +81,58 @@ test("new tweets and recycled loader cells get the right classification", async 
   assert.equal(page.document.querySelector("#loader").getAttribute("data-bxl-cell"), "tweet");
 });
 
+test("inline follow modules collapse without hiding tweets or loading controls and restore on disable", async t => {
+  for (const virtual of [true, false]) {
+    const page = setup('https://x.com/incago', true, false, { profile: 'grid' }); t.after(page.close);
+    const grid = page.document.querySelector('#timeline');
+    if (!virtual) for (const cell of grid.children) cell.removeAttribute('style');
+    const first = grid.firstElementChild;
+    first.querySelector('article').insertAdjacentHTML('beforeend', '<div data-testid="UserCell">Quoted account inside a post</div>');
+    first.insertAdjacentHTML('afterend', '<div data-testid="cellInnerDiv" id="suggestions" style="position: absolute; transform: translateY(500px)"><div><h2>Who to follow</h2><div data-testid="UserCell"><button>Follow</button></div><a href="/i/connect_people">Show more</a></div></div>');
+    if (!virtual) page.document.querySelector('#suggestions').removeAttribute('style');
+    const rec = page.document.querySelector('#suggestions'); const nativeStyle = rec.style.cssText;
+    const button = rec.querySelector('button'); let clicks = 0; button.addEventListener('click', () => clicks++);
+    const loader = page.document.querySelector('#loader'); loader.innerHTML = '<div role="progressbar">Loading</div><button>Retry</button>';
+    await page.settle();
+    assert.equal(rec.dataset.bxlCell, 'recommendation');
+    assert.equal(page.window.getComputedStyle(rec.firstElementChild).display, 'none');
+    assert.equal(first.dataset.bxlCell, 'tweet');
+    assert.equal(loader.dataset.bxlCell, 'other');
+    assert.notEqual(page.window.getComputedStyle(loader).display, 'none');
+    assert.deepEqual([...grid.querySelectorAll('[data-bxl-cell="tweet"]')].map(cell => cell.dataset.bxlIndex), virtual ? ['0', '1', '2', '3', '4'] : [undefined, undefined, undefined, undefined, undefined]);
+    assert.equal(grid.style.height, '2000px');
+    if (virtual) {
+      assert.equal(page.window.getComputedStyle(rec).height, '0px');
+      assert.equal(rec.style.transform, 'translateY(500px)');
+    }
+    page.setEnabled(false); await page.settle();
+    assert.equal(rec.hasAttribute('data-bxl-cell'), false);
+    assert.notEqual(page.window.getComputedStyle(rec.firstElementChild).display, 'none');
+    assert.equal(rec.style.cssText, nativeStyle);
+    assert.equal(rec.querySelector('button'), button); button.click(); assert.equal(clicks, 1);
+  }
+});
+
+test("split recommendations include their heading and footer and recycled loader cells become visible", async t => {
+  const page = setup(); t.after(page.close);
+  const grid = page.document.querySelector('#timeline');
+  grid.firstElementChild.insertAdjacentHTML('afterend', '<div data-testid="cellInnerDiv" id="follow-title"><h2>Suggested people in another language</h2></div><div data-testid="cellInnerDiv" id="follow-user"><div data-testid="UserCell"><button>Follow</button></div></div><div data-testid="cellInnerDiv" id="follow-more"><a href="/i/connect_people?user_id=123">More</a></div><div data-testid="cellInnerDiv" id="retry"><h2>Something went wrong</h2><div role="alert">Failed</div><button>Retry</button></div>');
+  await page.settle();
+  for (const id of ['follow-title', 'follow-user', 'follow-more']) assert.equal(page.document.getElementById(id).dataset.bxlCell, 'recommendation');
+  assert.equal(page.document.getElementById('retry').dataset.bxlCell, 'other');
+  const user = page.document.getElementById('follow-user');
+  user.innerHTML = '<div role="progressbar">Loading more</div>'; await page.settle();
+  assert.equal(user.dataset.bxlCell, 'other');
+  assert.notEqual(page.window.getComputedStyle(user.firstElementChild).display, 'none');
+  user.innerHTML = '<article data-testid="tweet"><a href="/writer/status/999">A new post</a></article>'; await page.settle();
+  assert.equal(user.dataset.bxlCell, 'tweet');
+  assert.notEqual(page.window.getComputedStyle(user.firstElementChild).display, 'none');
+  page.document.getElementById('follow-title').innerHTML = '<div>팔로우 추천</div>'; await page.settle();
+  assert.equal(page.document.getElementById('follow-title').dataset.bxlCell, 'recommendation');
+  page.navigate('/explore'); await page.settle();
+  assert.equal(page.document.querySelector('[data-bxl-cell="recommendation"]'), null);
+});
+
 test("disable restores all owned attributes and respects storage area", async (t) => {
   const page = setup(); t.after(page.close); await page.settle();
   page.setEnabled(false, "sync"); await page.settle();

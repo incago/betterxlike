@@ -7,6 +7,8 @@
     "data-bxl-feed", "data-bxl-nav", "data-bxl-layout", "data-bxl-card", "data-bxl-index",
     "data-bxl-profile-header"];
   const SIDEBAR_CONTENT = '[data-testid="SearchBox_Search_Input"], [data-testid="trend"], [data-testid="UserCell"]';
+  const FOLLOW_CONTENT = '[data-testid="UserCell"], [data-testid="whoToFollow"], a[href*="/i/connect_people"]';
+  const FOLLOW_TITLES = new Set(["팔로우 추천", "Who to follow", "You might like", "おすすめユーザー"]);
   const ownedElements = new Set();
   // Wait for the saved setting before painting, so disabled users see no flash.
   let enabled = false;
@@ -39,6 +41,29 @@
       for (const attribute of OWNED) element.removeAttribute(attribute);
     }
     ownedElements.clear();
+  }
+
+  function followRecommendations(cells) {
+    const result = new Set();
+    let group = [];
+    const flush = () => {
+      const hasPeople = group.some(cell => cell.matches(FOLLOW_CONTENT) || cell.querySelector(FOLLOW_CONTENT));
+      for (const cell of group) {
+        const explicit = cell.matches(FOLLOW_CONTENT) || cell.querySelector(FOLLOW_CONTENT);
+        // X may split the heading, people and More link into separate native
+        // cells. Context identifies headings without hiding unrelated loaders.
+        const heading = cell.querySelector('h1, h2, h3, [role="heading"]');
+        const controls = cell.querySelector('button, [role="button"], [role="progressbar"], [role="alert"], [role="status"]');
+        if (explicit || FOLLOW_TITLES.has(cell.textContent.trim()) || (hasPeople && heading && !controls)) result.add(cell);
+      }
+      group = [];
+    };
+    for (const cell of cells) {
+      if (cell.querySelector('article[data-testid="tweet"]')) flush();
+      else group.push(cell);
+    }
+    flush();
+    return result;
   }
 
   function update() {
@@ -152,9 +177,12 @@
       }
     }
     mark(grid, "data-bxl-grid");
-    for (const cell of grid.children) {
+    const cells = [...grid.children];
+    const recommendations = followRecommendations(cells);
+    for (const cell of cells) {
       const tweet = cell.querySelector('article[data-testid="tweet"]');
-      mark(cell, "data-bxl-cell", tweet ? "tweet" : "other");
+      mark(cell, "data-bxl-cell", tweet ? "tweet" : recommendations.has(cell) ? "recommendation" : "other");
+      if (!tweet) cell.removeAttribute("data-bxl-index");
     }
     layout.update(grid);
     videos.update(grid);

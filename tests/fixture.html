@@ -33,7 +33,7 @@
     .feed-align { display: flex; justify-content: flex-end; width: 1060px; max-width: 1060px; margin: 0 80px 0 auto; }
     .feed-align > section { width: 100%; min-width: 0; }
     .feed-inner { display: flex; flex-direction: column; align-items: flex-end; width: 100%; }
-    #timeline { position: relative; }
+    #timeline { position: relative; width: 100%; }
     [data-testid="cellInnerDiv"] { position: relative; width: 100%; }
     article { padding: 16px; border-bottom: 1px solid #253442; cursor: pointer; }
     .author { display: flex; gap: 9px; align-items: center; margin-bottom: 12px; }
@@ -64,6 +64,8 @@
     <button id="scroll-next" hidden>아래로 스크롤</button>
     <button id="refresh-home" hidden>35 게시물 보기</button>
     <button id="run-refresh" hidden>홈 갱신 테스트</button>
+    <button id="run-follow" hidden>추천 영역 테스트</button>
+    <span id="follow-checks" role="status"></span>
     <span id="checks" role="status"></span>
     <span id="virtual-status" role="status"></span>
   </aside>
@@ -93,6 +95,7 @@
       document.body.style.overflow = 'hidden';
     }
     const virtualDemo = new URLSearchParams(location.search).has('virtual');
+    const recommendationDemo = new URLSearchParams(location.search).has('recommendations');
     let enabled = localStorage.getItem('bxl-preview-enabled') !== 'false';
     let pageModes = JSON.parse(localStorage.getItem("bxl-preview-modes") || "null");
     window.chrome = { runtime: {}, storage: {
@@ -128,6 +131,13 @@
     }
     function addTweets(amount) {
       for (let i = 0; i < amount; i++) document.querySelector('#timeline').append(makeTweet(count++));
+    }
+    function makeRecommendation(id) {
+      const cell = document.createElement('div'); cell.dataset.testid = 'cellInnerDiv';
+      cell.dataset.recommendation = String(id);
+      const body = id === -1 ? '<h2>팔로우 추천</h2>' : id === -4 ? '<a href="/i/connect_people">더 보기</a>' : `<div data-testid="UserCell">샘플 추천 계정 ${-id}<p>@sample_follow_${-id}</p><button>팔로우</button></div>`;
+      cell.innerHTML = `<div style="padding:16px">${body}</div>`;
+      return cell;
     }
     function setEnabled(value) {
       enabled = value;
@@ -170,7 +180,10 @@
       document.body.style.background = light ? '#f7fafc' : '#0b1017';
       document.body.style.color = light ? '#16202c' : '#e7eef5';
     };
-    if (!virtualDemo) addTweets(8);
+    if (!virtualDemo) {
+      addTweets(8);
+      if (recommendationDemo) document.querySelector('#timeline').children[2].after(...[-1, -2, -3, -4].map(makeRecommendation));
+    }
     const settle = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     document.querySelector('#run').onclick = async () => {
       document.querySelector('#checks').textContent = '검증 중…';
@@ -179,7 +192,7 @@
       function check(name, condition) { results.push({ name, pass: Boolean(condition) }); }
       enableTestGrids(); await settle();
       const grid = document.querySelector('[data-bxl-grid]');
-      const cells = [...grid.children];
+      const cells = [...grid.querySelectorAll(':scope > [data-bxl-cell="tweet"]')];
       const width = grid.getBoundingClientRect().width;
       const columns = width >= 1060 ? 4 : width >= 800 ? 3 : width >= 540 ? 2 : 1;
       const rects = cells.slice(0, columns + 1).map(cell => cell.getBoundingClientRect());
@@ -228,11 +241,12 @@
       const mounted = new Map();
       let loaded = 7;
       const source = Array.from({ length: 42 }, (_, id) => id);
+      if (recommendationDemo) source.splice(3, 0, -1, -2, -3, -4);
       let freshId = 1000;
       let pages = 1;
       let removals = 0;
       let renderFrame = 0;
-      const height = id => measured.get(id) || 330;
+      const height = id => measured.get(id) ?? 330;
       const offset = position => Array.from({ length: position }, (_, index) => height(source[index])).reduce((a, b) => a + b, 0);
       const total = () => offset(loaded);
       const rootTop = () => grid.getBoundingClientRect().top + scrollY;
@@ -261,7 +275,7 @@
           if (offset(position) + height(id) < start || offset(position) > end) continue;
           wanted.add(id);
           if (!mounted.has(id)) {
-            const cell = makeTweet(id);
+            const cell = id < 0 ? makeRecommendation(id) : makeTweet(id);
             cell.dataset.sourceIndex = String(id);
             if (id >= 1000) cell.querySelector('[data-testid="tweetText"]').prepend('새 게시물 · ');
             cell.style.position = 'absolute';
@@ -283,7 +297,7 @@
         if (ordered.some((cell, index) => grid.children[index] !== cell)) {
           for (const cell of ordered) grid.append(cell);
         }
-        document.querySelector('#virtual-status').textContent = `7개로 시작 · 불러온 트윗 ${loaded}개 · 페이지 ${pages} · 제거한 셀 ${removals}개`;
+        document.querySelector('#virtual-status').textContent = `7개로 시작 · 불러온 트윗 ${source.slice(0, loaded).filter(id => id >= 0).length}개 · 페이지 ${pages} · 제거한 셀 ${removals}개`;
       }
       addEventListener('scroll', queueNative, { passive: true });
       addEventListener('resize', queueNative);
@@ -345,7 +359,7 @@
         check('initial source page had seven tweets', pages >= 1);
         check('uses the native virtual-slot layout', grid.dataset.bxlLayout === 'virtual');
         check('native min-height is preserved', getComputedStyle(grid).minHeight === grid.style.minHeight);
-        for (let page = 0; page < 5; page++) {
+        for (let page = 0; page < (recommendationDemo ? 6 : 5); page++) {
           scrollTo(0, document.scrollingElement.scrollHeight);
           for (let i = 0; i < 4; i++) await settle();
         }
@@ -375,6 +389,58 @@
         check('no secondary vertical scroller in content', document.querySelector('[data-bxl-primary]').scrollHeight <= document.querySelector('[data-bxl-primary]').clientHeight + 1);
         document.querySelector('#checks').textContent = `${results.filter(result => result.pass).length}/${results.length} 통과 · 가상 스크롤`;
         window.previewResults = results;
+      };
+    }
+    if (recommendationDemo) {
+      document.querySelector('#run-follow').hidden = false;
+      document.querySelector('#run-follow').onclick = async () => {
+        const results = []; const check = (name, pass) => results.push({ name, pass: Boolean(pass) });
+        const waitLayout = async () => { for (let i = 0; i < 6; i++) await settle(); };
+        enableTestGrids(); await waitLayout();
+        // A module at the initial page boundary must not stop native paging.
+        scrollTo(0, document.scrollingElement.scrollHeight); await waitLayout();
+        scrollTo(0, 0); await waitLayout();
+        const grid = document.querySelector('#timeline');
+        const recommendations = [...grid.querySelectorAll('[data-recommendation]')];
+        check('all four recommendation fragments are mounted', recommendations.length === 4);
+        check('only suggestion fragments are classified', recommendations.every(cell => cell.dataset.bxlCell === 'recommendation'));
+        check('hidden modules occupy no native height', recommendations.every(cell => cell.getBoundingClientRect().height === 0));
+        check('suggestion contents are hidden', recommendations.every(cell => getComputedStyle(cell.firstElementChild).display === 'none'));
+        const columns = Number(grid.style.getPropertyValue('--bxl-columns'));
+        const firstPosts = () => [...grid.querySelectorAll('[data-bxl-cell="tweet"]')].slice(0, columns + 1);
+        const aligned = () => {
+          const cards = firstPosts().slice(0, columns).map(cell => cell.firstElementChild);
+          return cards.length === columns && cards.every(card => Math.abs(card.getBoundingClientRect().top - cards[0].getBoundingClientRect().top) < 2);
+        };
+        check('posts on either side of recommendations stay aligned', aligned());
+        const rows = new Map();
+        [...grid.querySelectorAll('[data-bxl-cell="tweet"]')].slice(0, 8).forEach((cell, index) => {
+          const row = Math.floor(Number(cell.dataset.bxlIndex ?? index) / columns);
+          if (!rows.has(row)) rows.set(row, []);
+          rows.get(row).push(cell.firstElementChild.getBoundingClientRect());
+        });
+        const bounds = [...rows.values()];
+        check('all nearby rows are aligned without overlaps across suggestions', bounds.every((row, index) => row.every(rect => Math.abs(rect.top - row[0].top) < 2) && (!index || row[0].top >= Math.max(...bounds[index - 1].map(rect => rect.bottom)))));
+        check('next row begins below the first row', firstPosts()[columns]?.firstElementChild.getBoundingClientRect().top >= Math.max(...firstPosts().slice(0, columns).map(cell => cell.firstElementChild.getBoundingClientRect().bottom)));
+        const media = firstPosts()[Math.min(2, columns - 1)].querySelector('.media');
+        media.style.height = '550px'; await waitLayout();
+        check('late media growth keeps the row aligned', aligned());
+        media.style.height = ''; await waitLayout();
+        setEnabled(false); await waitLayout();
+        const restored = [...grid.querySelectorAll('[data-recommendation]')];
+        check('default list restores the suggestions', restored.length === 4 && restored.every(cell => cell.getBoundingClientRect().height > 0 && !cell.hasAttribute('data-bxl-cell')));
+        enableTestGrids(); await waitLayout();
+        check('enabling grid hides suggestions again', [...grid.querySelectorAll('[data-recommendation]')].every(cell => cell.dataset.bxlCell === 'recommendation' && cell.getBoundingClientRect().height === 0));
+        if (virtualDemo) {
+          for (let i = 0; i < 7; i++) { scrollTo(0, document.scrollingElement.scrollHeight); await waitLayout(); }
+          check('native pagination still loads all 42 posts', document.querySelector('#virtual-status').textContent.includes('트윗 42개'));
+          scrollTo(0, 0); await waitLayout();
+          check('remounted posts preserve their first row', aligned() && firstPosts()[0]?.dataset.bxlIndex === '0');
+        }
+        check('no extra vertical scroller', document.querySelector('[data-bxl-primary]').scrollHeight <= document.querySelector('[data-bxl-primary]').clientHeight + 1);
+        document.querySelector('#follow-checks').textContent = `${results.filter(result => result.pass).length}/${results.length} 통과 · 추천 영역`;
+        document.querySelector('#follow-checks').dataset.results = JSON.stringify(results);
+        window.followResults = results;
       };
     }
   </script>

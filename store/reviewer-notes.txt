@@ -1,4 +1,4 @@
-Better X Likes 1.5.5 — review instructions
+Better X Likes 1.5.6 — review instructions
 Publisher: Junhak Kim
 Contact: incago@gmail.com
 
@@ -29,8 +29,10 @@ Known dependency
 X controls its own DOM, authentication, rendering, and network loading. The extension styles its existing DOM rather than providing independent copies of posts. If an X account has no saved posts, bookmark/like some before testing. Access restrictions imposed by X remain unchanged.
 
 Publisher pre-submission record
-60 automated tests passed for the current implementation. Local browser tests exercised actual canvas-stream videos (1,000 rejected autoplay retries with no play/pause or frame progression, trusted manual play, restoration) and a virtualized timeline (42 posts/6 pages). These local tests do not replace an end-to-end test on the current logged-in X website; complete that before submitting.
+62 automated tests passed for the current implementation. Local browser tests exercised actual canvas-stream videos (1,000 rejected autoplay retries with no play/pause or frame progression, trusted manual play, restoration) and a virtualized timeline (42 posts/6 pages). These local tests do not replace an end-to-end test on the current logged-in X website; complete that before submitting.
 
 For 1.5.3, the synthetic home refresh checks passed 21 items each at one, two, three and four columns: batches of 1/3/35 prepended posts, first-row alignment and scroll reachability, return after offscreen unmounting and restoration after refreshing in Default list. The existing 16 virtual-scroll checks also passed. The first prepend regression failed before the fix; the current tests include same-parent replacement and cropped-head reset cases.
 
 For 1.5.5, profile chrome (title, cover, avatar, details and tabs outside the tweet timeline) is capped at 600px or available width; only the tweet grid expands. The native profile DOM is retained and styles restore on Default list, disable or navigation. Local browser profile checks passed 19 flow-layout items and 16 virtual-scroll items (42 posts/6 pages); wide and narrow profile geometry was checked. The current logged-in X rendering still needs a separate check.
+
+For 1.5.6, inline follow suggestions are hidden on grid pages, including split headings/UserCell/More fragments, without removing native cells or changing X offsets. Hidden virtual cells measure zero height. Verify post alignment around the suggestions and native paging; loaders/retry controls and post-contained account elements must remain visible. Default list restores suggestions. All 62 automated tests passed; local recommendation checks passed 13 items at each of 1/2/3/4 columns (42 posts loaded) and 11 flow-list checks. The current logged-in X site still needs separate verification.

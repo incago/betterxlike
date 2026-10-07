@@ -173,3 +173,24 @@ html[data-bxl-active] [data-bxl-cell="tweet"] [data-testid="tweetText"] {
 html[data-bxl-active] [data-bxl-layout="flow"] > [data-bxl-cell="other"] {
   grid-column: 1 / -1 !important;
 }
+
+/* Inline follow suggestions interrupt rows. Preserve the React-owned cell and
+   its native Y offset, but let X measure zero height for this hidden module. */
+html[data-bxl-active] [data-bxl-layout="flow"] > [data-bxl-cell="recommendation"] {
+  display: none !important;
+}
+
+html[data-bxl-active] [data-bxl-layout="virtual"] > [data-bxl-cell="recommendation"] {
+  height: 0 !important;
+  min-height: 0 !important;
+  max-height: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+html[data-bxl-active] [data-bxl-cell="recommendation"] > * {
+  display: none !important;
+}
