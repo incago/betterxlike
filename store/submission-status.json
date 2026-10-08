@@ -1,7 +1,7 @@
 {
-  "checkedOn": "2026-10-07",
+  "checkedOn": "2026-10-08",
   "name": "Better X Likes",
-  "version": "1.4.1",
+  "version": "1.5.10",
   "itemId": "kjdnnlmbnnncchgmogmagocekbikahpf",
   "dashboardUrl": "https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing",
   "privacyPolicyUrl": "https://incago.github.io/better-x-likes-privacy/",
@@ -22,19 +22,19 @@
   "contactVerificationEmailRequested": true,
   "contactEmailVerified": true,
   "submittedForReview": true,
-  "autoPublishAfterApproval": true,
+  "autoPublishAfterApproval": false,
   "published": false,
   "preparedUpdate": {
     "version": "1.5.10",
     "package": "better-x-likes-1.5.10-webstore.zip",
-    "status": "deferredByUser",
-    "submittedForReview": false,
+    "status": "pendingReview",
+    "submittedForReview": true,
     "languages": [
       "ko",
       "en",
       "ja"
     ],
-    "reason": "User chose to preserve the pending 1.4.1 review and submit the improved version later."
+    "reason": "Dashboard confirmed version 1.5.10; resubmitted on 2026-10-08 after removing supported-page URL lists from English, Japanese and Korean descriptions."
   },
   "privacyPolicyEnglishUrl": "https://incago.github.io/better-x-likes-privacy/en.html",
   "privacyPolicyUpdate": {
@@ -47,5 +47,19 @@
     "commit": "bbd0b667a0d1ca6368253652038ab642170bd693",
     "verifiedOn": "2026-10-07"
   },
-  "privacyPolicyJapaneseUrl": "https://incago.github.io/better-x-likes-privacy/ja.html"
+  "privacyPolicyJapaneseUrl": "https://incago.github.io/better-x-likes-privacy/ja.html",
+  "resubmission": {
+    "date": "2026-10-08",
+    "violationReference": "Yellow Argon",
+    "change": "Removed supported-page URL lists from all three localized store descriptions.",
+    "languages": [
+      "en",
+      "ja",
+      "ko"
+    ],
+    "status": "pendingReview",
+    "autoPublishAfterApproval": false,
+    "publicationNote": "Automatic approval review blocked submission with automatic publication because explicit publication authorization was missing. Submitted for review with automatic publication disabled.",
+    "evidence": "store/resubmission-2026-10-08.jpg"
+  }
 }

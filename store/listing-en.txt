@@ -31,14 +31,6 @@ How to use
 2. Sign in to X and open home, search results, a profile, bookmarks or likes.
 3. Resize the window and choose a layout for each page in the popup.
 
-Supported pages
-https://x.com/home
-https://x.com/search
-https://x.com/username (profile posts, replies, media and highlights)
-https://x.com/i/history
-https://x.com/i/history/likes
-https://x.com/i/bookmarks
-
 The profile preference applies to your profile and other profiles. Post details, messages, notifications, Explore, follower lists and pages without a tweet timeline keep X’s default layout.
 
 Privacy and permissions
