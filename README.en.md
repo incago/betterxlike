@@ -88,7 +88,7 @@ The regular ZIP includes runtime files and all three installation guides. The We
 
 Publisher: **Junhak Kim**. Public support email: **incago@gmail.com**.
 
-Version **1.4.1** was submitted for review on October 7, 2026 with automatic publication after approval. The user chose to keep that review and submit the improved version later. Version **1.5.10** is prepared locally and has not been submitted. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
+Version **1.4.1** is publicly available in the Chrome Web Store. Version **1.5.10** was first submitted on October 7, 2026 and resubmitted on October 8 after removing supported-page URL lists from the store descriptions. The October 8 record confirms pending review with automatic publication disabled; publication requires a separate action after approval. Korean, English and Japanese listings, permission explanations and reviewer instructions were updated. See [English submission guide](store/publish-guide-en.txt), [English store listing](store/listing-en.txt) and [submission status](store/submission-status.json).
 
 Better X Likes is an independent extension and is not an official product of X Corp. There is no separate terms-of-service document in this project; the privacy policy is available in all three languages.
 

@@ -5,7 +5,7 @@ Listing language: English
 Visibility: Public
 Price: Free
 Category: Productivity > Tools
-Prepared for version: 1.5.9 (not yet submitted)
+Submitted for version: 1.5.10 (resubmitted October 8, 2026; pending review)
 
 Short description
 View X home, search, profiles, bookmarks and likes in a 1–4 column grid, with a default layout option for each page.

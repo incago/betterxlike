@@ -34,7 +34,10 @@
       "en",
       "ja"
     ],
-    "reason": "Dashboard confirmed version 1.5.10; resubmitted on 2026-10-08 after removing supported-page URL lists from English, Japanese and Korean descriptions."
+    "reason": "Dashboard confirmed version 1.5.10; resubmitted on 2026-10-08 after removing supported-page URL lists from English, Japanese and Korean descriptions.",
+    "submittedOn": "2026-10-08",
+    "autoPublishAfterApproval": false,
+    "sha256": "024961311d7928b4a13db6efb0cf48cd2fe9dd4e8744166e9c5bf334245a0d8d"
   },
   "privacyPolicyEnglishUrl": "https://incago.github.io/better-x-likes-privacy/en.html",
   "privacyPolicyUpdate": {
@@ -61,5 +64,20 @@
     "autoPublishAfterApproval": false,
     "publicationNote": "Automatic approval review blocked submission with automatic publication because explicit publication authorization was missing. Submitted for review with automatic publication disabled.",
     "evidence": "store/resubmission-2026-10-08.jpg"
+  },
+  "publishedVersion": "1.4.1",
+  "publishedVersionStatus": "public",
+  "submittedOn": "2026-10-08",
+  "initialSubmission": {
+    "date": "2026-10-07",
+    "autoPublishAfterApproval": true,
+    "dashboardStatus": "검토 대기 중",
+    "confirmation": "검토를 위해 확장 프로그램을(를) 제출함",
+    "listingLanguages": [
+      "en",
+      "ja",
+      "ko"
+    ],
+    "reviewInstructionsCharacters": 495
   }
 }
