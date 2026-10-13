@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-13",
+  "environment": "Logged-in Chrome, existing unpacked Better X Likes extension",
+  "parent": "https://x.com/i/history/likes",
+  "checks": [
+    {
+      "case": "Native dialog over unchanged grid",
+      "result": "pass"
+    },
+    {
+      "case": "Full post in same-origin iframe, ISOLATED content script",
+      "result": "blocked",
+      "visibleError": "x.com에서 연결을 거부했습니다."
+    },
+    {
+      "case": "Full post in same-origin iframe, MAIN content script",
+      "result": "blocked",
+      "visibleError": "x.com에서 연결을 거부했습니다."
+    },
+    {
+      "case": "Same post in a top-level tab",
+      "result": "pass",
+      "observed": "Post body, reply composer and loaded reply visible"
+    }
+  ],
+  "limitations": [
+    "Exact authenticated frame response headers were not captured.",
+    "This rejects the tested iframe approach, not every possible custom-rendered approach.",
+    "Popup option not shipped because full-detail loading failed."
+  ],
+  "screenshot": "tests/tweet-modal-live-prototype.jpg"
+}

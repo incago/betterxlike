@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-13",
+  "timezone": "Asia/Seoul",
+  "environment": "Logged-in Chrome with the unpacked local extension",
+  "transport": "Same-page X GET requests; focal post only and translation on demand. No source tabs or reply requests.",
+  "checks": [
+    {
+      "case": "Header only has Close and Open in X; no visible title",
+      "result": "pass"
+    },
+    {
+      "case": "Only selected post rendered; no replies or reply controls",
+      "result": "pass",
+      "renderedPosts": 1
+    },
+    {
+      "case": "Complete original note text",
+      "result": "pass",
+      "characters": 517
+    },
+    {
+      "case": "X translation from Arabic to Korean and back to original",
+      "result": "pass",
+      "translatedCharacters": 324
+    },
+    {
+      "case": "X dark theme reflected in popup",
+      "result": "pass",
+      "popupBackground": "#000000"
+    },
+    {
+      "case": "Opening, translating and closing preserves scroll and route",
+      "result": "pass",
+      "scrollYBefore": 380,
+      "scrollYDuring": 380,
+      "scrollYAfter": 380,
+      "route": "/i/history/likes"
+    },
+    {
+      "case": "No new tab on open or translation",
+      "result": "pass",
+      "newTabs": 0
+    },
+    {
+      "case": "Setting off/on, persistence and localization",
+      "result": "automated tests passed",
+      "languages": [
+        "ko",
+        "en",
+        "ja"
+      ]
+    }
+  ],
+  "automated": {
+    "unitTests": 87,
+    "browserTests": 24,
+    "browser": "Installed Chrome, local fixtures"
+  },
+  "limitations": [
+    "Reply viewing, composing and reactions use Open in X.",
+    "X translation availability and target language follow the X session. Failed translations leave the original visible and can be retried.",
+    "X API or public bundle changes may require adapter updates."
+  ],
+  "screenshot": "tests/tweet-popup-translation-live.jpg"
+}
