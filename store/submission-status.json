@@ -1,32 +1,34 @@
 {
-  "checkedOn": "2026-10-08",
+  "checkedOn": "2026-10-13",
   "name": "Better X Likes",
-  "version": "1.5.10",
+  "version": "1.6.0",
   "itemId": "kjdnnlmbnnncchgmogmagocekbikahpf",
   "dashboardUrl": "https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing",
   "privacyPolicyUrl": "https://incago.github.io/better-x-likes-privacy/",
+  "privacyPolicyEnglishUrl": "https://incago.github.io/better-x-likes-privacy/en.html",
+  "privacyPolicyJapaneseUrl": "https://incago.github.io/better-x-likes-privacy/ja.html",
   "status": "pendingReview",
+  "submittedForReview": true,
+  "submittedOn": "2026-10-13",
+  "autoPublishAfterApproval": false,
+  "published": false,
+  "publishedVersion": "1.5.10",
+  "publishedVersionStatus": "public",
   "saved": [
     "package",
-    "listing",
-    "icon",
-    "screenshot",
-    "smallPromotionalTile",
+    "listing-en",
+    "listing-ja",
+    "listing-ko",
+    "newCrossGridIcon",
     "privacyPractices",
-    "publicFreeAllRegions",
-    "reviewInstructions",
-    "publisherDisplayName"
+    "reviewInstructions"
   ],
   "blocker": null,
   "contactEmail": "incago@gmail.com",
-  "contactVerificationEmailRequested": true,
   "contactEmailVerified": true,
-  "submittedForReview": true,
-  "autoPublishAfterApproval": false,
-  "published": false,
   "preparedUpdate": {
-    "version": "1.5.10",
-    "package": "better-x-likes-1.5.10-webstore.zip",
+    "version": "1.6.0",
+    "package": "better-x-likes-1.6.0-webstore.zip",
     "status": "pendingReview",
     "submittedForReview": true,
     "languages": [
@@ -34,12 +36,10 @@
       "en",
       "ja"
     ],
-    "reason": "Dashboard confirmed version 1.5.10; resubmitted on 2026-10-08 after removing supported-page URL lists from English, Japanese and Korean descriptions.",
-    "submittedOn": "2026-10-08",
+    "submittedOn": "2026-10-13",
     "autoPublishAfterApproval": false,
-    "sha256": "024961311d7928b4a13db6efb0cf48cd2fe9dd4e8744166e9c5bf334245a0d8d"
+    "sha256": "0633ca8c2bd8700f997c33803ae22d8ddc8e5c9666efce5db705be7a8938d2e9"
   },
-  "privacyPolicyEnglishUrl": "https://incago.github.io/better-x-likes-privacy/en.html",
   "privacyPolicyUpdate": {
     "languages": [
       "ko",
@@ -47,37 +47,37 @@
       "ja"
     ],
     "published": true,
-    "commit": "bbd0b667a0d1ca6368253652038ab642170bd693",
-    "verifiedOn": "2026-10-07"
+    "commit": "176ba6e66d7ec17a0ba1324f74f9deb627ea7806",
+    "deploymentRun": "https://github.com/incago/better-x-likes-privacy/actions/runs/38370244198",
+    "verifiedOn": "2026-10-13"
   },
-  "privacyPolicyJapaneseUrl": "https://incago.github.io/better-x-likes-privacy/ja.html",
-  "resubmission": {
-    "date": "2026-10-08",
-    "violationReference": "Yellow Argon",
-    "change": "Removed supported-page URL lists from all three localized store descriptions.",
-    "languages": [
-      "en",
-      "ja",
-      "ko"
+  "validation": {
+    "unitTests": 89,
+    "browserTests": 24,
+    "liveX": [
+      "full text",
+      "translation",
+      "no extra tab",
+      "scroll restoration",
+      "no extension-context error after reload"
     ],
-    "status": "pendingReview",
+    "ci": "https://github.com/incago/betterxlike/actions/runs/38371279428"
+  },
+  "release": {
+    "commit": "da8527034ae69a1d491440ad81fc38e5914f1355",
+    "url": "https://github.com/incago/betterxlike/releases/tag/v1.6.0",
+    "assets": [
+      "better-x-likes-1.6.0.zip",
+      "better-x-likes-1.6.0-webstore.zip",
+      "better-x-likes-1.6.0-store-kit.zip",
+      "icon-128.png"
+    ]
+  },
+  "confirmation": "검토를 위해 확장 프로그램을(를) 제출함",
+  "previousSubmission": {
+    "version": "1.5.10",
+    "submittedOn": "2026-10-08",
     "autoPublishAfterApproval": false,
-    "publicationNote": "Automatic approval review blocked submission with automatic publication because explicit publication authorization was missing. Submitted for review with automatic publication disabled.",
-    "evidence": "store/resubmission-2026-10-08.jpg"
-  },
-  "publishedVersion": "1.4.1",
-  "publishedVersionStatus": "public",
-  "submittedOn": "2026-10-08",
-  "initialSubmission": {
-    "date": "2026-10-07",
-    "autoPublishAfterApproval": true,
-    "dashboardStatus": "검토 대기 중",
-    "confirmation": "검토를 위해 확장 프로그램을(를) 제출함",
-    "listingLanguages": [
-      "en",
-      "ja",
-      "ko"
-    ],
-    "reviewInstructionsCharacters": 495
+    "recordCommit": "bbb4e1455b7d370c4c885c5507e382cb67fbcee5"
   }
 }

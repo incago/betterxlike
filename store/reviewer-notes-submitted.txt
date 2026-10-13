@@ -1,5 +1,1 @@
-Saved in Chrome Web Store Test instructions (473 / 500 characters):
-
-Use your own X account with 8+ saved posts, including 2 videos. No extension account or payment is required. Install and reload X. Open x.com/i/history (or /i/bookmarks), then /i/history/likes: grid and hidden right rail. Resize: 4/3/2/1 columns. Scroll past initial posts. Videos stay paused until player click/Enter/Space; pause must persist. Popup toggle restores X layout/playback. Home/search/profile/detail stay unchanged. All code bundled; no external data transfer.
-
-No personal X username or password was submitted.
+Sign in to X with your own account. Bookmarks/likes use grid by default; enable other grids in settings. Turn on Open tweets in a popup (off by default). Click a post body/time: full text/media appear without navigation or new tabs. Translate post uses X; Show original restores text. Close/Esc preserves scroll. Replies use Open in X. Check light/dark themes and option off. Session headers stay only in page memory for same-origin X GETs. Public query metadata is parsed, never executed.
