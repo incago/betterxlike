@@ -29,3 +29,6 @@ footer { line-height: 1.6; }
 footer { margin-top: 10px; text-align: center; font-size: 11px; color: #80929f; }
 html:lang(ja) .setting { margin-top: 12px; padding: 10px 16px; }
 @media (prefers-reduced-motion: reduce) { .switch, .switch::after { transition: none; } }
+
+.setting > div { flex: 1; min-width: 0; padding-right: 12px; }
+.switch { flex-shrink: 0; }

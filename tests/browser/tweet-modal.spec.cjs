@@ -1,0 +1,44 @@
+const {test,expect}=require('@playwright/test');
+const path=require('node:path');
+const fs=require('node:fs');
+const root=path.resolve(__dirname,'../..');
+for(const width of [500,1440])test(`conversation popup keeps native scroll and focus at ${width}px`,async({page})=>{
+ await page.setViewportSize({width,height:900});
+ await page.route('**/modal-test',route=>route.fulfill({contentType:'text/html',body:`<!doctype html><html><body style="margin:0;min-height:3000px"><main data-bxl-grid style="padding-top:600px"><article data-testid="tweet" role="button"><a id="timestamp" href="/writer/status/123"><time>Today</time></a><p id="tweet-body">Open this tweet</p><button id="like">Like</button></article></main></body></html>`}));
+ await page.goto('/modal-test');
+ await page.addStyleTag({path:path.join(root,'tweet-modal.css')});
+ await page.evaluate(catalog=>{
+  document.documentElement.setAttribute('data-bxl-active','');document.documentElement.setAttribute('data-bxl-path',location.pathname);
+  window.readerMessages=[];window.readerClosed=0;
+  document.addEventListener('bxl-reader-request',e=>{
+   const m=JSON.parse(e.detail);window.readerMessages.push(m);if(m.type==='close')window.readerClosed++;
+   if(m.type==='open')window.readerReceive=payload=>document.dispatchEvent(new CustomEvent('bxl-reader-response',{detail:JSON.stringify({token:m.token,...payload})}));
+  });
+  window.chrome={runtime:{id:'test-extension'},i18n:{getMessage:(key,sub)=>catalog[key]?.message.replace('$1',sub)||key},storage:{local:{get:(_,cb)=>cb({enabled:true,tweetPopup:true})},onChanged:{addListener:fn=>window.readerSetting=fn}}};
+ },JSON.parse(fs.readFileSync(path.join(root,'_locales/en/messages.json'),'utf8')));
+ await page.addScriptTag({path:path.join(root,'tweet-modal.js')});
+ await page.evaluate(()=>scrollTo(0,380));
+ const before=await page.locator('#timestamp').boundingBox();
+ const pagesBefore=page.context().pages().length;
+ await page.mouse.click(before.x+5,before.y+5);
+ await expect(page.getByRole('dialog')).toBeVisible();
+ expect(await page.evaluate(()=>scrollY)).toBe(380);
+ await page.evaluate(()=>window.readerReceive({type:'data',posts:[{id:'123',handle:'writer',name:'Writer',text:'Complete body\n'.repeat(60),lang:'ar'},{id:'456',handle:'reader',text:'Reply',replyTo:'123'},{id:'789',handle:'other',text:'Unrelated recommendation'}]}));
+ await expect(page.locator('.bxl-reader-post')).toHaveCount(1);
+ expect(page.context().pages().length).toBe(pagesBefore);
+ expect(new URL(page.url()).pathname).toBe('/modal-test');
+ const box=await page.getByRole('dialog').boundingBox();expect(box.x).toBeGreaterThanOrEqual(0);expect(box.x+box.width).toBeLessThanOrEqual(width);
+ await expect(page.locator('dialog h2,dialog h3,.bxl-reader-more')).toHaveCount(0);
+ await page.getByRole('button',{name:'Translate post',exact:true}).click();
+ expect(await page.evaluate(()=>window.readerMessages.some(m=>m.type==='translate'))).toBe(true);
+ await page.evaluate(()=>window.readerReceive({type:'translation',text:'Translated content'}));
+ await expect(page.locator('.bxl-reader-text')).toHaveText('Translated content');
+ await page.getByRole('button',{name:'Show original',exact:true}).click();
+ await expect(page.locator('.bxl-reader-text')).toContainText('Complete body');
+ expect(await page.evaluate(()=>scrollY)).toBe(380);
+ await page.keyboard.press('Escape');await expect(page.getByRole('dialog')).toHaveCount(0);
+ expect(await page.evaluate(()=>scrollY)).toBe(380);expect(await page.evaluate(()=>window.readerClosed)).toBe(1);await expect(page.locator('#timestamp')).toBeFocused();
+ const after=await page.locator('#timestamp').boundingBox();expect(after.y).toBe(before.y);
+ await page.locator('#tweet-body').click();await page.evaluate(()=>window.readerSetting({tweetPopup:{newValue:false}},'local'));
+ await expect(page.getByRole('dialog')).toHaveCount(0);expect(await page.evaluate(()=>window.readerClosed)).toBe(2);
+});

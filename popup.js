@@ -11,10 +11,14 @@ const toggle = document.querySelector("#enabled");
 const pageSettings = document.querySelector("#page-settings");
 const selects = [...pageSettings.querySelectorAll("select[data-page]")];
 const status = document.querySelector("#status");
+const tweetPopupToggle = document.querySelector('#tweet-popup');
+let tweetPopup = false;
 let enabled = false;
 let pageModes = BxlPages.normalize();
 
 function render() {
+  tweetPopupToggle.checked = tweetPopup;
+  tweetPopupToggle.disabled = !enabled;
   toggle.checked = enabled;
   toggle.disabled = false;
   pageSettings.disabled = !enabled;
@@ -27,6 +31,7 @@ function render() {
 
 function save(change, rollback) {
   toggle.disabled = true;
+  tweetPopupToggle.disabled = true;
   pageSettings.disabled = true;
   chrome.storage.local.set(change, () => {
     const failed = Boolean(chrome.runtime.lastError);
@@ -36,12 +41,13 @@ function save(change, rollback) {
   });
 }
 
-chrome.storage.local.get({ enabled: true, pageModes: BxlPages.defaults }, settings => {
+chrome.storage.local.get({ enabled: true, pageModes: BxlPages.defaults, tweetPopup: false }, settings => {
   if (chrome.runtime.lastError) {
     status.textContent = message("statusLoadError");
     return;
   }
   enabled = settings.enabled !== false;
+  tweetPopup = settings.tweetPopup === true;
   pageModes = BxlPages.normalize(settings.pageModes);
   render();
 });
@@ -56,4 +62,10 @@ for (const select of selects) select.addEventListener("change", () => {
   const previous = pageModes;
   pageModes = { ...pageModes, [select.dataset.page]: select.value };
   save({ pageModes }, () => { pageModes = previous; });
+});
+
+tweetPopupToggle.addEventListener('change', () => {
+  const previous = tweetPopup;
+  tweetPopup = tweetPopupToggle.checked;
+  save({ tweetPopup }, () => { tweetPopup = previous; });
 });

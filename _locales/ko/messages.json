@@ -73,5 +73,38 @@
   },
   "profileHint": {
     "message": "프로필 설정은 내 프로필과 다른 프로필에 적용"
+  },
+  "tweetPopup": {
+    "message": "트윗을 팝업으로 열기"
+  },
+  "tweetPopupHint": {
+    "message": "목록과 스크롤 위치를 유지하며 본문을 팝업으로 확인합니다."
+  },
+  "readerTitle": {
+    "message": "트윗"
+  },
+  "readerOriginal": {
+    "message": "X에서 열기"
+  },
+  "readerClose": {
+    "message": "닫기"
+  },
+  "readerLoading": {
+    "message": "본문을 불러오는 중…"
+  },
+  "readerError": {
+    "message": "본문을 불러오지 못했습니다. X에서 열기로 확인해 주세요."
+  },
+  "readerTranslate": {
+    "message": "번역 보기"
+  },
+  "readerShowOriginal": {
+    "message": "원문 보기"
+  },
+  "readerTranslating": {
+    "message": "번역 중…"
+  },
+  "readerTranslationError": {
+    "message": "번역을 불러오지 못했습니다. 다시 시도하거나 X에서 열기로 확인해 주세요."
   }
 }

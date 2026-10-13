@@ -4,11 +4,19 @@
 
 A Chrome extension that displays **X home, search results, profiles, bookmarks and likes in responsive grids with 1–4 posts per row**. Choose **Grid / Default list** separately for each page in the popup. Grid pages hide the right search, trends and suggested follows sidebar while keeping the left navigation.
 
-The popup and extension description support Korean, English and Japanese. Chrome selects the language from its interface language; unsupported languages fall back to English. Your layout preferences stay the same when the language changes. The extension does not translate posts or X’s own interface.
+The popup and extension description support Korean, English and Japanese. Chrome selects the language from its interface language; unsupported languages fall back to English. Your layout preferences stay the same when the language changes. Interface localization is separate from the optional X translation button in the post popup.
+
+## Tweet detail popup
+
+The local source adds an opt-in **Open tweets in a popup** setting. Clicking a grid post's body or timestamp opens its full original text, images, video and quote above the unchanged timeline. The header contains only Close and **Open in X**. Replies are neither fetched nor displayed; use Open in X to read them. Close with the button, Escape or backdrop to keep your scroll position. Modified clicks, profile/media links and native action buttons keep their normal behavior.
+
+**Translate post** uses X's translation service and language preference. **Show original** restores the original text. Translation failures keep the original visible and allow retrying. Colors follow X's current light or dark theme.
+
+Post and translation data are requested directly from X in the current page using your existing session, without creating tabs. Current query definitions are read from X's public script without executing downloaded code. Authentication headers stay in page memory and are never forwarded to the extension or saved. Posts are not sent to a separate server or stored persistently. No additional permissions or API keys are needed. Use **Open in X** for replies and reactions. X API changes or unavailable translations may cause loading to fail.
 
 ## Install or update locally
 
-1. [Download the v1.5.10 installation ZIP](https://github.com/incago/betterxlike/releases/download/v1.5.10/better-x-likes-1.5.10.zip) and extract it. See the [release page](https://github.com/incago/betterxlike/releases/tag/v1.5.10) for release notes.
+1. [Download the v1.6.0 installation ZIP](https://github.com/incago/betterxlike/releases/download/v1.6.0/better-x-likes-1.6.0.zip) and extract it. See the [release page](https://github.com/incago/betterxlike/releases/tag/v1.6.0) for release notes.
 2. Open `chrome://extensions` in Chrome.
 3. Enable **Developer mode**.
 4. Click **Load unpacked** and select the extracted folder containing `manifest.json`.
@@ -39,7 +47,7 @@ Videos in grids remain paused until you click the corresponding player control o
 
 ## Permissions and privacy
 
-The `storage` permission saves only `enabled` (the master switch) and `pageModes` (five layout preferences) in `chrome.storage.local`. Content scripts run on `x.com` and `twitter.com` to detect navigation and supported timelines. The current path/query, rendered post links/IDs, dimensions and player gestures are processed temporarily in page memory. Posts, browsing history and player input are not persisted or sent to the developer. There is no backend service, analytics or remote runtime code.
+The `storage` permission saves `enabled` (the master switch), `pageModes` (five layout preferences), and `tweetPopup` (the popup option) in `chrome.storage.local`. Content scripts run on `x.com` and `twitter.com` to detect navigation and supported timelines. The current path/query, rendered post links/IDs, dimensions and player gestures are processed temporarily in page memory. Posts, browsing history and player input are not persisted or sent to the developer. There is no backend service, analytics or remote runtime code.
 
 [English privacy policy](https://incago.github.io/better-x-likes-privacy/en.html) · [Korean privacy policy](https://incago.github.io/better-x-likes-privacy/)
 

@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const root = path.resolve(__dirname, "..");
 const fixture = fs.readFileSync(path.join(__dirname, "fixture.html"));
-const assets = new Set(["/pages.js", "/layout.js", "/video.js", "/video-play.js", "/content.js", "/content.css", "/popup.html", "/popup.js", "/popup.css",
+const assets = new Set(["/pages.js", "/layout.js", "/video.js", "/video-play.js", "/tweet-modal.js", "/tweet-modal.css", "/content.js", "/content.css", "/popup.html", "/popup.js", "/popup.css",
   "/store/promo.html", "/store/privacy/index.html", "/store/privacy/en.html", "/store/privacy/ja.html", "/tests/profile-cover.svg",
   "/icons/icon-16.png", "/icons/icon-32.png", "/icons/icon-48.png", "/icons/icon-128.png"]);
 const mime = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".css": "text/css; charset=utf-8", ".png": "image/png", ".svg": "image/svg+xml" };
@@ -22,7 +22,7 @@ const server = http.createServer((request, response) => {
       const requestedLocale = url.searchParams.get("lang") || "ko";
       const locale = ["ko", "en", "ja"].includes(requestedLocale) ? requestedLocale : "en";
       const catalog = fs.readFileSync(path.join(root, "_locales", locale, "messages.json"), "utf8");
-      bytes = bytes.toString().replace('<script src="popup.js" defer></script>', `<script>window.chrome={i18n:{getUILanguage:()=>${JSON.stringify(locale)},getMessage:(key,sub)=>{const catalog=${catalog};return catalog[key]?.message.replace(/\\$COUNT\\$/g,String(sub))||""}},runtime:{},storage:{local:{get:(_,cb)=>cb({enabled:localStorage.getItem("bxl-preview-enabled")!=="false",pageModes:JSON.parse(localStorage.getItem("bxl-preview-modes")||"null")}),set:(value,cb)=>{if("enabled" in value)localStorage.setItem("bxl-preview-enabled",String(value.enabled));if(value.pageModes)localStorage.setItem("bxl-preview-modes",JSON.stringify(value.pageModes));cb()}}}};</script><script src="popup.js" defer></script>`);
+      bytes = bytes.toString().replace('<script src="popup.js" defer></script>', `<script>window.chrome={i18n:{getUILanguage:()=>${JSON.stringify(locale)},getMessage:(key,sub)=>{const catalog=${catalog};return catalog[key]?.message.replace(/\\$COUNT\\$/g,String(sub))||""}},runtime:{},storage:{local:{get:(_,cb)=>cb({enabled:localStorage.getItem("bxl-preview-enabled")!=="false",pageModes:JSON.parse(localStorage.getItem("bxl-preview-modes")||"null"),tweetPopup:localStorage.getItem("bxl-preview-popup")==="true"}),set:(value,cb)=>{if("enabled" in value)localStorage.setItem("bxl-preview-enabled",String(value.enabled));if("tweetPopup" in value)localStorage.setItem("bxl-preview-popup",String(value.tweetPopup));if(value.pageModes)localStorage.setItem("bxl-preview-modes",JSON.stringify(value.pageModes));cb()}}}};</script><script src="popup.js" defer></script>`);
     }
     response.writeHead(200, { "Content-Type": mime[path.extname(pathname)] }); response.end(bytes); return;
   }

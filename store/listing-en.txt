@@ -5,7 +5,7 @@ Listing language: English
 Visibility: Public
 Price: Free
 Category: Productivity > Tools
-Submitted for version: 1.5.10 (resubmitted October 8, 2026; pending review)
+Prepared version: 1.6.0
 
 Short description
 View X home, search, profiles, bookmarks and likes in a 1–4 column grid, with a default layout option for each page.
@@ -15,6 +15,8 @@ Detailed description
 Browse posts on X (Twitter) at a glance: home, search results, profiles, bookmarks and likes.
 Better X Likes turns long vertical timelines into grids that fit your browser window.
 
+• Enable Open tweets in a popup to read full text, images, video and quoted posts above the grid without losing your scroll position or automatically opening another tab.
+• Translate posts using X inside the popup, then switch back to the original. Use Open in X for replies.
 • Use the full profile header width while capping banner height at 200px and portraits at 145px. Banner images are cropped around their center to fill the width.
 • Hide inline follow suggestions in grids to keep posts aligned. Switching to Default list restores the suggestions.
 • See up to four posts per row in a wide window.
@@ -34,7 +36,7 @@ How to use
 The profile preference applies to your profile and other profiles. Post details, messages, notifications, Explore, follower lists and pages without a tweet timeline keep X’s default layout.
 
 Privacy and permissions
-Only the master switch and per-page layout preferences are saved in the browser. The current page path/query, rendered post elements and links, dimensions and video player gestures are processed locally for layout and playback control. The extension does not save posts or browsing history to a separate file or server, or send them to the developer. It includes no advertising, analytics or remotely executed code.
+Grid and popup preferences are saved locally. Selected posts and translations are requested directly from X using the current page session. Session headers stay in page memory and are never stored by the extension or sent to the developer. Public X scripts are read only for query definitions; downloaded code is not executed.
 
 You need to sign in to X, but the extension requires no separate account or login credentials. Changes to X’s page structure may require updates to this extension. If something stops working, turn off the grid and reload the X tab.
 

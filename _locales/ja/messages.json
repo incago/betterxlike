@@ -73,5 +73,38 @@
   },
   "profileHint": {
     "message": "自分と他のユーザーのプロフィールに適用"
+  },
+  "tweetPopup": {
+    "message": "ポストをポップアップで開く"
+  },
+  "tweetPopupHint": {
+    "message": "一覧とスクロール位置を維持して、本文をポップアップで確認します。"
+  },
+  "readerTitle": {
+    "message": "ポスト"
+  },
+  "readerOriginal": {
+    "message": "Xで開く"
+  },
+  "readerClose": {
+    "message": "閉じる"
+  },
+  "readerLoading": {
+    "message": "本文を読み込み中…"
+  },
+  "readerError": {
+    "message": "本文を読み込めませんでした。Xで開いてご確認ください。"
+  },
+  "readerTranslate": {
+    "message": "ポストを翻訳"
+  },
+  "readerShowOriginal": {
+    "message": "原文を表示"
+  },
+  "readerTranslating": {
+    "message": "翻訳中…"
+  },
+  "readerTranslationError": {
+    "message": "翻訳を読み込めませんでした。再試行するか、Xで開いてください。"
   }
 }

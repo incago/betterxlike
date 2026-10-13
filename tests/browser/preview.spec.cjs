@@ -110,10 +110,13 @@ for (const locale of ['ko', 'en', 'ja']) {
     await page.goto(`/popup.html?lang=${locale}`);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await page.locator('#mode-home').selectOption('grid');
+    await page.locator('#tweet-popup').check();
     await page.locator('#enabled').uncheck();
     await page.reload();
     await expect(page.locator('#enabled')).not.toBeChecked();
     await expect(page.locator('#mode-home')).toHaveValue('grid');
+    await expect(page.locator('#tweet-popup')).toBeChecked();
+    await expect(page.locator('#tweet-popup')).toBeDisabled();
     await page.locator('#enabled').check();
     await expect(page.locator('#mode-home')).toBeEnabled();
   });

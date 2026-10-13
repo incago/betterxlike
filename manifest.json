@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "1.5.10",
+  "version": "1.6.0",
   "description": "__MSG_extensionDescription__",
   "permissions": [
     "storage"
@@ -29,7 +29,9 @@
         "https://twitter.com/*"
       ],
       "js": [
-        "video-play.js"
+        "video-play.js",
+        "tweet-data.js",
+        "tweet-source-main.js"
       ],
       "world": "MAIN",
       "run_at": "document_start"
@@ -40,13 +42,15 @@
         "https://twitter.com/*"
       ],
       "css": [
-        "content.css"
+        "content.css",
+        "tweet-modal.css"
       ],
       "js": [
         "pages.js",
         "layout.js",
         "video.js",
-        "content.js"
+        "content.js",
+        "tweet-modal.js"
       ],
       "run_at": "document_idle"
     }

@@ -1,0 +1,7 @@
+{
+  "purpose": "Make X timelines easier to review with responsive grids, manual video playback and an optional post popup that preserves scroll and offers X translation. Replies and reactions use Open in X.",
+  "storage": "Save only enabled, pageModes and tweetPopup preferences in chrome.storage.local. Post content, translations, IDs, session headers, history and input are not persisted.",
+  "host": "Run on x.com and twitter.com to arrange supported timelines and display an optional selected-post popup. Read current path, rendered posts and video gestures locally. The page script holds X native read-request session headers only in page memory and reuses them only for same-origin X GETs for selected posts and user-requested translation. No credentials reach extension storage or the developer.",
+  "remote": "All executable code is bundled. The extension reads query IDs and feature metadata from the public X-linked abs.twimg.com main script as text, without credentials or evaluation. It never executes downloaded code. X post/translation responses are data rendered as text.",
+  "data": "Website content, current-page browsing activity, video/click user activity, and authentication information (X session request headers held temporarily in page memory only). No passwords requested; no direct cookie reads. Requests go only to X for the user-requested feature. No sale, developer collection, analytics, advertising, credit or lending use."
+}

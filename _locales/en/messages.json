@@ -73,5 +73,38 @@
   },
   "profileHint": {
     "message": "Applies to your profile and other profiles"
+  },
+  "tweetPopup": {
+    "message": "Open tweets in a popup"
+  },
+  "tweetPopupHint": {
+    "message": "Read posts in a popup while keeping your place in the grid."
+  },
+  "readerTitle": {
+    "message": "Post"
+  },
+  "readerOriginal": {
+    "message": "Open in X"
+  },
+  "readerClose": {
+    "message": "Close"
+  },
+  "readerLoading": {
+    "message": "Loading post…"
+  },
+  "readerError": {
+    "message": "Could not load this post. Use Open in X to view it."
+  },
+  "readerTranslate": {
+    "message": "Translate post"
+  },
+  "readerShowOriginal": {
+    "message": "Show original"
+  },
+  "readerTranslating": {
+    "message": "Translating…"
+  },
+  "readerTranslationError": {
+    "message": "Could not load the translation. Try again or open in X."
   }
 }

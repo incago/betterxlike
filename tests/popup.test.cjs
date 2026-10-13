@@ -5,7 +5,7 @@ const path = require("node:path");
 const { JSDOM } = require("jsdom");
 const root = path.resolve(__dirname, "..");
 
-function setup({ enabled = true, pageModes, readError = false, writeError = false, locale = "ko" } = {}) {
+function setup({ enabled = true, pageModes, tweetPopup = false, readError = false, writeError = false, locale = "ko" } = {}) {
   const dom = new JSDOM(fs.readFileSync(path.join(root, "popup.html"), "utf8"), { runScripts: "outside-only" });
   const { window } = dom;
   const writes = [];
@@ -23,7 +23,7 @@ function setup({ enabled = true, pageModes, readError = false, writeError = fals
     storage: { local: {
       get: (_, callback) => {
         window.chrome.runtime.lastError = readError ? { message: "read failed" } : undefined;
-        callback({ enabled, pageModes });
+        callback({ enabled, pageModes, tweetPopup });
         window.chrome.runtime.lastError = undefined;
       },
       set: (settings, callback) => {
@@ -191,4 +191,16 @@ test("Japanese read and write errors are localized and leave saved preferences i
   assert.match(write.status.textContent, /設定を保存できませんでした/);
   assert.equal(write.toggle.checked, true);
   assert.equal(write.window.document.documentElement.lang, "ja");
+});
+
+
+test("tweet popup is opt-in, saved separately, retained when disabled, and rolls back errors", t => {
+  const page=setup();t.after(page.close);
+  const input=page.window.document.querySelector('#tweet-popup');
+  assert.equal(input.checked,false);input.click();assert.equal(page.writes[0].tweetPopup,true);
+  page.toggle.click();assert.equal(input.disabled,true);assert.equal(input.checked,true);
+  page.toggle.click();assert.equal(input.disabled,false);assert.equal(input.checked,true);
+  const saved=setup({tweetPopup:true,writeError:true});t.after(saved.close);
+  const toggle=saved.window.document.querySelector('#tweet-popup');toggle.click();
+  assert.equal(toggle.checked,true);assert.match(saved.status.textContent,/저장하지 못했습니다/);
 });
