@@ -14,7 +14,7 @@ X의 **홈·검색 결과·프로필·북마크·마음에 들어요**를 **창 
 
 ## 설치
 
-1. [v1.6.0 설치 파일 다운로드](https://github.com/incago/betterxlike/releases/download/v1.6.0/better-x-likes-1.6.0.zip) 후 압축을 풉니다. 변경 내역은 [릴리스 페이지](https://github.com/incago/betterxlike/releases/tag/v1.6.0)에서 확인할 수 있습니다.
+1. [v1.6.1 설치 파일 다운로드](https://github.com/incago/betterxlike/releases/download/v1.6.1/better-x-likes-1.6.1.zip) 후 압축을 풉니다. 변경 내역은 [릴리스 페이지](https://github.com/incago/betterxlike/releases/tag/v1.6.1)에서 확인할 수 있습니다.
 2. Chrome 주소창에서 `chrome://extensions`를 엽니다.
 3. 오른쪽 위 **개발자 모드**를 켭니다.
 4. **압축해제된 확장 프로그램을 로드합니다**를 누르고, 압축을 푼 폴더(`manifest.json`이 있는 폴더)를 선택합니다.

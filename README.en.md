@@ -16,7 +16,7 @@ Post and translation data are requested directly from X in the current page usin
 
 ## Install or update locally
 
-1. [Download the v1.6.0 installation ZIP](https://github.com/incago/betterxlike/releases/download/v1.6.0/better-x-likes-1.6.0.zip) and extract it. See the [release page](https://github.com/incago/betterxlike/releases/tag/v1.6.0) for release notes.
+1. [Download the v1.6.1 installation ZIP](https://github.com/incago/betterxlike/releases/download/v1.6.1/better-x-likes-1.6.1.zip) and extract it. See the [release page](https://github.com/incago/betterxlike/releases/tag/v1.6.1) for release notes.
 2. Open `chrome://extensions` in Chrome.
 3. Enable **Developer mode**.
 4. Click **Load unpacked** and select the extracted folder containing `manifest.json`.

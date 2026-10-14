@@ -16,7 +16,7 @@ Xの**ホーム・検索結果・プロフィール・ブックマーク・い�
 
 ## ローカルでのインストール・更新
 
-1. [v1.6.0のインストール用ZIPをダウンロード](https://github.com/incago/betterxlike/releases/download/v1.6.0/better-x-likes-1.6.0.zip)し、展開します。変更内容は[リリースページ](https://github.com/incago/betterxlike/releases/tag/v1.6.0)で確認できます。
+1. [v1.6.1のインストール用ZIPをダウンロード](https://github.com/incago/betterxlike/releases/download/v1.6.1/better-x-likes-1.6.1.zip)し、展開します。変更内容は[リリースページ](https://github.com/incago/betterxlike/releases/tag/v1.6.1)で確認できます。
 2. Chromeで `chrome://extensions` を開きます。
 3. **デベロッパー モード**をオンにします。
 4. **パッケージ化されていない拡張機能を読み込む**から、展開したフォルダー（`manifest.json` があるフォルダー）を選びます。

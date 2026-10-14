@@ -34,6 +34,33 @@ test('settings off and navigation close modal and cancel the in-page request',as
  p.change[0]({enabled:{newValue:true}},'local');p.doc.querySelector('#body').click();p.doc.documentElement.removeAttribute('data-bxl-active');await new Promise(resolve=>p.w.queueMicrotask(resolve));assert.equal(p.doc.querySelector('dialog'),null);assert.equal(p.disconnects(),2);
 });
 
+test('video thumbnails and overlays stay native through playback and after closing a popup',t=>{
+ for(const testid of ['videoPlayer','videoComponent']){
+  const p=setup();t.after(p.close);
+  const player=p.doc.createElement('div');player.dataset.testid=testid;
+  player.innerHTML='<img alt="Thumbnail"><button>Play</button><div class="overlay"><span>Video overlay</span></div>';
+  p.doc.querySelector('article').append(player);
+  let playing=false;let toggles=0;
+  player.addEventListener('click',()=>{playing=!playing;toggles++;});
+  const click=target=>{
+   const event=new p.w.MouseEvent('click',{bubbles:true,cancelable:true});target.dispatchEvent(event);
+   assert.equal(event.defaultPrevented,false);assert.equal(p.doc.querySelector('dialog'),null);
+  };
+  click(player.querySelector('button'));assert.equal(playing,true);
+  // X can mount the video lazily and put non-interactive overlay elements above it.
+  player.prepend(p.doc.createElement('video'));
+  click(player.querySelector('.overlay span'));assert.equal(playing,false);
+  click(player.querySelector('img'));assert.equal(playing,true);
+  click(player);assert.equal(playing,false);
+  assert.equal(p.messages.filter(m=>m.type==='open').length,0);
+  p.doc.querySelector('#body').click();assert.ok(p.doc.querySelector('dialog'));
+  p.doc.querySelector('.bxl-reader-close').click();
+  click(player.querySelector('.overlay span'));assert.equal(playing,true);
+  click(player.querySelector('.overlay span'));assert.equal(playing,false);
+  assert.equal(toggles,6);assert.equal(p.messages.filter(m=>m.type==='open').length,1);
+ }
+});
+
 test('later full text replaces an early preview without losing the conversation',t=>{
  const p=setup();t.after(p.close);p.doc.querySelector('#body').click();
  p.receive[0]({type:'data',posts:[{id:'123',handle:'writer',text:'preview'}]});

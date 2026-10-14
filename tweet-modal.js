@@ -150,6 +150,9 @@
     if(!useGrid() || event.defaultPrevented || event.button!==0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || getSelection()?.toString())return;
     if(!(event.target instanceof Element))return;
     const article=event.target.closest('[data-bxl-grid] article[data-testid="tweet"]');if(!article)return;
+    // X handles thumbnail/overlay clicks on the player wrapper, not just the
+    // video or play button. Leave the whole player to its native controls.
+    if(event.target.closest('[data-testid="videoPlayer"],[data-testid="videoComponent"]'))return;
     const control=event.target.closest('button,[role="button"],input,textarea,video,[contenteditable="true"]');
     if(control && control!==article)return;
     const timestamp=article.querySelector('a[href*="/status/"] time')?.closest('a');
