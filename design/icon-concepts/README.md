@@ -4,6 +4,7 @@ The user selected **01-cross-grid** on 2026-10-07: four cyan/white parts form an
 
 - The five numbered PNGs are original concept previews generated with the built-in image generation tool.
 - `01-cross-grid-master.png` is the selected master. The built-in image tool removed the exterior white canvas while preserving the design.
+- On 2026-10-16, the master was recreated from the original concept to remove the bottom-center semicircular transparency artifact. All four extension icon sizes and the store icon were regenerated and visually checked on a light checkerboard background.
 - `prompts.json` records the concept prompts and final background-removal instructions.
 - `applied-popup.png` shows the selected icon in the local popup preview. Page choices in that preview are saved test preferences.
 

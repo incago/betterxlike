@@ -28,6 +28,8 @@
   "finalEdit": {
     "tool": "Built-in image_gen",
     "useCase": "background-extraction",
-    "prompt": "Remove ONLY the white/off-white canvas outside the dark rounded-square app tile. Keep the cyan/white divided-X artwork, navy tile, geometry, proportions and colors. Retain interior white diagonal pieces. Transparent exterior, no added text, shadow, gloss or border."
+    "date": "2026-10-16",
+    "source": "01-cross-grid.png",
+    "prompt": "Use case: background-extraction. Edit target: the supplied original Better X Likes app icon. Remove ONLY the white/off-white canvas outside the dark navy rounded-square tile and make the exterior genuinely transparent. Preserve the existing cyan and white four-part X exactly: same geometry, proportions, positions, colors, rounded ends and dark cross-shaped gutters. Preserve the entire navy tile as fully OPAQUE including the bottom-center area below the X. The lower navy area must be clean, continuous and uniform, with absolutely NO semicircle, arch, crescent, blemish, hole, translucent patch, tiny symbol or extra mark. Do not remove any interior navy or white pixels. Keep the original rounded tile outline and centered square composition with narrow transparent exterior margin. No added shadows, borders, text, icons or new design elements."
   }
 }

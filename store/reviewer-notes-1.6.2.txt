@@ -1,0 +1,3 @@
+Version 1.6.2 removes an unintended semicircular artifact below the X logo in all extension and store icons. It also includes the v1.6.1 inline video click fix when updating from published v1.6.0. No additional permissions or data collection.
+
+Sign in to X with your own account. Bookmarks/likes use grid by default; enable other grids in settings. Turn on Open tweets in a popup (off by default). Click a post body/time: full text/media appear without navigation or new tabs. Translate post uses X; Show original restores text. Close/Esc preserves scroll. Replies use Open in X. Check light/dark themes and option off. Session headers stay only in page memory for same-origin X GETs. Public query metadata is parsed, never executed.

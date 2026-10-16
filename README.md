@@ -14,7 +14,7 @@ X의 **홈·검색 결과·프로필·북마크·마음에 들어요**를 **창 
 
 ## 설치
 
-1. [v1.6.1 설치 파일 다운로드](https://github.com/incago/betterxlike/releases/download/v1.6.1/better-x-likes-1.6.1.zip) 후 압축을 풉니다. 변경 내역은 [릴리스 페이지](https://github.com/incago/betterxlike/releases/tag/v1.6.1)에서 확인할 수 있습니다.
+1. [v1.6.2 설치 파일 다운로드](https://github.com/incago/betterxlike/releases/download/v1.6.2/better-x-likes-1.6.2.zip) 후 압축을 풉니다. 변경 내역은 [릴리스 페이지](https://github.com/incago/betterxlike/releases/tag/v1.6.2)에서 확인할 수 있습니다.
 2. Chrome 주소창에서 `chrome://extensions`를 엽니다.
 3. 오른쪽 위 **개발자 모드**를 켭니다.
 4. **압축해제된 확장 프로그램을 로드합니다**를 누르고, 압축을 푼 폴더(`manifest.json`이 있는 폴더)를 선택합니다.
@@ -98,7 +98,7 @@ npm test
 
 ## Chrome 웹 스토어 배포 준비
 
-스토어 업로드용 ZIP은 `python3 tools/package.py --store`로 생성합니다. 런타임 파일만 포함한 `store/better-x-likes-1.5.10-webstore.zip`과 제출 문구, 권한 사유, 심사자 안내, 규격에 맞는 이미지가 `store/`에 있습니다. 자세한 순서는 [제출 안내](store/publish-guide-ko.txt)를 참고하세요.
+스토어 업로드용 ZIP은 `python3 tools/package.py --store`로 생성합니다. 런타임 파일만 포함한 `store/better-x-likes-1.6.2-webstore.zip`과 제출 문구, 권한 사유, 심사자 안내, 규격에 맞는 이미지가 `store/`에 있습니다. 자세한 순서는 [제출 안내](store/publish-guide-ko.txt)를 참고하세요.
 
 게시자는 Junhak Kim, 공개 지원 이메일은 incago@gmail.com입니다. [공개 개인정보처리방침](https://incago.github.io/better-x-likes-privacy/)은 [전용 GitHub Pages 저장소](https://github.com/incago/better-x-likes-privacy)에 게시했습니다. 2026년 10월 7일 개발자 등록과 연락처 이메일 인증을 완료했습니다. 1.4.1은 공개 스토어에서 설치할 수 있고, 최신 1.5.10은 10월 8일 스토어 설명의 지원 주소 목록을 삭제한 뒤 재제출했습니다. 최신 기록에서는 자동 게시가 꺼져 있어 승인 후 직접 게시해야 합니다. 10월 8일 확인한 [대시보드](https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing) 상태는 검토 대기 중입니다. 실제 X에서의 최종 동작 검증은 별도 확인이 필요합니다.
 
