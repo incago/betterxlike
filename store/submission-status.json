@@ -1,7 +1,7 @@
 {
-  "checkedOn": "2026-10-13",
+  "checkedOn": "2026-10-16",
   "name": "Better X Likes",
-  "version": "1.6.0",
+  "version": "1.6.2",
   "itemId": "kjdnnlmbnnncchgmogmagocekbikahpf",
   "dashboardUrl": "https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing",
   "privacyPolicyUrl": "https://incago.github.io/better-x-likes-privacy/",
@@ -9,17 +9,17 @@
   "privacyPolicyJapaneseUrl": "https://incago.github.io/better-x-likes-privacy/ja.html",
   "status": "pendingReview",
   "submittedForReview": true,
-  "submittedOn": "2026-10-13",
+  "submittedOn": "2026-10-16",
   "autoPublishAfterApproval": false,
   "published": false,
-  "publishedVersion": "1.5.10",
+  "publishedVersion": "1.6.0",
   "publishedVersionStatus": "public",
   "saved": [
     "package",
     "listing-en",
     "listing-ja",
     "listing-ko",
-    "newCrossGridIcon",
+    "cleanCrossGridIcon",
     "privacyPractices",
     "reviewInstructions"
   ],
@@ -27,8 +27,8 @@
   "contactEmail": "incago@gmail.com",
   "contactEmailVerified": true,
   "preparedUpdate": {
-    "version": "1.6.0",
-    "package": "better-x-likes-1.6.0-webstore.zip",
+    "version": "1.6.2",
+    "package": "better-x-likes-1.6.2-webstore.zip",
     "status": "pendingReview",
     "submittedForReview": true,
     "languages": [
@@ -36,9 +36,9 @@
       "en",
       "ja"
     ],
-    "submittedOn": "2026-10-13",
-    "autoPublishAfterApproval": false,
-    "sha256": "0633ca8c2bd8700f997c33803ae22d8ddc8e5c9666efce5db705be7a8938d2e9"
+    "sha256": "bcf0cf7d88bb7a4ab7bebb1550feabc8c13564b43db21167aea72b82f2af112a",
+    "submittedOn": "2026-10-16",
+    "autoPublishAfterApproval": false
   },
   "privacyPolicyUpdate": {
     "languages": [
@@ -52,32 +52,55 @@
     "verifiedOn": "2026-10-13"
   },
   "validation": {
-    "unitTests": 89,
-    "browserTests": 24,
-    "liveX": [
-      "full text",
-      "translation",
-      "no extra tab",
-      "scroll restoration",
-      "no extension-context error after reload"
-    ],
-    "ci": "https://github.com/incago/betterxlike/actions/runs/38371279428"
+    "unitTests": 90,
+    "browserTests": 25,
+    "icons": "All four icon dimensions and packaged bytes checked; bottom-center artifact removed; store icon matches extension 128px icon.",
+    "ci": "https://github.com/incago/betterxlike/actions/runs/38880288173",
+    "ciStatus": "success"
   },
   "release": {
-    "commit": "da8527034ae69a1d491440ad81fc38e5914f1355",
-    "url": "https://github.com/incago/betterxlike/releases/tag/v1.6.0",
+    "commit": "ed65f839266a3dc93f562edfd52f071db731b65c",
+    "url": "https://github.com/incago/betterxlike/releases/tag/v1.6.2",
     "assets": [
-      "better-x-likes-1.6.0.zip",
-      "better-x-likes-1.6.0-webstore.zip",
-      "better-x-likes-1.6.0-store-kit.zip",
+      "better-x-likes-1.6.2.zip",
+      "better-x-likes-1.6.2-webstore.zip",
       "icon-128.png"
     ]
   },
   "confirmation": "검토를 위해 확장 프로그램을(를) 제출함",
   "previousSubmission": {
-    "version": "1.5.10",
-    "submittedOn": "2026-10-08",
+    "version": "1.6.0",
+    "submittedOn": "2026-10-13",
+    "publishedOn": "2026-10-16",
     "autoPublishAfterApproval": false,
-    "recordCommit": "bbb4e1455b7d370c4c885c5507e382cb67fbcee5"
-  }
+    "status": "published",
+    "release": {
+      "commit": "da8527034ae69a1d491440ad81fc38e5914f1355",
+      "url": "https://github.com/incago/betterxlike/releases/tag/v1.6.0",
+      "assets": [
+        "better-x-likes-1.6.0.zip",
+        "better-x-likes-1.6.0-webstore.zip",
+        "better-x-likes-1.6.0-store-kit.zip",
+        "icon-128.png"
+      ]
+    },
+    "validation": {
+      "unitTests": 89,
+      "browserTests": 24,
+      "liveX": [
+        "full text",
+        "translation",
+        "no extra tab",
+        "scroll restoration",
+        "no extension-context error after reload"
+      ],
+      "ci": "https://github.com/incago/betterxlike/actions/runs/38371279428"
+    }
+  },
+  "publicListingVerification": {
+    "checkedOn": "2026-10-16",
+    "visibleVersion": "1.5.10",
+    "status": "propagationPending"
+  },
+  "publishedVersionPublishedOn": "2026-10-16"
 }

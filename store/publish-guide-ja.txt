@@ -1,11 +1,11 @@
-2026年10月13日の提出結果
-1.6.0は新しい青色のXアイコンと韓国語・英語・日本語の説明を含めて審査に提出しました。現在は審査待ちで、自動公開は無効です。公開中のバージョンは1.5.10です。承認後に別途公開してください。
-任意のポストポップアップ、X翻訳、スクロール位置の維持、拡張機能の再読み込み後のExtension context invalidatedエラー修正を含みます。単体テスト89件、Chromeブラウザテスト24件とGitHub CIに合格しました。
+2026年10月16日の提出結果
+アイコン下部の半円状の跡を削除した1.6.2を審査に提出しました。動画クリックでポストポップアップが開く問題の1.6.1修正も含みます。ダッシュボードは審査待ちで、公開中のバージョンは1.6.0です。自動公開は無効のため、承認後に手動で公開してください。
+単体テスト90件、Chromeブラウザテスト25件とGitHub CIに合格しました。新しいパッケージ、ストアアイコン、審査用の案内を保存しました。
 
-GitHub: https://github.com/incago/betterxlike/releases/tag/v1.6.0
+GitHub: https://github.com/incago/betterxlike/releases/tag/v1.6.2
 Dashboard: https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing
-Package: better-x-likes-1.6.0-webstore.zip
+Package: better-x-likes-1.6.2-webstore.zip
 Icon: assets/icon-128.png
-Review instructions: reviewer-notes-1.6.0.txt
+Review instructions: reviewer-notes-1.6.2.txt
 Submission record: submission-status.json
 Privacy: https://incago.github.io/better-x-likes-privacy/

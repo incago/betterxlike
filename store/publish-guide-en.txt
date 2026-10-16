@@ -1,11 +1,11 @@
-Submission result — October 13, 2026
-Version 1.6.0 was submitted with the new blue X icon and Korean, English and Japanese descriptions. It is pending review with automatic publication disabled. The published version is 1.5.10. Publish separately after approval.
-Includes the optional post popup, X translation, preserved scrolling, and the Extension context invalidated fix after extension reload/update. Passed 89 unit tests, 24 Chrome browser tests and GitHub CI.
+Submission result — October 16, 2026
+Version 1.6.2 was submitted for review with the semicircular icon artifact removed. It also includes the v1.6.1 fix for inline video clicks opening the post popup. The dashboard confirms Pending review; the published version remains 1.6.0. Automatic publication is disabled. Publish manually after approval.
+Passed 90 unit tests, 25 Chrome browser tests and GitHub CI. The new package, store icon and reviewer instructions were saved.
 
-GitHub: https://github.com/incago/betterxlike/releases/tag/v1.6.0
+GitHub: https://github.com/incago/betterxlike/releases/tag/v1.6.2
 Dashboard: https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing
-Package: better-x-likes-1.6.0-webstore.zip
+Package: better-x-likes-1.6.2-webstore.zip
 Icon: assets/icon-128.png
-Review instructions: reviewer-notes-1.6.0.txt
+Review instructions: reviewer-notes-1.6.2.txt
 Submission record: submission-status.json
 Privacy: https://incago.github.io/better-x-likes-privacy/

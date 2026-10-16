@@ -1,11 +1,11 @@
-2026-10-13 제출 결과
-1.6.0은 새 파란색 X 아이콘과 한국어·영어·일본어 설명을 포함하여 심사 제출했습니다. 현재 검토 대기 중이며 자동 게시는 꺼져 있습니다. 공개 버전은 1.5.10입니다. 승인 후 별도 게시가 필요합니다.
-옵션형 트윗 팝업, X 번역, 스크롤 유지 및 확장 프로그램 갱신 후 발생하던 Extension context invalidated 오류 수정이 포함됩니다. 단위 테스트 89개와 Chrome 브라우저 테스트 24개 및 GitHub CI를 통과했습니다.
+2026-10-16 제출 결과
+아이콘 아래 반원 흔적을 제거한 1.6.2를 심사 제출했습니다. 1.6.1의 영상 클릭 시 포스트 팝업이 열리는 오류 수정도 포함합니다. 대시보드 상태는 검토 대기 중이며, 공개 버전은 1.6.0입니다. 자동 게시는 꺼져 있어 승인 후 수동 게시해야 합니다.
+단위 테스트 90개, Chrome 브라우저 테스트 25개 및 GitHub CI를 통과했습니다. 새 패키지와 스토어 아이콘, 심사자 안내를 저장했습니다.
 
-GitHub: https://github.com/incago/betterxlike/releases/tag/v1.6.0
+GitHub: https://github.com/incago/betterxlike/releases/tag/v1.6.2
 Dashboard: https://chrome.google.com/webstore/devconsole/da3df3c1-9fb9-4613-9cb3-5a3525042564/kjdnnlmbnnncchgmogmagocekbikahpf/edit/listing
-Package: better-x-likes-1.6.0-webstore.zip
+Package: better-x-likes-1.6.2-webstore.zip
 Icon: assets/icon-128.png
-Review instructions: reviewer-notes-1.6.0.txt
+Review instructions: reviewer-notes-1.6.2.txt
 Submission record: submission-status.json
 Privacy: https://incago.github.io/better-x-likes-privacy/
